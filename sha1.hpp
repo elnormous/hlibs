@@ -1,9 +1,5 @@
 //
-//  sha1.h
-//  WebsocketTest
-//
-//  Created by Elviss Strazdins on 22/11/2018.
-//  Copyright © 2018 Elviss Strazdins. All rights reserved.
+// Header-only libs
 //
 
 #ifndef SHA1_HPP
