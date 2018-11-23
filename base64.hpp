@@ -1,9 +1,5 @@
 //
-//  base64.hpp
-//  WebsocketTest
-//
-//  Created by Elviss Strazdins on 22/11/2018.
-//  Copyright © 2018 Elviss Strazdins. All rights reserved.
+// Header-only libs
 //
 
 #ifndef BASE64_HPP
