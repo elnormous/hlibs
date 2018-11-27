@@ -13,7 +13,7 @@ namespace sha1
 {
     inline uint32_t rotateLeft(uint32_t value, uint32_t bits)
     {
-        return (value << bits) | ((value & 0xFFffffff) >> (32 - bits));
+        return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
     }
 
     static const uint32_t DIGEST_INTS = 5; // number of 32bit integers per SHA1 digest
