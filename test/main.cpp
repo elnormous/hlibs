@@ -21,11 +21,11 @@ int main()
 {
     try
     {
-        std::vector<uint8_t> test = {'T', 'e', 's', 't'};
+        std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
 
-        static const std::string hashTest = "640ab2bae07bedc4c163f679a746f7ab7fb5d1fa";
-        static const std::string base64Test = "ZAqyuuB77cTBY/Z5p0b3q3+10fo=";
-        static const std::string md5Test = "0cbc6611f5540bd0809a388dc95a615b";
+        static const std::string hashTest = "ca593e38a74c94d97c9e0ead291340ae6a824060";
+        static const std::string base64Test = "VGVzdCAxMiE=";
+        static const std::string md5Test = "9575b2604f8fd72edb743e95bd88b36d";
 
         std::vector<uint8_t> h = sha1::hash(test);
         std::string hstr = toString(h);
@@ -35,12 +35,17 @@ int main()
 
         std::cout << hstr << std::endl;
 
-        std::string b = base64::encode(h);
+        std::string b = base64::encode(test);
 
         if (b != base64Test)
             throw std::runtime_error("Invalid base64");
 
         std::cout << b << std::endl;
+
+        std::vector<uint8_t> b2 = base64::decode(b);
+
+        if (b2 != test)
+            throw std::runtime_error("Invalid decoded base64");
 
         std::vector<uint8_t> d = md5::digest(test);
         std::string dstr = toString(d);
