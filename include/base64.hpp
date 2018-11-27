@@ -5,6 +5,7 @@
 #ifndef BASE64_HPP
 #define BASE64_HPP
 
+#include <cstdint>
 #include <string>
 #include <vector>
 

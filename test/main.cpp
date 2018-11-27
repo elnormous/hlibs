@@ -1,5 +1,6 @@
 #include <iostream>
 #include "base64.hpp"
+#include "md5.hpp"
 #include "sha1.hpp"
 
 inline std::string toString(const std::vector<uint8_t>& v)
@@ -18,16 +19,19 @@ inline std::string toString(const std::vector<uint8_t>& v)
 
 int main()
 {
-    static const std::vector<uint8_t> hashTest = {0x64, 0x0a, 0xb2, 0xba, 0xe0, 0x7b, 0xed, 0xc4, 0xc1, 0x63, 0xf6, 0x79, 0xa7, 0x46, 0xf7, 0xab, 0x7f, 0xb5, 0xd1, 0xfa};
+    std::vector<uint8_t> test = {'T', 'e', 's', 't'};
 
-    std::vector<uint8_t> h = sha1::hash({'T', 'e', 's', 't'});
+    static const std::string hashTest = "640ab2bae07bedc4c163f679a746f7ab7fb5d1fa";
+    static const std::string base64Test = "ZAqyuuB77cTBY/Z5p0b3q3+10fo=";
+    static const std::string md5Test = "0cbc6611f5540bd0809a388dc95a615b";
 
-    if (h != hashTest)
+    std::vector<uint8_t> h = sha1::hash(test);
+    std::string hstr = toString(h);
+
+    if (hstr != hashTest)
         throw std::runtime_error("Invalid sha1");
 
-    std::cout << toString(h) << std::endl;
-
-    static const std::string base64Test = "ZAqyuuB77cTBY/Z5p0b3q3+10fo=";
+    std::cout << hstr << std::endl;
 
     std::string b = base64::encode(h);
 
@@ -35,6 +39,14 @@ int main()
         throw std::runtime_error("Invalid base64");
 
     std::cout << b << std::endl;
+
+    std::vector<uint8_t> d = md5::digest(test);
+    std::string dstr = toString(d);
+
+    if (dstr != md5Test)
+        throw std::runtime_error("Invalid md5");
+
+    std::cout << dstr << std::endl;
 
     return EXIT_SUCCESS;
 }
