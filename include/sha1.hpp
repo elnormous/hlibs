@@ -27,7 +27,7 @@ namespace sha1
             w[i] = block[i];
 
         for (int i = 16; i < 80; ++i)
-            w[i] = rotateLeft(w[i-3] ^ w[i-8] ^ w[i-14] ^ w[i-16], 1);
+            w[i] = rotateLeft(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1);
 
         uint32_t a = digest[0];
         uint32_t b = digest[1];
@@ -42,7 +42,7 @@ namespace sha1
         {
             if (0 <= i && i < 20)
             {
-                f = (b & c) | ((~b) & d);
+                f = (b & c) | (~b & d);
                 k = 0x5A827999;
             }
             else if (20 <= i && i < 40)
