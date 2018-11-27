@@ -19,34 +19,42 @@ inline std::string toString(const std::vector<uint8_t>& v)
 
 int main()
 {
-    std::vector<uint8_t> test = {'T', 'e', 's', 't'};
+    try
+    {
+        std::vector<uint8_t> test = {'T', 'e', 's', 't'};
 
-    static const std::string hashTest = "640ab2bae07bedc4c163f679a746f7ab7fb5d1fa";
-    static const std::string base64Test = "ZAqyuuB77cTBY/Z5p0b3q3+10fo=";
-    static const std::string md5Test = "0cbc6611f5540bd0809a388dc95a615b";
+        static const std::string hashTest = "640ab2bae07bedc4c163f679a746f7ab7fb5d1fa";
+        static const std::string base64Test = "ZAqyuuB77cTBY/Z5p0b3q3+10fo=";
+        static const std::string md5Test = "0cbc6611f5540bd0809a388dc95a615b";
 
-    std::vector<uint8_t> h = sha1::hash(test);
-    std::string hstr = toString(h);
+        std::vector<uint8_t> h = sha1::hash(test);
+        std::string hstr = toString(h);
 
-    if (hstr != hashTest)
-        throw std::runtime_error("Invalid sha1");
+        if (hstr != hashTest)
+            throw std::runtime_error("Invalid sha1");
 
-    std::cout << hstr << std::endl;
+        std::cout << hstr << std::endl;
 
-    std::string b = base64::encode(h);
+        std::string b = base64::encode(h);
 
-    if (b != base64Test)
-        throw std::runtime_error("Invalid base64");
+        if (b != base64Test)
+            throw std::runtime_error("Invalid base64");
 
-    std::cout << b << std::endl;
+        std::cout << b << std::endl;
 
-    std::vector<uint8_t> d = md5::digest(test);
-    std::string dstr = toString(d);
+        std::vector<uint8_t> d = md5::digest(test);
+        std::string dstr = toString(d);
 
-    if (dstr != md5Test)
-        throw std::runtime_error("Invalid md5");
+        if (dstr != md5Test)
+            throw std::runtime_error("Invalid md5");
 
-    std::cout << dstr << std::endl;
+        std::cout << dstr << std::endl;
+    }
+    catch (const std::exception& e)
+    {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
 
     return EXIT_SUCCESS;
 }
