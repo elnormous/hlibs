@@ -3,6 +3,7 @@
 #include "fnv1.hpp"
 #include "md5.hpp"
 #include "sha1.hpp"
+#include "utf8.hpp"
 
 inline std::string toString(const std::vector<uint8_t>& v)
 {
@@ -23,6 +24,7 @@ int main()
     try
     {
         std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+        std::string testString = u8"ÀÁÂÃÄÅÆ";
 
         static const std::string hashTest = "ca593e38a74c94d97c9e0ead291340ae6a824060";
         static const std::string base64Test = "VGVzdCAxMiE=";
@@ -71,6 +73,14 @@ int main()
             throw std::runtime_error("Invalid FNV1 64-bit");
 
         std::cout << std::hex << f64 << std::endl;
+
+        std::vector<uint32_t> utf32String = utf8::toUtf32(testString);
+        std::string utf8String = utf8::fromUtf32(utf32String);
+
+        if (utf8String != testString)
+            throw std::runtime_error("Invalid UTF-8");
+
+        std::cout << utf8String << std::endl;
     }
     catch (const std::exception& e)
     {
