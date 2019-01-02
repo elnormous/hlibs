@@ -90,7 +90,7 @@ int main()
         if (c8 != crc8Test)
             throw std::runtime_error("Invalid CRC8!");
 
-        std::cout << std::hex << c8 << std::endl;
+        std::cout << std::hex << static_cast<uint32_t>(c8) << std::endl;
 
         uint32_t c32 = crc32::generate(test);
 

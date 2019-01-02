@@ -169,7 +169,7 @@ namespace md5
 
     inline std::vector<uint8_t> generate(const std::vector<uint8_t>& v)
     {
-        uint32_t state[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
+        uint32_t state[4] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476};
 
         std::vector<uint8_t> m = v;
         m.push_back(0x80);
@@ -179,14 +179,14 @@ namespace md5
 
         uint64_t length = v.size() * 8;
 
-        m.push_back(length & 0xff);
-        m.push_back((length >> 8) & 0xff);
-        m.push_back((length >> 16) & 0xff);
-        m.push_back((length >> 24) & 0xff);
-        m.push_back((length >> 32) & 0xff);
-        m.push_back((length >> 40) & 0xff);
-        m.push_back((length >> 48) & 0xff);
-        m.push_back((length >> 56) & 0xff);
+        m.push_back(length & 0xFF);
+        m.push_back((length >> 8) & 0xFF);
+        m.push_back((length >> 16) & 0xFF);
+        m.push_back((length >> 24) & 0xFF);
+        m.push_back((length >> 32) & 0xFF);
+        m.push_back((length >> 40) & 0xFF);
+        m.push_back((length >> 48) & 0xFF);
+        m.push_back((length >> 56) & 0xFF);
 
         for (uint32_t i = 0; i + 63 < m.size(); i += 64)
             transform(state, &m[i]);
@@ -194,10 +194,10 @@ namespace md5
         std::vector<uint8_t> result(16);
         for (uint32_t i = 0; i < 4; ++i)
         {
-            result[i * 4] = state[i] & 0xff;
-            result[i * 4 + 1] = (state[i] >> 8) & 0xff;
-            result[i * 4 + 2] = (state[i] >> 16) & 0xff;
-            result[i * 4 + 3] = (state[i] >> 24) & 0xff;
+            result[i * 4] = state[i] & 0xFF;
+            result[i * 4 + 1] = (state[i] >> 8) & 0xFF;
+            result[i * 4 + 2] = (state[i] >> 16) & 0xFF;
+            result[i * 4 + 3] = (state[i] >> 24) & 0xFF;
         }
 
         return result;
