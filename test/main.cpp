@@ -1,5 +1,6 @@
 #include <iostream>
 #include "base64.hpp"
+#include "crc.hpp"
 #include "fnv1.hpp"
 #include "md5.hpp"
 #include "sha1.hpp"
@@ -31,6 +32,7 @@ int main()
         static const std::string md5Test = "9575b2604f8fd72edb743e95bd88b36d";
         static const uint32_t fnv132Test = 0x296a37b7;
         static const uint64_t fnv164Test = 0x98645a51cb3becf7;
+        static const uint32_t crc32Test = 0xc8a61cc1;
 
         std::vector<uint8_t> h = sha1::hash(test);
         std::string hstr = toString(h);
@@ -52,7 +54,7 @@ int main()
         if (b2 != test)
             throw std::runtime_error("Invalid decoded base64");
 
-        std::vector<uint8_t> d = md5::digest(test);
+        std::vector<uint8_t> d = md5::generate(test);
         std::string dstr = toString(d);
 
         if (dstr != md5Test)
@@ -81,6 +83,13 @@ int main()
             throw std::runtime_error("Invalid UTF-8");
 
         std::cout << utf8String << std::endl;
+
+        uint32_t c32 = crc32::generate(test);
+
+        if (c32 != crc32Test)
+            throw std::runtime_error("Invalid CRC32");
+
+        std::cout << std::hex << c32 << std::endl;
     }
     catch (const std::exception& e)
     {

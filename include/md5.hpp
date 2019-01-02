@@ -167,7 +167,7 @@ namespace md5
         state[3] += d;
     }
 
-    inline std::vector<uint8_t> digest(const std::vector<uint8_t>& v)
+    inline std::vector<uint8_t> generate(const std::vector<uint8_t>& v)
     {
         uint32_t state[4] = {0x67452301, 0xefcdab89, 0x98badcfe, 0x10325476};
 
