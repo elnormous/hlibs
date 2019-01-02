@@ -32,6 +32,7 @@ int main()
         static const std::string md5Test = "9575b2604f8fd72edb743e95bd88b36d";
         static const uint32_t fnv132Test = 0x296a37b7;
         static const uint64_t fnv164Test = 0x98645a51cb3becf7;
+        static const uint8_t crc8Test = 0x20;
         static const uint32_t crc32Test = 0xc8a61cc1;
 
         std::vector<uint8_t> h = sha1::hash(test);
@@ -83,6 +84,13 @@ int main()
             throw std::runtime_error("Invalid UTF-8");
 
         std::cout << utf8String << std::endl;
+
+        uint8_t c8 = crc8::generate(test);
+
+        if (c8 != crc8Test)
+            throw std::runtime_error("Invalid CRC8!");
+
+        std::cout << std::hex << c8 << std::endl;
 
         uint32_t c32 = crc32::generate(test);
 
