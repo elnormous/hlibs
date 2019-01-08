@@ -24,16 +24,16 @@ int main()
 {
     try
     {
-        std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
-        std::string testString = u8"ÀÁÂÃÄÅÆ";
+        static const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+        static const std::string testString = u8"ÀÁÂÃÄÅÆ";
 
         static const std::string hashTest = "ca593e38a74c94d97c9e0ead291340ae6a824060";
         static const std::string base64Test = "VGVzdCAxMiE=";
         static const std::string md5Test = "9575b2604f8fd72edb743e95bd88b36d";
-        static const uint32_t fnv132Test = 0x296a37b7;
-        static const uint64_t fnv164Test = 0x98645a51cb3becf7;
-        static const uint8_t crc8Test = 0x20;
-        static const uint32_t crc32Test = 0xc8a61cc1;
+        static constexpr uint32_t fnv132Test = 0x296a37b7;
+        static constexpr uint64_t fnv164Test = 0x98645a51cb3becf7;
+        static constexpr uint8_t crc8Test = 0x20;
+        static constexpr uint32_t crc32Test = 0xc8a61cc1;
 
         std::vector<uint8_t> h = sha1::hash(test);
         std::string hstr = toString(h);
