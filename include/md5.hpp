@@ -91,7 +91,10 @@ namespace md5
         uint32_t x[16];
 
         for (uint32_t i = 0; i < 16; ++i)
-            x[i] = block[i * 4] | (block[i * 4 + 1] << 8) | (block[i * 4 + 2] << 16) | (block[i * 4 + 3] << 24);
+            x[i] = static_cast<uint32_t>(block[i * 4] |
+                                         (block[i * 4 + 1] << 8) |
+                                         (block[i * 4 + 2] << 16) |
+                                         (block[i * 4 + 3] << 24));
 
         FF(a, b, c, d, x[0], S11, 0xD76AA478);
         FF(d, a, b, c, x[1], S12, 0xE8C7B756);
