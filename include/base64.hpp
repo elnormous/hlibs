@@ -44,7 +44,7 @@ namespace base64
         uint8_t charArray4[4];
         const uint8_t* bytesToEncode = bytes.data();
 
-        for (int l = 0; l < bytes.size(); ++l)
+        for (uint32_t l = 0; l < bytes.size(); ++l)
         {
             charArray3[i++] = *(bytesToEncode++);
             if (i == 3)
