@@ -35,7 +35,7 @@ namespace crc8
 		0xFA, 0xFD, 0xF4, 0xF3
 	};
     
-	uint8_t generate(const std::vector<uint8_t>& data)
+	inline uint8_t generate(const std::vector<uint8_t>& data)
 	{
 		uint8_t result = 0x00;
 		for (uint8_t b : data)
