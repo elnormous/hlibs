@@ -5,6 +5,7 @@
 #include "md5.hpp"
 #include "sha1.hpp"
 #include "utf8.hpp"
+#include "uuid.hpp"
 
 inline std::string toString(const std::vector<uint8_t>& v)
 {
@@ -98,6 +99,15 @@ int main()
             throw std::runtime_error("Invalid CRC32");
 
         std::cout << std::hex << c32 << std::endl;
+
+        std::string g = uuid::generateString();
+        if (g[14] != '4')
+            throw std::runtime_error("Wrong UUID version");
+
+        if ((g[24] & 0x40) != 0x40)
+            throw std::runtime_error("Wrong UUID variant");
+
+        std::cout << g << std::endl;
     }
     catch (const std::exception& e)
     {
