@@ -44,7 +44,7 @@ namespace uuid
 
         uint16_t clockSequence = static_cast<uint16_t>(mt() & 0x3FFF); // 14-bit random
 
-        result.clockSeqHiAndReserved = static_cast<uint8_t>(0x40 | // bit 6 and 7
+        result.clockSeqHiAndReserved = static_cast<uint8_t>(0x80 | // bit 6 and 7
                                                             ((clockSequence >> 8) & 0x3F));
         result.clockSeqLow = static_cast<uint8_t>(clockSequence & 0xFF);
 
