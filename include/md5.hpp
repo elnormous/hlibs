@@ -170,17 +170,17 @@ namespace md5
         state[3] += d;
     }
 
-    inline std::vector<uint8_t> generate(const std::vector<uint8_t>& v)
+    template <class I>
+    inline std::vector<uint8_t> generate(I begin, I end)
     {
         uint32_t state[4] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476};
 
-        std::vector<uint8_t> m = v;
+        std::vector<uint8_t> m(begin, end);
+        size_t length = m.size() * 8;
         m.push_back(0x80);
 
         while (m.size() % 64 != 56)
             m.push_back(0x00);
-
-        uint64_t length = v.size() * 8;
 
         m.push_back(length & 0xFF);
         m.push_back((length >> 8) & 0xFF);

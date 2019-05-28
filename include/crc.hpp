@@ -34,12 +34,13 @@ namespace crc8
 		0xDE, 0xD9, 0xD0, 0xD7, 0xC2, 0xC5, 0xCC, 0xCB, 0xE6, 0xE1, 0xE8, 0xEF,
 		0xFA, 0xFD, 0xF4, 0xF3
 	};
-    
-	inline uint8_t generate(const std::vector<uint8_t>& data)
+
+    template <class I>
+	inline uint8_t generate(I begin, I end)
 	{
 		uint8_t result = 0x00;
-		for (uint8_t b : data)
-			result = CRC_TABLE[result ^ b];
+        for (I i = begin; i != end; ++i)
+			result = CRC_TABLE[result ^ *i];
 
 		return result;
 	}
@@ -101,13 +102,13 @@ namespace crc32
 		while (0 != ++b);
 	}*/
 
-    inline uint32_t generate(const std::vector<uint8_t>& data)
+    template <class I>
+    inline uint32_t generate(I begin, I end)
     {
         uint32_t result = 0xFFFFFFFF;
-
-        for (uint8_t b : data)
+        for (I i = begin; i != end; ++i)
         {
-        	uint8_t index = (result ^ b) & 0xFF;
+        	uint8_t index = (result ^ *i) & 0xFF;
         	result = (result >> 8) ^ CRC_TABLE[index];
         }
 
