@@ -10,22 +10,22 @@
 
 namespace md5
 {
-    static const uint8_t S11 = 7;
-    static const uint8_t S12 = 12;
-    static const uint8_t S13 = 17;
-    static const uint8_t S14 = 22;
-    static const uint8_t S21 = 5;
-    static const uint8_t S22 = 9;
-    static const uint8_t S23 = 14;
-    static const uint8_t S24 = 20;
-    static const uint8_t S31 = 4;
-    static const uint8_t S32 = 11;
-    static const uint8_t S33 = 16;
-    static const uint8_t S34 = 23;
-    static const uint8_t S41 = 6;
-    static const uint8_t S42 = 10;
-    static const uint8_t S43 = 15;
-    static const uint8_t S44 = 21;
+    static constexpr uint8_t S11 = 7;
+    static constexpr uint8_t S12 = 12;
+    static constexpr uint8_t S13 = 17;
+    static constexpr uint8_t S14 = 22;
+    static constexpr uint8_t S21 = 5;
+    static constexpr uint8_t S22 = 9;
+    static constexpr uint8_t S23 = 14;
+    static constexpr uint8_t S24 = 20;
+    static constexpr uint8_t S31 = 4;
+    static constexpr uint8_t S32 = 11;
+    static constexpr uint8_t S33 = 16;
+    static constexpr uint8_t S34 = 23;
+    static constexpr uint8_t S41 = 6;
+    static constexpr uint8_t S42 = 10;
+    static constexpr uint8_t S43 = 15;
+    static constexpr uint8_t S44 = 21;
 
     constexpr uint32_t rotateLeft(uint32_t value, uint32_t bits)
     {

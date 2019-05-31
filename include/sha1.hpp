@@ -17,9 +17,9 @@ namespace sha1
         return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
     }
 
-    static const uint32_t DIGEST_INTS = 5; // number of 32bit integers per SHA1 digest
-    static const uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA1 block
-    static const uint32_t BLOCK_BYTES = BLOCK_INTS * 4;
+    static constexpr uint32_t DIGEST_INTS = 5; // number of 32bit integers per SHA1 digest
+    static constexpr uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA1 block
+    static constexpr uint32_t BLOCK_BYTES = BLOCK_INTS * 4;
 
     inline void transform(uint32_t block[BLOCK_BYTES], uint32_t digest[DIGEST_INTS])
     {
