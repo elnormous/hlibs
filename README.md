@@ -7,7 +7,13 @@ Currently the following algorithms are supported:
 * FNV1
 * MD5
 * SHA1
+* UUID v4
 * UTF-8/UTF-32
 
 ## Usage
+
 Just copy the header files into your project.
+
+## License
+
+Please refer to the LICENSE file for detailed information.

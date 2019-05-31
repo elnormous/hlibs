@@ -19,7 +19,7 @@ namespace base64
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
     };
 
-    static inline bool isBase64(char c)
+    constexpr bool isBase64(char c)
     {
         return ((c >= 'A' && c <= 'Z') ||
                 (c >= 'a' && c <= 'z') ||
@@ -27,49 +27,48 @@ namespace base64
                 (c == '+') || (c == '/'));
     }
 
-    static inline uint8_t charIndex(uint8_t c)
+    constexpr uint8_t getIndex(uint8_t c)
     {
-        for (uint8_t i = 0; i < sizeof(CHARS); ++i)
-            if (CHARS[i] == c) return i;
-
-        throw std::runtime_error("Invalid character");
+        return (c >= 'A' && c <= 'Z') ? c - 'A' :
+            (c >= 'a' && c <= 'z') ? 26 + (c - 'a') :
+            (c >= '0' && c <= '9') ? 52 + (c - '0') :
+            (c == '+') ? 62 : (c == '/') ? 63 : 0;
     }
 
-    inline std::string encode(const std::vector<uint8_t>& bytes)
+    template <class I>
+    inline std::string encode(I begin, I end)
     {
         std::string result;
-        int i = 0;
-        int j = 0;
+        size_t c = 0;
         uint8_t charArray3[3];
         uint8_t charArray4[4];
-        const uint8_t* bytesToEncode = bytes.data();
 
-        for (uint32_t l = 0; l < bytes.size(); ++l)
+        for (I i = begin; i != end; ++i)
         {
-            charArray3[i++] = *(bytesToEncode++);
-            if (i == 3)
+            charArray3[c++] = *i;
+            if (c == 3)
             {
                 charArray4[0] = static_cast<uint8_t>((charArray3[0] & 0xFC) >> 2);
                 charArray4[1] = static_cast<uint8_t>(((charArray3[0] & 0x03) << 4) + ((charArray3[1] & 0xF0) >> 4));
                 charArray4[2] = static_cast<uint8_t>(((charArray3[1] & 0x0F) << 2) + ((charArray3[2] & 0xC0) >> 6));
                 charArray4[3] = static_cast<uint8_t>(charArray3[2] & 0x3f);
 
-                for (i = 0; (i < 4) ; i++) result += CHARS[charArray4[i]];
-                i = 0;
+                for (c = 0; (c < 4) ; c++) result += CHARS[charArray4[c]];
+                c = 0;
             }
         }
 
-        if (i)
+        if (c)
         {
-            for (j = i; j < 3; j++) charArray3[j] = '\0';
+            for (size_t j = c; j < 3; j++) charArray3[j] = '\0';
 
             charArray4[0] = static_cast<uint8_t>((charArray3[0] & 0xFC) >> 2);
             charArray4[1] = static_cast<uint8_t>(((charArray3[0] & 0x03) << 4) + ((charArray3[1] & 0xF0) >> 4));
             charArray4[2] = static_cast<uint8_t>(((charArray3[1] & 0x0F) << 2) + ((charArray3[2] & 0xC0) >> 6));
 
-            for (j = 0; (j < i + 1); j++) result += CHARS[charArray4[j]];
+            for (size_t j = 0; (j < c + 1); j++) result += CHARS[charArray4[j]];
 
-            while (i++ < 3) result += '=';
+            while (c++ < 3) result += '=';
 
         }
 
@@ -89,7 +88,7 @@ namespace base64
             charArray4[i++] = static_cast<uint8_t>(encodedString[in]); in++;
             if (i == 4)
             {
-                for (i = 0; i < 4; i++) charArray4[i] = charIndex(charArray4[i]);
+                for (i = 0; i < 4; i++) charArray4[i] = getIndex(charArray4[i]);
 
                 charArray3[0] = static_cast<uint8_t>((charArray4[0] << 2) + ((charArray4[1] & 0x30) >> 4));
                 charArray3[1] = static_cast<uint8_t>(((charArray4[1] & 0x0F) << 4) + ((charArray4[2] & 0x3C) >> 2));
@@ -102,7 +101,7 @@ namespace base64
 
         if (i)
         {
-            for (uint32_t j = 0; j < i; j++) charArray4[j] = charIndex(charArray4[j]);
+            for (uint32_t j = 0; j < i; j++) charArray4[j] = getIndex(charArray4[j]);
 
             charArray3[0] = static_cast<uint8_t>((charArray4[0] << 2) + ((charArray4[1] & 0x30) >> 4));
             charArray3[1] = static_cast<uint8_t>(((charArray4[1] & 0x0F) << 4) + ((charArray4[2] & 0x3C) >> 2));

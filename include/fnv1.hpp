@@ -15,22 +15,24 @@ namespace fnv1
     static const uint64_t FNV_PRIME64 = 1099511628211u;
     static const uint64_t OFFSET_BASIS64 = 14695981039346656037u;
 
-    inline uint32_t hash32(const std::vector<uint8_t>& data, uint32_t result = OFFSET_BASIS32)
+    template <class I>
+    inline uint32_t hash32(I begin, I end, uint32_t result = OFFSET_BASIS32)
     {
-        for (uint8_t b : data)
+        for (I i = begin; i != end; ++i)
         {
             result *= FNV_PRIME32;
-            result ^= b;
+            result ^= *i;
         }
         return result;
     }
 
-    inline uint64_t hash64(const std::vector<uint8_t>& data, uint64_t result = OFFSET_BASIS64)
+    template <class I>
+    inline uint64_t hash64(I begin, I end, uint64_t result = OFFSET_BASIS64)
     {
-        for (uint8_t b : data)
+        for (I i = begin; i != end; ++i)
         {
             result *= FNV_PRIME64;
-            result ^= b;
+            result ^= *i;
         }
         return result;
     }
