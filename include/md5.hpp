@@ -27,28 +27,28 @@ namespace md5
     static const uint8_t S43 = 15;
     static const uint8_t S44 = 21;
 
-    inline uint32_t rotateLeft(uint32_t value, uint32_t bits)
+    constexpr uint32_t rotateLeft(uint32_t value, uint32_t bits)
     {
         return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
     }
 
     // F, G, H and I are basic MD5 functions
-    inline uint32_t F(uint32_t x, uint32_t y, uint32_t z)
+    constexpr uint32_t F(uint32_t x, uint32_t y, uint32_t z)
     {
         return (x & y) | (~x & z);
     }
 
-    inline uint32_t G(uint32_t x, uint32_t y, uint32_t z)
+    constexpr uint32_t G(uint32_t x, uint32_t y, uint32_t z)
     {
         return (x & z) | (y & ~z);
     }
 
-    inline uint32_t H(uint32_t x, uint32_t y, uint32_t z)
+    constexpr uint32_t H(uint32_t x, uint32_t y, uint32_t z)
     {
         return x ^ y ^ z;
     }
 
-    inline uint32_t I(uint32_t x, uint32_t y, uint32_t z)
+    constexpr uint32_t I(uint32_t x, uint32_t y, uint32_t z)
     {
         return y ^ (x | ~z);
     }

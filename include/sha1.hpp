@@ -12,7 +12,7 @@
 
 namespace sha1
 {
-    inline uint32_t rotateLeft(uint32_t value, uint32_t bits)
+    constexpr uint32_t rotateLeft(uint32_t value, uint32_t bits)
     {
         return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
     }
