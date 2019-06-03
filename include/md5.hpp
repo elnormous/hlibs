@@ -170,8 +170,8 @@ namespace md5
         state[3] += d;
     }
 
-    template <class I>
-    inline std::vector<uint8_t> generate(I begin, I end)
+    template <class Iterator>
+    inline std::vector<uint8_t> generate(Iterator begin, Iterator end)
     {
         uint32_t state[4] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476};
 

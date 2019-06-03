@@ -35,11 +35,11 @@ namespace crc8
 		0xFA, 0xFD, 0xF4, 0xF3
 	};
 
-    template <class I>
-	inline uint8_t generate(I begin, I end)
+    template <class Iterator>
+	inline uint8_t generate(Iterator begin, Iterator end)
 	{
 		uint8_t result = 0x00;
-        for (I i = begin; i != end; ++i)
+        for (Iterator i = begin; i != end; ++i)
 			result = CRC_TABLE[result ^ *i];
 
 		return result;
@@ -102,11 +102,11 @@ namespace crc32
 		while (0 != ++b);
 	}*/
 
-    template <class I>
-    inline uint32_t generate(I begin, I end)
+    template <class Iterator>
+    inline uint32_t generate(Iterator begin, Iterator end)
     {
         uint32_t result = 0xFFFFFFFF;
-        for (I i = begin; i != end; ++i)
+        for (Iterator i = begin; i != end; ++i)
         {
         	uint8_t index = (result ^ *i) & 0xFF;
         	result = (result >> 8) ^ CRC_TABLE[index];

@@ -35,15 +35,15 @@ namespace base64
             (c == '+') ? 62 : (c == '/') ? 63 : 0;
     }
 
-    template <class I>
-    inline std::string encode(I begin, I end)
+    template <class Iterator>
+    inline std::string encode(Iterator begin, Iterator end)
     {
         std::string result;
         size_t c = 0;
         uint8_t charArray3[3];
         uint8_t charArray4[4];
 
-        for (I i = begin; i != end; ++i)
+        for (Iterator i = begin; i != end; ++i)
         {
             charArray3[c++] = *i;
             if (c == 3)

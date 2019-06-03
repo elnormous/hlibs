@@ -77,13 +77,13 @@ namespace sha1
         digest[4] += e;
     }
 
-    template <class I>
-    inline std::vector<uint8_t> hash(I begin, I end)
+    template <class Iterator>
+    inline std::vector<uint8_t> hash(Iterator begin, Iterator end)
     {
         uint32_t digest[DIGEST_INTS] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
         std::vector<uint8_t> buffer;
         uint32_t block[BLOCK_INTS];
-        I i;
+        Iterator i;
         for (i = begin; std::distance(i, end) >= BLOCK_BYTES; i += BLOCK_BYTES)
         {
             buffer.assign(i, i + BLOCK_BYTES);
