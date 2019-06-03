@@ -60,7 +60,7 @@ int main()
 
         std::cout << b << std::endl;
 
-        std::vector<uint8_t> b2 = base64::decode(b);
+        std::vector<uint8_t> b2 = base64::decode(b.begin(), b.end());
 
         if (b2 != test)
             throw std::runtime_error("Invalid decoded base64");

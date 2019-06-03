@@ -73,38 +73,38 @@ namespace base64
         return result;
     }
 
-    inline std::vector<uint8_t> decode(const std::string& encodedString)
+    template <class Iterator>
+    inline std::vector<uint8_t> decode(Iterator begin, Iterator end)
     {
-        uint32_t i = 0;
-        uint32_t in = 0;
+        uint32_t c = 0;
         uint8_t charArray3[3];
         uint8_t charArray4[4];
         std::vector<uint8_t> result;
 
-        for (uint32_t l = 0; l < encodedString.size() && encodedString[in] != '='; ++l)
+        for (Iterator i = begin; i != end && *i != '='; ++i)
         {
-            charArray4[i++] = static_cast<uint8_t>(encodedString[in]); in++;
-            if (i == 4)
+            charArray4[c++] = static_cast<uint8_t>(*i);
+            if (c == 4)
             {
-                for (i = 0; i < 4; i++) charArray4[i] = getIndex(charArray4[i]);
+                for (c = 0; c < 4; c++) charArray4[c] = getIndex(charArray4[c]);
 
                 charArray3[0] = static_cast<uint8_t>((charArray4[0] << 2) + ((charArray4[1] & 0x30) >> 4));
                 charArray3[1] = static_cast<uint8_t>(((charArray4[1] & 0x0F) << 4) + ((charArray4[2] & 0x3C) >> 2));
                 charArray3[2] = static_cast<uint8_t>(((charArray4[2] & 0x3) << 6) + charArray4[3]);
 
-                for (i = 0; i < 3; i++) result.push_back(charArray3[i]);
-                i = 0;
+                for (c = 0; c < 3; c++) result.push_back(charArray3[c]);
+                c = 0;
             }
         }
 
-        if (i)
+        if (c)
         {
-            for (uint32_t j = 0; j < i; j++) charArray4[j] = getIndex(charArray4[j]);
+            for (uint32_t j = 0; j < c; j++) charArray4[j] = getIndex(charArray4[j]);
 
             charArray3[0] = static_cast<uint8_t>((charArray4[0] << 2) + ((charArray4[1] & 0x30) >> 4));
             charArray3[1] = static_cast<uint8_t>(((charArray4[1] & 0x0F) << 4) + ((charArray4[2] & 0x3C) >> 2));
 
-            for (uint32_t j = 0; j < i - 1; j++) result.push_back(charArray3[j]);
+            for (uint32_t j = 0; j < c - 1; j++) result.push_back(charArray3[j]);
         }
 
         return result;
