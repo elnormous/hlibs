@@ -86,25 +86,25 @@ namespace base64
             charArray4[c++] = static_cast<uint8_t>(*i);
             if (c == 4)
             {
-                for (c = 0; c < 4; c++) charArray4[c] = getIndex(charArray4[c]);
+                for (c = 0; c < 4; ++c) charArray4[c] = getIndex(charArray4[c]);
 
                 charArray3[0] = static_cast<uint8_t>((charArray4[0] << 2) + ((charArray4[1] & 0x30) >> 4));
                 charArray3[1] = static_cast<uint8_t>(((charArray4[1] & 0x0F) << 4) + ((charArray4[2] & 0x3C) >> 2));
                 charArray3[2] = static_cast<uint8_t>(((charArray4[2] & 0x3) << 6) + charArray4[3]);
 
-                for (c = 0; c < 3; c++) result.push_back(charArray3[c]);
+                for (c = 0; c < 3; ++c) result.push_back(charArray3[c]);
                 c = 0;
             }
         }
 
         if (c)
         {
-            for (uint32_t j = 0; j < c; j++) charArray4[j] = getIndex(charArray4[j]);
+            for (uint32_t j = 0; j < c; ++j) charArray4[j] = getIndex(charArray4[j]);
 
             charArray3[0] = static_cast<uint8_t>((charArray4[0] << 2) + ((charArray4[1] & 0x30) >> 4));
             charArray3[1] = static_cast<uint8_t>(((charArray4[1] & 0x0F) << 4) + ((charArray4[2] & 0x3C) >> 2));
 
-            for (uint32_t j = 0; j < c - 1; j++) result.push_back(charArray3[j]);
+            for (uint32_t j = 0; j < c - 1; ++j) result.push_back(charArray3[j]);
         }
 
         return result;
