@@ -28,7 +28,7 @@ namespace uuid
 
         Uuid result;
 
-        uint64_t randomTime = mt();
+        const uint64_t randomTime = mt();
 
         result.timeLow = ((randomTime >> 24) & 0x000000FF) |
             ((randomTime >> 8) & 0x0000FF00) |
@@ -48,7 +48,7 @@ namespace uuid
                                                             ((clockSequence >> 8) & 0x3F));
         result.clockSeqLow = static_cast<uint8_t>(clockSequence & 0xFF);
 
-        uint64_t random = mt();
+        const uint64_t random = mt();
 
         result.node[0] = (random >> 48) & 0xFF;
         result.node[1] = (random >> 40) & 0xFF;
@@ -64,7 +64,7 @@ namespace uuid
     {
         static const char* digits = "0123456789abcdef";
 
-        Uuid u = generate();
+        const Uuid u = generate();
 
         std::string result = {
             digits[(u.timeLow >> 28) & 0x0F],

@@ -7,7 +7,7 @@
 #include "utf8.hpp"
 #include "uuid.hpp"
 
-inline std::string toString(const std::vector<uint8_t>& v)
+static inline std::string toString(const std::vector<uint8_t>& v)
 {
     static const char* digits = "0123456789abcdef";
 
@@ -21,14 +21,12 @@ inline std::string toString(const std::vector<uint8_t>& v)
     return result;
 }
 
-inline uint8_t hexToDec(char hex)
+static constexpr uint8_t hexToDec(char hex)
 {
-    if (hex >= '0' && hex <= '9') return static_cast<uint8_t>(hex - '0');
-    else if (hex >= 'a' && hex <='f') return static_cast<uint8_t>(hex - 'a' + 10);
-    else if (hex >= 'A' && hex <='F') return static_cast<uint8_t>(hex - 'A' + 10);
-    else throw std::runtime_error("Invalid hex character");
+    return (hex >= '0' && hex <= '9') ? static_cast<uint8_t>(hex - '0') :
+        (hex >= 'a' && hex <='f') ? static_cast<uint8_t>(hex - 'a' + 10) :
+        (hex >= 'A' && hex <='F') ? static_cast<uint8_t>(hex - 'A' + 10) : 0;
 }
-
 
 int main()
 {

@@ -62,7 +62,7 @@ namespace sha1
                 k = 0xCA62C1D6;
             }
 
-            uint32_t temp = rotateLeft(a, 5) + f + e + k + w[i];
+            const uint32_t temp = rotateLeft(a, 5) + f + e + k + w[i];
             e = d;
             d = c;
             c = rotateLeft(b, 30);
@@ -99,7 +99,7 @@ namespace sha1
 
         buffer.assign(i, end);
         buffer.push_back(0x80);
-        auto origSize = buffer.size();
+        const auto origSize = buffer.size();
         while (buffer.size() < BLOCK_BYTES)
             buffer.push_back(0x00);
 
@@ -116,7 +116,7 @@ namespace sha1
                 block[n] = 0;
         }
 
-        uint64_t totalBits = static_cast<uint64_t>(abs(std::distance(begin, end))) * 8;
+        const uint64_t totalBits = static_cast<uint64_t>(abs(std::distance(begin, end))) * 8;
         block[BLOCK_INTS - 1] = totalBits & 0xFFFFFFFF;
         block[BLOCK_INTS - 2] = (totalBits >> 32) & 0xFFFFFFFF;
         transform(block, digest);

@@ -108,7 +108,7 @@ namespace crc32
         uint32_t result = 0xFFFFFFFF;
         for (Iterator i = begin; i != end; ++i)
         {
-        	uint8_t index = (result ^ *i) & 0xFF;
+        	const uint8_t index = (result ^ *i) & 0xFF;
         	result = (result >> 8) ^ CRC_TABLE[index];
         }
 
