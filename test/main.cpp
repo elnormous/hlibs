@@ -32,16 +32,16 @@ int main()
 {
     try
     {
-        static const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
-        static const std::string testString = u8"ÀÁÂÃÄÅÆ";
+        const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+        const std::string testString = u8"ÀÁÂÃÄÅÆ";
 
-        static const std::string hashTest = "ca593e38a74c94d97c9e0ead291340ae6a824060";
-        static const std::string base64Test = "VGVzdCAxMiE=";
-        static const std::string md5Test = "9575b2604f8fd72edb743e95bd88b36d";
-        static constexpr uint32_t fnv132Test = 0x296a37b7;
-        static constexpr uint64_t fnv164Test = 0x98645a51cb3becf7;
-        static constexpr uint8_t crc8Test = 0x20;
-        static constexpr uint32_t crc32Test = 0xc8a61cc1;
+        const std::string hashTest = "ca593e38a74c94d97c9e0ead291340ae6a824060";
+        const std::string base64Test = "VGVzdCAxMiE=";
+        const std::string md5Test = "9575b2604f8fd72edb743e95bd88b36d";
+        constexpr uint32_t fnv132Test = 0x296a37b7;
+        constexpr uint64_t fnv164Test = 0x98645a51cb3becf7;
+        constexpr uint8_t crc8Test = 0x20;
+        constexpr uint32_t crc32Test = 0xc8a61cc1;
 
         std::vector<uint8_t> h = sha1::hash(test.begin(), test.end());
         std::string hstr = toString(h);

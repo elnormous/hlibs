@@ -1,2 +1,4 @@
 test/test.xcodeproj/project.xcworkspace
 test/test.xcodeproj/xcuserdata
+.DS_Store
+*.o
