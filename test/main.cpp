@@ -25,7 +25,8 @@ static constexpr uint8_t hexToDec(char hex)
 {
     return (hex >= '0' && hex <= '9') ? static_cast<uint8_t>(hex - '0') :
         (hex >= 'a' && hex <='f') ? static_cast<uint8_t>(hex - 'a' + 10) :
-        (hex >= 'A' && hex <='F') ? static_cast<uint8_t>(hex - 'A' + 10) : 0;
+        (hex >= 'A' && hex <='F') ? static_cast<uint8_t>(hex - 'A' + 10) :
+        throw std::out_of_range("Invalid hex digit");
 }
 
 int main()
