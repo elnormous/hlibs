@@ -21,7 +21,7 @@ static inline std::string toString(const std::vector<uint8_t>& v)
     return result;
 }
 
-constexpr uint8_t hexToDec(char hex)
+constexpr uint8_t hexToInt(char hex)
 {
     return (hex >= '0' && hex <= '9') ? static_cast<uint8_t>(hex - '0') :
         (hex >= 'a' && hex <='f') ? static_cast<uint8_t>(hex - 'a' + 10) :
@@ -112,7 +112,7 @@ int main()
         if (g[14] != '4')
             throw std::runtime_error("Wrong UUID version");
 
-        if ((hexToDec(g[19]) & 0x0C) != 0x8)
+        if ((hexToInt(g[19]) & 0x0C) != 0x8)
             throw std::runtime_error("Wrong UUID variant");
 
         std::cout << g << std::endl;
