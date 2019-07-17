@@ -27,57 +27,57 @@ namespace md5
     static constexpr uint8_t S43 = 15;
     static constexpr uint8_t S44 = 21;
 
-    constexpr uint32_t rotateLeft(uint32_t value, uint32_t bits)
+    constexpr uint32_t rotateLeft(uint32_t value, uint32_t bits) noexcept
     {
         return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
     }
 
     // F, G, H and I are basic MD5 functions
-    constexpr uint32_t f(uint32_t x, uint32_t y, uint32_t z)
+    constexpr uint32_t f(uint32_t x, uint32_t y, uint32_t z) noexcept
     {
         return (x & y) | (~x & z);
     }
 
-    constexpr uint32_t g(uint32_t x, uint32_t y, uint32_t z)
+    constexpr uint32_t g(uint32_t x, uint32_t y, uint32_t z) noexcept
     {
         return (x & z) | (y & ~z);
     }
 
-    constexpr uint32_t h(uint32_t x, uint32_t y, uint32_t z)
+    constexpr uint32_t h(uint32_t x, uint32_t y, uint32_t z) noexcept
     {
         return x ^ y ^ z;
     }
 
-    constexpr uint32_t i(uint32_t x, uint32_t y, uint32_t z)
+    constexpr uint32_t i(uint32_t x, uint32_t y, uint32_t z) noexcept
     {
         return y ^ (x | ~z);
     }
 
     constexpr uint32_t ff(uint32_t a, uint32_t b, uint32_t c, uint32_t d,
-                          uint32_t x, uint32_t s, uint32_t ac)
+                          uint32_t x, uint32_t s, uint32_t ac) noexcept
     {
         return rotateLeft(a + f(b, c, d) + x + ac, s) + b;
     }
 
     constexpr uint32_t gg(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
-                          uint32_t x, uint32_t s, uint32_t ac)
+                          uint32_t x, uint32_t s, uint32_t ac) noexcept
     {
         return rotateLeft(a + g(b, c, d) + x + ac, s) + b;
     }
 
     constexpr uint32_t hh(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
-                          uint32_t x, uint32_t s, uint32_t ac)
+                          uint32_t x, uint32_t s, uint32_t ac) noexcept
     {
         return rotateLeft(a + h(b, c, d) + x + ac, s) + b;
     }
 
     constexpr uint32_t ii(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
-                          uint32_t x, uint32_t s, uint32_t ac)
+                          uint32_t x, uint32_t s, uint32_t ac) noexcept
     {
         return rotateLeft(a + i(b, c, d) + x + ac, s) + b;
     }
 
-    inline void transform(uint32_t state[4], const uint8_t block[64])
+    inline void transform(uint32_t state[4], const uint8_t block[64]) noexcept
     {
         uint32_t a = state[0], b = state[1], c = state[2], d = state[3];
         uint32_t x[16];

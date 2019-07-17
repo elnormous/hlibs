@@ -16,7 +16,7 @@ namespace fnv1
     static constexpr uint64_t OFFSET_BASIS64 = 14695981039346656037u;
 
     template <class Iterator>
-    inline uint32_t hash32(Iterator begin, Iterator end, uint32_t result = OFFSET_BASIS32)
+    inline uint32_t hash32(Iterator begin, Iterator end, uint32_t result = OFFSET_BASIS32) noexcept
     {
         for (Iterator i = begin; i != end; ++i)
         {
@@ -27,7 +27,7 @@ namespace fnv1
     }
 
     template <class Iterator>
-    inline uint64_t hash64(Iterator begin, Iterator end, uint64_t result = OFFSET_BASIS64)
+    inline uint64_t hash64(Iterator begin, Iterator end, uint64_t result = OFFSET_BASIS64) noexcept
     {
         for (Iterator i = begin; i != end; ++i)
         {
