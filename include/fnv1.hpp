@@ -16,25 +16,15 @@ namespace fnv1
     static constexpr uint64_t OFFSET_BASIS64 = 14695981039346656037u;
 
     template <class Iterator>
-    inline uint32_t hash32(Iterator begin, Iterator end, uint32_t result = OFFSET_BASIS32) noexcept
+    constexpr uint32_t hash32(Iterator i, Iterator end, uint32_t result = OFFSET_BASIS32) noexcept
     {
-        for (Iterator i = begin; i != end; ++i)
-        {
-            result *= FNV_PRIME32;
-            result ^= *i;
-        }
-        return result;
+        return (i != end) ? hash32(i + 1, end, (result * FNV_PRIME32) ^ *i) : result;
     }
 
     template <class Iterator>
-    inline uint64_t hash64(Iterator begin, Iterator end, uint64_t result = OFFSET_BASIS64) noexcept
+    constexpr uint64_t hash64(Iterator i, Iterator end, uint64_t result = OFFSET_BASIS64) noexcept
     {
-        for (Iterator i = begin; i != end; ++i)
-        {
-            result *= FNV_PRIME64;
-            result ^= *i;
-        }
-        return result;
+        return (i != end) ? hash64(i + 1, end, (result * FNV_PRIME64) ^ *i) : result;
     }
 }
 
