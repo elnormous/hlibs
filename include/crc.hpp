@@ -36,13 +36,9 @@ namespace crc8
 	};
 
     template <class Iterator>
-	inline uint8_t generate(Iterator begin, Iterator end) noexcept
+	constexpr uint8_t generate(Iterator i, Iterator end, uint8_t result = 0x00) noexcept
 	{
-		uint8_t result = 0x00;
-        for (Iterator i = begin; i != end; ++i)
-			result = CRC_TABLE[result ^ *i];
-
-		return result;
+        return (i != end) ? generate(i + 1, end, CRC_TABLE[result ^ *i]) : result;
 	}
 }
 
