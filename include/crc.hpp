@@ -99,18 +99,15 @@ namespace crc32
 	}*/
 
     template <class Iterator>
-    inline uint32_t generate(Iterator begin, Iterator end) noexcept
+    constexpr uint32_t generateWithoutInvert(Iterator i, Iterator end, uint32_t result = 0xFFFFFFFF) noexcept
     {
-        uint32_t result = 0xFFFFFFFF;
-        for (Iterator i = begin; i != end; ++i)
-        {
-        	const uint8_t index = (result ^ *i) & 0xFF;
-        	result = (result >> 8) ^ CRC_TABLE[index];
-        }
+        return (i != end) ? generateWithoutInvert(i + 1, end, (result >> 8) ^ CRC_TABLE[(result ^ *i) & 0xFF]) : result;
+    }
 
-		result ^= 0xFFFFFFFF;
-
-        return result;
+    template <class Iterator>
+    constexpr uint32_t generate(Iterator begin, Iterator end, uint32_t result = 0xFFFFFFFF) noexcept
+    {
+        return generateWithoutInvert(begin, end, result) ^ 0xFFFFFFFF;
     }
 }
 
