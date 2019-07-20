@@ -50,14 +50,14 @@ int main()
         if (hstr != hashTest)
             throw std::runtime_error("Invalid sha1");
 
-        std::cout << hstr << std::endl;
+        std::cout << "SHA1: " << hstr << std::endl;
 
         std::string b = base64::encode(test.begin(), test.end());
 
         if (b != base64Test)
             throw std::runtime_error("Invalid base64");
 
-        std::cout << b << std::endl;
+        std::cout << "Base64: " << b << std::endl;
 
         std::vector<uint8_t> b2 = base64::decode(b.begin(), b.end());
 
@@ -70,21 +70,21 @@ int main()
         if (dstr != md5Test)
             throw std::runtime_error("Invalid md5");
 
-        std::cout << dstr << std::endl;
+        std::cout << "MD5: " << dstr << std::endl;
 
         uint32_t f32 = fnv1::hash32(test.begin(), test.end());
 
         if (f32 != fnv132Test)
             throw std::runtime_error("Invalid FNV1 32-bit");
 
-        std::cout << std::hex << f32 << std::endl;
+        std::cout << "FNV32: " << std::hex << f32 << std::endl;
 
         uint64_t f64 = fnv1::hash64(test.begin(), test.end());
 
         if (f64 != fnv164Test)
             throw std::runtime_error("Invalid FNV1 64-bit");
 
-        std::cout << std::hex << f64 << std::endl;
+        std::cout << "FNV64: " << std::hex << f64 << std::endl;
 
         std::vector<uint32_t> utf32String = utf8::toUtf32(testString);
         std::string utf8String = utf8::fromUtf32(utf32String);
@@ -92,21 +92,21 @@ int main()
         if (utf8String != testString)
             throw std::runtime_error("Invalid UTF-8");
 
-        std::cout << utf8String << std::endl;
+        std::cout << "UTF8: " << utf8String << std::endl;
 
         uint8_t c8 = crc8::generate(test.begin(), test.end());
 
         if (c8 != crc8Test)
             throw std::runtime_error("Invalid CRC8!");
 
-        std::cout << std::hex << static_cast<uint32_t>(c8) << std::endl;
+        std::cout << "CRC8: " << std::hex << static_cast<uint32_t>(c8) << std::endl;
 
         uint32_t c32 = crc32::generate(test.begin(), test.end());
 
         if (c32 != crc32Test)
             throw std::runtime_error("Invalid CRC32");
 
-        std::cout << std::hex << c32 << std::endl;
+        std::cout << "CRC32: " << std::hex << c32 << std::endl;
 
         std::string g = uuid::generateString();
         if (g[14] != '4')
@@ -115,7 +115,7 @@ int main()
         if ((hexToInt(g[19]) & 0x0C) != 0x8)
             throw std::runtime_error("Wrong UUID variant");
 
-        std::cout << g << std::endl;
+        std::cout << "UUID: " << g << std::endl;
     }
     catch (const std::exception& e)
     {
