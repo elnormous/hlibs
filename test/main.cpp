@@ -72,14 +72,14 @@ int main()
 
         std::cout << "MD5: " << dstr << std::endl;
 
-        uint32_t f32 = fnv1::hash32(test.begin(), test.end());
+        uint32_t f32 = fnv1::hash<uint32_t>(test.begin(), test.end());
 
         if (f32 != fnv132Test)
             throw std::runtime_error("Invalid FNV1 32-bit");
 
         std::cout << "FNV32: " << std::hex << f32 << std::endl;
 
-        uint64_t f64 = fnv1::hash64(test.begin(), test.end());
+        uint64_t f64 = fnv1::hash<uint64_t>(test.begin(), test.end());
 
         if (f64 != fnv164Test)
             throw std::runtime_error("Invalid FNV1 64-bit");
