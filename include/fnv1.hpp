@@ -9,8 +9,8 @@
 
 namespace fnv1
 {
-    template <typename T> constexpr T prime() noexcept;
-    template <typename T> constexpr T offsetBasis() noexcept;
+    template <typename T> T prime() noexcept;
+    template <typename T> T offsetBasis() noexcept;
 
     template <>
     constexpr uint32_t prime() noexcept { return 16777619u; }
