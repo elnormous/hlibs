@@ -21,7 +21,7 @@ namespace uuid
         uint8_t   node[6];
     };
 
-    inline Uuid generate()
+    inline Uuid generate() noexcept
     {
         static std::random_device rd;
         static std::mt19937_64 mt(rd());
