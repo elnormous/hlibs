@@ -36,7 +36,8 @@ namespace crc8
 	};
 
     template <class Iterator>
-	constexpr uint8_t generate(Iterator i, Iterator end, uint8_t result = 0x00) noexcept
+	constexpr uint8_t generate(const Iterator i, const Iterator end,
+                               const uint8_t result = 0x00) noexcept
 	{
         return (i != end) ? generate(i + 1, end, CRC_TABLE[result ^ *i]) : result;
 	}
@@ -99,13 +100,15 @@ namespace crc32
 	}*/
 
     template <class Iterator>
-    constexpr uint32_t generateWithoutInvert(Iterator i, Iterator end, uint32_t result = 0xFFFFFFFF) noexcept
+    constexpr uint32_t generateWithoutInvert(const Iterator i, const Iterator end,
+                                             const uint32_t result = 0xFFFFFFFF) noexcept
     {
         return (i != end) ? generateWithoutInvert(i + 1, end, (result >> 8) ^ CRC_TABLE[(result ^ *i) & 0xFF]) : result;
     }
 
     template <class Iterator>
-    constexpr uint32_t generate(Iterator begin, Iterator end, uint32_t result = 0xFFFFFFFF) noexcept
+    constexpr uint32_t generate(const Iterator begin, const Iterator end,
+                                const uint32_t result = 0xFFFFFFFF) noexcept
     {
         return generateWithoutInvert(begin, end, result) ^ 0xFFFFFFFF;
     }

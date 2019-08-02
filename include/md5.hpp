@@ -27,52 +27,52 @@ namespace md5
     static constexpr uint8_t S43 = 15;
     static constexpr uint8_t S44 = 21;
 
-    constexpr uint32_t rotateLeft(uint32_t value, uint32_t bits) noexcept
+    constexpr uint32_t rotateLeft(const uint32_t value, const uint32_t bits) noexcept
     {
         return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
     }
 
     // F, G, H and I are basic MD5 functions
-    constexpr uint32_t f(uint32_t x, uint32_t y, uint32_t z) noexcept
+    constexpr uint32_t f(const uint32_t x, const uint32_t y, const uint32_t z) noexcept
     {
         return (x & y) | (~x & z);
     }
 
-    constexpr uint32_t g(uint32_t x, uint32_t y, uint32_t z) noexcept
+    constexpr uint32_t g(const uint32_t x, const uint32_t y, const uint32_t z) noexcept
     {
         return (x & z) | (y & ~z);
     }
 
-    constexpr uint32_t h(uint32_t x, uint32_t y, uint32_t z) noexcept
+    constexpr uint32_t h(const uint32_t x, const uint32_t y, const uint32_t z) noexcept
     {
         return x ^ y ^ z;
     }
 
-    constexpr uint32_t i(uint32_t x, uint32_t y, uint32_t z) noexcept
+    constexpr uint32_t i(const uint32_t x, const uint32_t y, const uint32_t z) noexcept
     {
         return y ^ (x | ~z);
     }
 
-    constexpr uint32_t ff(uint32_t a, uint32_t b, uint32_t c, uint32_t d,
-                          uint32_t x, uint32_t s, uint32_t ac) noexcept
+    constexpr uint32_t ff(const uint32_t a, const uint32_t b, const uint32_t c, const uint32_t d,
+                          const uint32_t x, const uint32_t s, const uint32_t ac) noexcept
     {
         return rotateLeft(a + f(b, c, d) + x + ac, s) + b;
     }
 
-    constexpr uint32_t gg(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
-                          uint32_t x, uint32_t s, uint32_t ac) noexcept
+    constexpr uint32_t gg(const uint32_t a, const uint32_t b, const uint32_t c, const uint32_t d,
+                          const uint32_t x, const uint32_t s, const uint32_t ac) noexcept
     {
         return rotateLeft(a + g(b, c, d) + x + ac, s) + b;
     }
 
-    constexpr uint32_t hh(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
-                          uint32_t x, uint32_t s, uint32_t ac) noexcept
+    constexpr uint32_t hh(const uint32_t a, const uint32_t b, const uint32_t c, const uint32_t d,
+                          const uint32_t x, const uint32_t s, const uint32_t ac) noexcept
     {
         return rotateLeft(a + h(b, c, d) + x + ac, s) + b;
     }
 
-    constexpr uint32_t ii(uint32_t& a, uint32_t b, uint32_t c, uint32_t d,
-                          uint32_t x, uint32_t s, uint32_t ac) noexcept
+    constexpr uint32_t ii(const uint32_t a, const uint32_t b, const uint32_t c, const uint32_t d,
+                          const uint32_t x, const uint32_t s, const uint32_t ac) noexcept
     {
         return rotateLeft(a + i(b, c, d) + x + ac, s) + b;
     }
@@ -163,12 +163,12 @@ namespace md5
     }
 
     template <class Iterator>
-    inline std::vector<uint8_t> generate(Iterator begin, Iterator end)
+    inline std::vector<uint8_t> generate(const Iterator begin, const Iterator end)
     {
         uint32_t state[4] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476};
 
         std::vector<uint8_t> m(begin, end);
-        size_t length = m.size() * 8;
+        const size_t length = m.size() * 8;
         m.push_back(0x80);
 
         while (m.size() % 64 != 56)

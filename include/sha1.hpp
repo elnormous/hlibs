@@ -12,7 +12,7 @@
 
 namespace sha1
 {
-    constexpr uint32_t rotateLeft(uint32_t value, uint32_t bits) noexcept
+    constexpr uint32_t rotateLeft(const uint32_t value, const uint32_t bits) noexcept
     {
         return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
     }
@@ -21,7 +21,8 @@ namespace sha1
     static constexpr uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA1 block
     static constexpr uint32_t BLOCK_BYTES = BLOCK_INTS * 4;
 
-    inline void transform(uint32_t block[BLOCK_BYTES], uint32_t digest[DIGEST_INTS]) noexcept
+    inline void transform(const uint32_t block[BLOCK_BYTES],
+                          uint32_t digest[DIGEST_INTS]) noexcept
     {
         uint32_t w[80];
         for (int i = 0; i < 16; ++i)
@@ -78,7 +79,7 @@ namespace sha1
     }
 
     template <class Iterator>
-    inline std::vector<uint8_t> hash(Iterator begin, Iterator end)
+    inline std::vector<uint8_t> hash(const Iterator begin, const Iterator end)
     {
         uint32_t digest[DIGEST_INTS] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
         std::vector<uint8_t> buffer;

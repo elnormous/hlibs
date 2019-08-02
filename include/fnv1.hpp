@@ -25,7 +25,8 @@ namespace fnv1
     constexpr uint64_t offsetBasis() noexcept { return 14695981039346656037u; }
 
     template <typename Result, typename Iterator>
-    constexpr Result hash(Iterator i, Iterator end, Result result = offsetBasis<Result>()) noexcept
+    constexpr Result hash(const Iterator i, const Iterator end,
+                          const Result result = offsetBasis<Result>()) noexcept
     {
         return (i != end) ? hash(i + 1, end, (result * prime<Result>()) ^ *i) : result;
     }

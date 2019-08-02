@@ -12,7 +12,7 @@
 namespace utf8
 {
     template <typename Iterator>
-    inline std::vector<uint32_t> toUtf32(Iterator begin, Iterator end)
+    inline std::vector<uint32_t> toUtf32(const Iterator begin, const Iterator end)
     {
         std::vector<uint32_t> result;
 
@@ -58,7 +58,7 @@ namespace utf8
         return toUtf32(text.begin(), text.end());
     }
 
-    inline std::string fromUtf32(uint32_t c)
+    inline std::string fromUtf32(const uint32_t c)
     {
         std::string result;
 
@@ -87,7 +87,7 @@ namespace utf8
     }
 
     template <typename Iterator>
-    inline std::string fromUtf32(Iterator begin, Iterator end)
+    inline std::string fromUtf32(const Iterator begin, const Iterator end)
     {
         std::string result;
 

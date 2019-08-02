@@ -20,7 +20,7 @@ namespace base64
         '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
     };
 
-    constexpr uint8_t getIndex(uint8_t c)
+    constexpr uint8_t getIndex(const uint8_t c)
     {
         return (c >= 'A' && c <= 'Z') ? c - 'A' :
             (c >= 'a' && c <= 'z') ? 26 + (c - 'a') :
@@ -30,7 +30,7 @@ namespace base64
     }
 
     template <class Iterator>
-    inline std::string encode(Iterator begin, Iterator end)
+    inline std::string encode(const Iterator begin, const Iterator end)
     {
         std::string result;
         size_t c = 0;
@@ -68,7 +68,7 @@ namespace base64
     }
 
     template <class Iterator>
-    inline std::vector<uint8_t> decode(Iterator begin, Iterator end)
+    inline std::vector<uint8_t> decode(const Iterator begin, const Iterator end)
     {
         uint32_t c = 0;
         uint8_t charArray3[3];

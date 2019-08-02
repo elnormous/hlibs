@@ -24,7 +24,7 @@ static inline std::string toString(const std::vector<uint8_t>& v)
     return result;
 }
 
-static constexpr uint8_t hexToInt(char hex)
+static constexpr uint8_t hexToInt(const char hex)
 {
     return (hex >= '0' && hex <= '9') ? static_cast<uint8_t>(hex - '0') :
         (hex >= 'a' && hex <='f') ? static_cast<uint8_t>(hex - 'a' + 10) :
