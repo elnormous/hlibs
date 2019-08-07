@@ -5,6 +5,7 @@
 #ifndef SHA1_HPP
 #define SHA1_HPP
 
+#include <array>
 #include <cstdint>
 #include <cstdlib>
 #include <string>
@@ -79,7 +80,7 @@ namespace sha1
     }
 
     template <class Iterator>
-    inline std::vector<uint8_t> hash(const Iterator begin, const Iterator end)
+    inline std::array<uint8_t, DIGEST_INTS * 4> hash(const Iterator begin, const Iterator end)
     {
         uint32_t digest[DIGEST_INTS] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
         std::vector<uint8_t> buffer;
@@ -122,20 +123,20 @@ namespace sha1
         block[BLOCK_INTS - 2] = (totalBits >> 32) & 0xFFFFFFFF;
         transform(block, digest);
 
-        std::vector<uint8_t> result;
+        std::array<uint8_t, DIGEST_INTS * 4> result;
         for (uint32_t n = 0; n < DIGEST_INTS; n++)
         {
-            result.push_back((digest[n] >> 24) & 0xFF);
-            result.push_back((digest[n] >> 16) & 0xFF);
-            result.push_back((digest[n] >> 8) & 0xFF);
-            result.push_back(digest[n] & 0xFF);
+            result[n * 4 + 0] = (digest[n] >> 24) & 0xFF;
+            result[n * 4 + 1] = (digest[n] >> 16) & 0xFF;
+            result[n * 4 + 2] = (digest[n] >> 8) & 0xFF;
+            result[n * 4 + 3] = (digest[n] & 0xFF);
         }
 
         return result;
     }
 
     template <class T>
-    inline std::vector<uint8_t> hash(const T& v)
+    inline std::array<uint8_t, DIGEST_INTS * 4> hash(const T& v)
     {
         return hash(std::begin(v), std::end(v));
     }

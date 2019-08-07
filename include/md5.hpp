@@ -5,6 +5,7 @@
 #ifndef MD5_HPP
 #define MD5_HPP
 
+#include <array>
 #include <cstdint>
 #include <vector>
 
@@ -163,7 +164,7 @@ namespace md5
     }
 
     template <class Iterator>
-    inline std::vector<uint8_t> generate(const Iterator begin, const Iterator end)
+    inline std::array<uint8_t, 16> generate(const Iterator begin, const Iterator end)
     {
         uint32_t state[4] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476};
 
@@ -186,7 +187,7 @@ namespace md5
         for (uint32_t i = 0; i + 63 < m.size(); i += 64)
             transform(state, &m[i]);
 
-        std::vector<uint8_t> result(16);
+        std::array<uint8_t, 16> result;
         for (uint32_t i = 0; i < 4; ++i)
         {
             result[i * 4] = state[i] & 0xFF;
@@ -199,7 +200,7 @@ namespace md5
     }
 
     template <class T>
-    inline std::vector<uint8_t> generate(const T& v)
+    inline std::array<uint8_t, 16> generate(const T& v)
     {
         return generate(std::begin(v), std::end(v));
     }
