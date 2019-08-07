@@ -13,7 +13,7 @@
 template <class T>
 static inline std::string toString(const T& v)
 {
-    static const char* digits = "0123456789abcdef";
+    static constexpr char digits[] = "0123456789abcdef";
 
     std::string result;
     for (uint8_t b : v)
