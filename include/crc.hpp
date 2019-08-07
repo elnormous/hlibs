@@ -41,6 +41,12 @@ namespace crc8
 	{
         return (i != end) ? generate(i + 1, end, CRC_TABLE[result ^ *i]) : result;
 	}
+
+    template <class T>
+    constexpr uint8_t generate(const T& v) noexcept
+    {
+        return generate(std::begin(v), std::end(v));
+    }
 }
 
 namespace crc32
@@ -111,6 +117,12 @@ namespace crc32
                                 const uint32_t result = 0xFFFFFFFF) noexcept
     {
         return generateWithoutInvert(begin, end, result) ^ 0xFFFFFFFF;
+    }
+
+    template <class T>
+    constexpr uint32_t generate(const T& v) noexcept
+    {
+        return generate(std::begin(v), std::end(v));
     }
 }
 

@@ -197,6 +197,12 @@ namespace md5
 
         return result;
     }
+
+    template <class T>
+    inline std::vector<uint8_t> generate(const T& v)
+    {
+        return generate(std::begin(v), std::end(v));
+    }
 }
 
 #endif // MD5_HPP

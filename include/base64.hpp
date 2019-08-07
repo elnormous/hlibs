@@ -67,6 +67,12 @@ namespace base64
         return result;
     }
 
+    template <class T>
+    inline std::string encode(const T& v)
+    {
+        return encode(std::begin(v), std::end(v));
+    }
+
     template <class Iterator>
     inline std::vector<uint8_t> decode(const Iterator begin, const Iterator end)
     {
@@ -102,6 +108,12 @@ namespace base64
         }
 
         return result;
+    }
+
+    template <class T>
+    inline std::vector<uint8_t> decode(const T& s)
+    {
+        return decode(std::begin(s), std::end(s));
     }
 }
 

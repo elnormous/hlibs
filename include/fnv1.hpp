@@ -30,6 +30,12 @@ namespace fnv1
     {
         return (i != end) ? hash(i + 1, end, (result * prime<Result>()) ^ *i) : result;
     }
+
+    template <typename Result, typename T>
+    constexpr Result hash(const T& v) noexcept
+    {
+        return hash<Result>(std::begin(v), std::end(v));
+    }
 }
 
 #endif // FNV_HPP

@@ -118,9 +118,10 @@ namespace utf8
         return result;
     }
 
-    inline std::string fromUtf32(const std::vector<uint32_t>& text)
+    template <typename T>
+    inline std::string fromUtf32(const T& text)
     {
-        return fromUtf32(text.begin(), text.end());
+        return fromUtf32(std::begin(text), std::end(text));
     }
 }
 

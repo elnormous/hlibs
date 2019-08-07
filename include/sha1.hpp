@@ -133,6 +133,12 @@ namespace sha1
 
         return result;
     }
+
+    template <class T>
+    inline std::vector<uint8_t> hash(const T& v)
+    {
+        return hash(std::begin(v), std::end(v));
+    }
 }
 
 #endif // SHA1_HPP
