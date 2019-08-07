@@ -44,6 +44,7 @@ int main()
         const std::string md5Test = "9575b2604f8fd72edb743e95bd88b36d";
         constexpr uint32_t fnv132Test = 0x296a37b7;
         constexpr uint64_t fnv164Test = 0x98645a51cb3becf7;
+        const std::vector<uint32_t> utf32Test = {192, 193, 194, 195, 196, 197, 198};
         constexpr uint8_t crc8Test = 0x20;
         constexpr uint32_t crc32Test = 0xc8a61cc1;
 
@@ -90,6 +91,10 @@ int main()
         std::cout << "FNV64: " << std::hex << f64 << std::endl;
 
         const std::vector<uint32_t> utf32String = utf8::toUtf32(testString);
+
+        if (utf32String != utf32Test)
+            throw std::runtime_error("Invalid UTF-32");
+
         const std::string utf8String = utf8::fromUtf32(utf32String);
 
         if (utf8String != testString)
