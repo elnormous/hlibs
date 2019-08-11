@@ -55,7 +55,7 @@ namespace utf8
     template <typename T>
     inline std::vector<uint32_t> toUtf32(const T& text)
     {
-        return toUtf32(text.begin(), text.end());
+        return toUtf32(std::begin(text), std::end(text));
     }
 
     inline std::string fromUtf32(const uint32_t c)
