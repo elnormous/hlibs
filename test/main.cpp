@@ -45,7 +45,7 @@ int main()
         const std::string md5Test = "9575b2604f8fd72edb743e95bd88b36d";
         constexpr uint32_t fnv132Test = 0x296a37b7;
         constexpr uint64_t fnv164Test = 0x98645a51cb3becf7;
-        const std::vector<uint32_t> utf32Test = {192, 193, 194, 195, 196, 197, 198};
+        const std::u32string utf32Test = U"ÀÁÂÃÄÅÆ";
         constexpr uint8_t crc8Test = 0x20;
         constexpr uint32_t crc32Test = 0xc8a61cc1;
 
