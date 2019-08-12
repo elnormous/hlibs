@@ -7,7 +7,6 @@
 
 #include <cstdint>
 #include <string>
-#include <type_traits>
 
 namespace utf8
 {
