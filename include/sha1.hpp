@@ -5,6 +5,7 @@
 #ifndef SHA1_HPP
 #define SHA1_HPP
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
 #include <cstdlib>
@@ -13,7 +14,8 @@
 
 namespace sha1
 {
-    constexpr uint32_t rotateLeft(const uint32_t value, const uint32_t bits) noexcept
+    constexpr uint32_t rotateLeft(const uint32_t value,
+                                  const uint32_t bits) noexcept
     {
         return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
     }
@@ -80,7 +82,8 @@ namespace sha1
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, DIGEST_INTS * 4> hash(const Iterator begin, const Iterator end)
+    inline std::array<uint8_t, DIGEST_INTS * 4> hash(const Iterator begin,
+                                                     const Iterator end)
     {
         uint32_t digest[DIGEST_INTS] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
         std::vector<uint8_t> buffer;
@@ -114,8 +117,7 @@ namespace sha1
         if (origSize > BLOCK_BYTES - 8)
         {
             transform(block, digest);
-            for (uint32_t n = 0; n < BLOCK_INTS - 2; n++)
-                block[n] = 0;
+            std::fill(block, block + BLOCK_INTS - 2, 0);
         }
 
         const uint64_t totalBits = static_cast<uint64_t>(abs(std::distance(begin, end))) * 8;
