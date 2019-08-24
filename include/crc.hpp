@@ -6,7 +6,6 @@
 #define CRC_HPP
 
 #include <cstdint>
-#include <vector>
 
 namespace crc8
 {
