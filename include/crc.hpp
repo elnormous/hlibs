@@ -35,11 +35,11 @@ namespace crc8
 		0xFA, 0xFD, 0xF4, 0xF3
 	};
 
-    template <class Iterator>
+    template <uint32_t xorOut = 0x0, class Iterator>
 	constexpr uint8_t generate(const Iterator i, const Iterator end,
-                               const uint8_t result = 0x00) noexcept
+                               const uint8_t init = 0x00) noexcept
 	{
-        return (i != end) ? generate(i + 1, end, CRC_TABLE[result ^ *i]) : result;
+        return ((i != end) ? generate<0x0>(i + 1, end, CRC_TABLE[init ^ static_cast<uint32_t>(*i)]) : init) ^ xorOut;
 	}
 
     template <class T>
@@ -105,11 +105,11 @@ namespace crc32
 		while (0 != ++b);
 	}*/
 
-    template <bool invert = true, class Iterator>
+    template <uint32_t xorOut = 0xFFFFFFFF, class Iterator>
     constexpr uint32_t generate(const Iterator i, const Iterator end,
-                                const uint32_t result = 0xFFFFFFFF) noexcept
+                                const uint32_t init = 0xFFFFFFFF) noexcept
     {
-        return ((i != end) ? generate<false>(i + 1, end, (result >> 8) ^ CRC_TABLE[(result ^ *i) & 0xFF]) : result) ^ (invert ? 0xFFFFFFFF : 0x0);
+        return ((i != end) ? generate<0x0>(i + 1, end, (init >> 8) ^ CRC_TABLE[(init ^ static_cast<uint32_t>(*i)) & 0xFF]) : init) ^ xorOut;
     }
 
     template <class T>
