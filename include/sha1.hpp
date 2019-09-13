@@ -43,24 +43,24 @@ namespace sha1
         uint32_t f = 0;
         uint32_t k = 0;
 
-        for (int i = 0; i < 80; ++i)
+        for (uint32_t i = 0; i < 80; ++i)
         {
-            if (0 <= i && i < 20)
+            if (i < 20)
             {
                 f = (b & c) | (~b & d);
                 k = 0x5A827999;
             }
-            else if (20 <= i && i < 40)
+            else if (i < 40)
             {
                 f = b ^ c ^ d;
                 k = 0x6ED9EBA1;
             }
-            else if (40 <= i && i < 60)
+            else if (i < 60)
             {
                 f = (b & c) | (b & d) | (c & d);
                 k = 0x8F1BBCDC;
             }
-            else if (60 <= i && i < 80)
+            else if (i < 80)
             {
                 f = b ^ c ^ d;
                 k = 0xCA62C1D6;
