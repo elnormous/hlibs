@@ -23,6 +23,13 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		30E08685232B183700F90FAF /* sha1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sha1.hpp; sourceTree = "<group>"; };
+		30E08686232B183700F90FAF /* utf8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utf8.hpp; sourceTree = "<group>"; };
+		30E08687232B183700F90FAF /* uuid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = uuid.hpp; sourceTree = "<group>"; };
+		30E08688232B183700F90FAF /* fnv1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = fnv1.hpp; sourceTree = "<group>"; };
+		30E08689232B183700F90FAF /* crc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = crc.hpp; sourceTree = "<group>"; };
+		30E0868A232B183700F90FAF /* base64.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = base64.hpp; sourceTree = "<group>"; };
+		30E0868B232B183700F90FAF /* md5.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = md5.hpp; sourceTree = "<group>"; };
 		C6C90FD321A5A24D00B5FCB7 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6C90FD621A5A24D00B5FCB7 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -38,9 +45,25 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		30E08684232B168C00F90FAF /* include */ = {
+			isa = PBXGroup;
+			children = (
+				30E0868A232B183700F90FAF /* base64.hpp */,
+				30E08689232B183700F90FAF /* crc.hpp */,
+				30E08688232B183700F90FAF /* fnv1.hpp */,
+				30E0868B232B183700F90FAF /* md5.hpp */,
+				30E08685232B183700F90FAF /* sha1.hpp */,
+				30E08686232B183700F90FAF /* utf8.hpp */,
+				30E08687232B183700F90FAF /* uuid.hpp */,
+			);
+			name = include;
+			path = ../include;
+			sourceTree = "<group>";
+		};
 		C6C90FCA21A5A24D00B5FCB7 = {
 			isa = PBXGroup;
 			children = (
+				30E08684232B168C00F90FAF /* include */,
 				C6C90FD621A5A24D00B5FCB7 /* main.cpp */,
 				C6C90FD421A5A24D00B5FCB7 /* Products */,
 			);
@@ -184,6 +207,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../include;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -253,6 +277,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = ../include;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -262,7 +287,6 @@
 		C6C90FDB21A5A24D00B5FCB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../include;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -270,7 +294,6 @@
 		C6C90FDC21A5A24D00B5FCB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				HEADER_SEARCH_PATHS = ../include;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
