@@ -9,8 +9,6 @@
 #include <array>
 #include <cstdint>
 #include <cstdlib>
-#include <string>
-#include <vector>
 
 namespace sha1
 {
@@ -24,15 +22,18 @@ namespace sha1
     static constexpr uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA1 block
     static constexpr uint32_t BLOCK_BYTES = BLOCK_INTS * 4;
 
-    inline void transform(const uint32_t block[DIGEST_INTS],
+    inline void transform(const uint8_t block[BLOCK_BYTES],
                           uint32_t state[DIGEST_INTS]) noexcept
     {
-        uint32_t w[80];
-        for (int i = 0; i < 16; ++i)
-            w[i] = block[i];
+        uint32_t m[80];
+        for (uint32_t i = 0; i < 16; ++i)
+            m[i] = static_cast<uint32_t>(block[i * 4 + 3]) |
+                (static_cast<uint32_t>(block[i * 4 + 2]) << 8) |
+                (static_cast<uint32_t>(block[i * 4 + 1]) << 16) |
+                (static_cast<uint32_t>(block[i * 4 + 0]) << 24);
 
-        for (int i = 16; i < 80; ++i)
-            w[i] = rotateLeft(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1);
+        for (uint32_t i = 16; i < 80; ++i)
+            m[i] = rotateLeft(m[i - 3] ^ m[i - 8] ^ m[i - 14] ^ m[i - 16], 1);
 
         uint32_t a = state[0];
         uint32_t b = state[1];
@@ -66,7 +67,7 @@ namespace sha1
                 k = 0xCA62C1D6;
             }
 
-            const uint32_t temp = rotateLeft(a, 5) + f + e + k + w[i];
+            const uint32_t temp = rotateLeft(a, 5) + f + e + k + m[i];
             e = d;
             d = c;
             c = rotateLeft(b, 30);
@@ -83,7 +84,7 @@ namespace sha1
 
     template <class Iterator>
     inline std::array<uint8_t, DIGEST_INTS * 4> hash(const Iterator begin,
-                                                     const Iterator end)
+                                                     const Iterator end) noexcept
     {
         uint32_t state[DIGEST_INTS] = {
             0x67452301,
@@ -94,54 +95,54 @@ namespace sha1
         };
 
         std::vector<uint8_t> buffer;
-        uint32_t block[BLOCK_INTS];
-        Iterator i;
-        for (i = begin; std::distance(i, end) >= BLOCK_BYTES; i += BLOCK_BYTES)
+        uint8_t block[BLOCK_BYTES];
+        uint32_t dataSize = 0;
+        for (auto i = begin; i != end; ++i)
         {
-            buffer.assign(i, i + BLOCK_BYTES);
-
-            for (uint32_t n = 0; n < BLOCK_INTS; n++)
-                block[n] = static_cast<uint32_t>(buffer[4 * n + 3] |
-                                                 buffer[4 * n + 2] << 8 |
-                                                 buffer[4 * n + 1] << 16 |
-                                                 buffer[4 * n + 0] << 24);
-
-            transform(block, state);
+            block[dataSize] = *i;
+            dataSize++;
+            if (dataSize == BLOCK_BYTES)
+            {
+                transform(block, state);
+                dataSize = 0;
+            }
         }
 
-        // pad data left in the buffer
-        buffer.assign(i, end);
-        buffer.push_back(0x80);
-        const auto origSize = buffer.size();
-        while (buffer.size() < BLOCK_BYTES)
-            buffer.push_back(0x00);
-
-        for (uint32_t n = 0; n < BLOCK_INTS; n++)
-            block[n] = static_cast<uint32_t>(buffer[4 * n + 3]) |
-                static_cast<uint32_t>(buffer[4 * n + 2]) << 8 |
-                static_cast<uint32_t>(buffer[4 * n + 1]) << 16 |
-                static_cast<uint32_t>(buffer[4 * n + 0]) << 24;
-
-        if (origSize > BLOCK_BYTES - 8)
+        // Pad data left in the buffer
+        uint32_t n = dataSize;
+        if (dataSize < BLOCK_BYTES - 8)
         {
+            block[n++] = 0x80;
+            while (n < BLOCK_BYTES - 8) block[n++] = 0x00;
+        }
+        else
+        {
+            block[n++] = 0x80;
+            while (n < BLOCK_BYTES) block[n++] = 0x00;
             transform(block, state);
-            std::fill(block, block + BLOCK_INTS - 2, 0);
+            std::fill(block, block + BLOCK_BYTES - 8, 0);
         }
 
         // append the size in bits
         const uint64_t totalBits = static_cast<uint64_t>(abs(std::distance(begin, end))) * 8;
-        block[BLOCK_INTS - 1] = static_cast<uint32_t>(totalBits);
-        block[BLOCK_INTS - 2] = static_cast<uint32_t>(totalBits >> 32);
+        block[63] = static_cast<uint8_t>(totalBits);
+        block[62] = static_cast<uint8_t>(totalBits >> 8);
+        block[61] = static_cast<uint8_t>(totalBits >> 16);
+        block[60] = static_cast<uint8_t>(totalBits >> 24);
+        block[59] = static_cast<uint8_t>(totalBits >> 32);
+        block[58] = static_cast<uint8_t>(totalBits >> 40);
+        block[57] = static_cast<uint8_t>(totalBits >> 48);
+        block[56] = static_cast<uint8_t>(totalBits >> 56);
         transform(block, state);
 
         std::array<uint8_t, DIGEST_INTS * 4> result;
         // reverse all the bytes to big endian
-        for (uint32_t n = 0; n < DIGEST_INTS; n++)
+        for (uint32_t i = 0; i < DIGEST_INTS; i++)
         {
-            result[n * 4 + 0] = static_cast<uint8_t>(state[n] >> 24);
-            result[n * 4 + 1] = static_cast<uint8_t>(state[n] >> 16);
-            result[n * 4 + 2] = static_cast<uint8_t>(state[n] >> 8);
-            result[n * 4 + 3] = static_cast<uint8_t>(state[n]);
+            result[i * 4 + 0] = static_cast<uint8_t>(state[i] >> 24);
+            result[i * 4 + 1] = static_cast<uint8_t>(state[i] >> 16);
+            result[i * 4 + 2] = static_cast<uint8_t>(state[i] >> 8);
+            result[i * 4 + 3] = static_cast<uint8_t>(state[i]);
         }
 
         return result;

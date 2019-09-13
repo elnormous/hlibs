@@ -9,8 +9,6 @@
 #include <array>
 #include <cstdint>
 #include <cstdlib>
-#include <string>
-#include <vector>
 
 namespace sha256
 {
@@ -81,7 +79,8 @@ namespace sha256
             m[i] = (static_cast<uint32_t>(block[i * 4]) << 24) |
                 (static_cast<uint32_t>(block[i * 4 + 1]) << 16) |
                 (static_cast<uint32_t>(block[i * 4 + 2]) << 8) |
-                static_cast<uint32_t>(block[i * 4 + 3]);
+                static_cast<uint32_t>(block[i * 4 + 3]);;
+
         for (uint32_t i = 16; i < 64; ++i)
             m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16];
 
@@ -119,8 +118,8 @@ namespace sha256
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, 32> hash(const Iterator begin,
-                                        const Iterator end) noexcept
+    inline std::array<uint8_t, DIGEST_INTS * 4> hash(const Iterator begin,
+                                                     const Iterator end) noexcept
     {
         uint32_t state[DIGEST_INTS] = {
             0x6A09E667,
@@ -173,25 +172,21 @@ namespace sha256
         block[56] = static_cast<uint8_t>(totalBits >> 56);
         transform(block, state);
 
-        std::array<uint8_t, 32> result;
+        std::array<uint8_t, DIGEST_INTS * 4> result;
         // reverse all the bytes to big endian
-        for (uint32_t i = 0; i < 4; ++i)
+        for (uint32_t i = 0; i < DIGEST_INTS; i++)
         {
-            result[i + 0] = static_cast<uint8_t>(state[0] >> (24 - i * 8));
-            result[i + 4] = static_cast<uint8_t>(state[1] >> (24 - i * 8));
-            result[i + 8] = static_cast<uint8_t>(state[2] >> (24 - i * 8));
-            result[i + 12] = static_cast<uint8_t>(state[3] >> (24 - i * 8));
-            result[i + 16] = static_cast<uint8_t>(state[4] >> (24 - i * 8));
-            result[i + 20] = static_cast<uint8_t>(state[5] >> (24 - i * 8));
-            result[i + 24] = static_cast<uint8_t>(state[6] >> (24 - i * 8));
-            result[i + 28] = static_cast<uint8_t>(state[7] >> (24 - i * 8));
+            result[i * 4 + 0] = static_cast<uint8_t>(state[i] >> 24);
+            result[i * 4 + 1] = static_cast<uint8_t>(state[i] >> 16);
+            result[i * 4 + 2] = static_cast<uint8_t>(state[i] >> 8);
+            result[i * 4 + 3] = static_cast<uint8_t>(state[i]);
         }
 
         return result;
     }
 
     template <class T>
-    inline std::array<uint8_t, 32> hash(const T& v) noexcept
+    inline std::array<uint8_t, DIGEST_INTS * 4> hash(const T& v) noexcept
     {
         return hash(std::begin(v), std::end(v));
     }
