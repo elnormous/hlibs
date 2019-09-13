@@ -25,15 +25,15 @@ namespace sha1
     inline void transform(const uint8_t block[BLOCK_BYTES],
                           uint32_t state[DIGEST_INTS]) noexcept
     {
-        uint32_t m[80];
+        uint32_t w[80];
         for (uint32_t i = 0; i < 16; ++i)
-            m[i] = static_cast<uint32_t>(block[i * 4 + 3]) |
+            w[i] = static_cast<uint32_t>(block[i * 4 + 3]) |
                 (static_cast<uint32_t>(block[i * 4 + 2]) << 8) |
                 (static_cast<uint32_t>(block[i * 4 + 1]) << 16) |
                 (static_cast<uint32_t>(block[i * 4 + 0]) << 24);
 
         for (uint32_t i = 16; i < 80; ++i)
-            m[i] = rotateLeft(m[i - 3] ^ m[i - 8] ^ m[i - 14] ^ m[i - 16], 1);
+            w[i] = rotateLeft(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1);
 
         uint32_t a = state[0];
         uint32_t b = state[1];
@@ -67,7 +67,7 @@ namespace sha1
                 k = 0xCA62C1D6;
             }
 
-            const uint32_t temp = rotateLeft(a, 5) + f + e + k + m[i];
+            const uint32_t temp = rotateLeft(a, 5) + f + e + k + w[i];
             e = d;
             d = c;
             c = rotateLeft(b, 30);

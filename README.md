@@ -7,6 +7,7 @@ Currently the following algorithms are supported:
 * FNV1
 * MD5
 * SHA1
+* SHA256
 * UUID v4
 * UTF-8/UTF-32
 

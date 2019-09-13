@@ -18,36 +18,6 @@ namespace sha256
         return (value >> bits) | ((value & 0xFFFFFFFF) << (32 - bits));
     }
 
-    constexpr uint32_t ch(uint32_t x, uint32_t y, uint32_t z) noexcept
-    {
-        return (x & y) ^ (~x & z);
-    }
-
-    constexpr uint32_t maj(uint32_t x, uint32_t y, uint32_t z) noexcept
-    {
-        return (x & y) ^ (x & z) ^ (y & z);
-    }
-
-    constexpr uint32_t ep0(uint32_t x) noexcept
-    {
-        return rotateRight(x, 2) ^ rotateRight(x, 13) ^ rotateRight(x, 22);
-    }
-
-    constexpr uint32_t ep1(uint32_t x) noexcept
-    {
-        return rotateRight(x, 6) ^ rotateRight(x, 11) ^ rotateRight(x, 25);
-    }
-
-    constexpr uint32_t sig0(uint32_t x) noexcept
-    {
-        return rotateRight(x, 7) ^ rotateRight(x, 18) ^ (x >> 3);
-    }
-
-    constexpr uint32_t sig1(uint32_t x) noexcept
-    {
-        return rotateRight(x, 17) ^ rotateRight(x, 19) ^ (x >> 10);
-    }
-
     static const uint32_t k[64] = {
         0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5,
         0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5,
@@ -73,16 +43,19 @@ namespace sha256
 
     inline void transform(const uint8_t block[BLOCK_BYTES], uint32_t state[DIGEST_INTS]) noexcept
     {
-        uint32_t m[64];
-
+        uint32_t w[64];
         for (uint32_t i = 0; i < 16; ++i)
-            m[i] = (static_cast<uint32_t>(block[i * 4]) << 24) |
+            w[i] = (static_cast<uint32_t>(block[i * 4]) << 24) |
                 (static_cast<uint32_t>(block[i * 4 + 1]) << 16) |
                 (static_cast<uint32_t>(block[i * 4 + 2]) << 8) |
                 static_cast<uint32_t>(block[i * 4 + 3]);;
 
         for (uint32_t i = 16; i < 64; ++i)
-            m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16];
+        {
+            const uint32_t sigma0 = rotateRight(w[i - 15], 7) ^ rotateRight(w[i - 15], 18) ^ (w[i - 15] >> 3);
+            const uint32_t sigma1 = rotateRight(w[i - 2], 17) ^ rotateRight(w[i - 2], 19) ^ (w[i - 2] >> 10);
+            w[i] = w[i-16] + sigma0 + w[i-7] + sigma1;
+        }
 
         uint32_t a = state[0];
         uint32_t b = state[1];
@@ -95,16 +68,22 @@ namespace sha256
 
         for (uint32_t i = 0; i < 64; ++i)
         {
-            const uint32_t t1 = h + ep1(e) + ch(e, f, g) + k[i] + m[i];
-            const uint32_t t2 = ep0(a) + maj(a, b, c);
+            const uint32_t s1 = rotateRight(e, 6) ^ rotateRight(e, 11) ^ rotateRight(e, 25);
+            const uint32_t ch = (e & f) ^ (~e & g);
+            const uint32_t temp1 = h + s1 + ch + k[i] + w[i];
+
+            const uint32_t s0 = rotateRight(a, 2) ^ rotateRight(a, 13) ^ rotateRight(a, 22);
+            const uint32_t maj = (a & b) ^ (a & c) ^ (b & c);
+            const uint32_t temp2 = s0 + maj;
+
             h = g;
             g = f;
             f = e;
-            e = d + t1;
+            e = d + temp1;
             d = c;
             c = b;
             b = a;
-            a = t1 + t2;
+            a = temp1 + temp2;
         }
 
         state[0] += a;
