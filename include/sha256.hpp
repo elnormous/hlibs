@@ -69,16 +69,20 @@ namespace sha256
         0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
     };
 
-    inline void transform(const uint8_t block[64], uint32_t state[8]) noexcept
-    {
-        uint32_t i, j, m[64];
+    static constexpr uint32_t DIGEST_INTS = 8; // number of 32bit integers per SHA1 digest
+    static constexpr uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA1 block
+    static constexpr uint32_t BLOCK_BYTES = BLOCK_INTS * 4;
 
-        for (i = 0, j = 0; i < 16; ++i, j += 4)
-            m[i] = (static_cast<uint32_t>(block[j]) << 24) |
-                (static_cast<uint32_t>(block[j + 1]) << 16) |
-                (static_cast<uint32_t>(block[j + 2]) << 8) |
-                static_cast<uint32_t>(block[j + 3]);
-        for ( ; i < 64; ++i)
+    inline void transform(const uint8_t block[BLOCK_BYTES], uint32_t state[DIGEST_INTS]) noexcept
+    {
+        uint32_t m[64];
+
+        for (uint32_t i = 0; i < 16; ++i)
+            m[i] = (static_cast<uint32_t>(block[i * 4]) << 24) |
+                (static_cast<uint32_t>(block[i * 4 + 1]) << 16) |
+                (static_cast<uint32_t>(block[i * 4 + 2]) << 8) |
+                static_cast<uint32_t>(block[i * 4 + 3]);
+        for (uint32_t i = 16; i < 64; ++i)
             m[i] = sig1(m[i - 2]) + m[i - 7] + sig0(m[i - 15]) + m[i - 16];
 
         uint32_t a = state[0];
@@ -90,10 +94,10 @@ namespace sha256
         uint32_t g = state[6];
         uint32_t h = state[7];
 
-        for (i = 0; i < 64; ++i)
+        for (uint32_t i = 0; i < 64; ++i)
         {
-            uint32_t t1 = h + ep1(e) + ch(e, f, g) + k[i] + m[i];
-            uint32_t t2 = ep0(a) + maj(a, b, c);
+            const uint32_t t1 = h + ep1(e) + ch(e, f, g) + k[i] + m[i];
+            const uint32_t t2 = ep0(a) + maj(a, b, c);
             h = g;
             g = f;
             f = e;
@@ -118,9 +122,7 @@ namespace sha256
     inline std::array<uint8_t, 32> hash(const Iterator begin,
                                         const Iterator end) noexcept
     {
-        uint8_t data[64];
-        uint32_t datalen = 0;
-        uint32_t state[8] = {
+        uint32_t state[DIGEST_INTS] = {
             0x6A09E667,
             0xBB67AE85,
             0x3C6EF372,
@@ -131,45 +133,45 @@ namespace sha256
             0x5BE0CD19
         };
 
+        uint8_t block[BLOCK_BYTES];
+        uint32_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {
-            data[datalen] = *i;
-            datalen++;
-            if (datalen == 64)
+            block[dataSize] = *i;
+            dataSize++;
+            if (dataSize == BLOCK_BYTES)
             {
-                transform(data, state);
-                datalen = 0;
+                transform(block, state);
+                dataSize = 0;
             }
         }
 
         // Pad data left in the buffer
-        uint32_t n = datalen;
-        if (datalen < 56)
+        uint32_t n = dataSize;
+        if (dataSize < BLOCK_BYTES - 8)
         {
-            data[n++] = 0x80;
-            while (n < 56)
-                data[n++] = 0x00;
+            block[n++] = 0x80;
+            while (n < BLOCK_BYTES - 8) block[n++] = 0x00;
         }
         else
         {
-            data[n++] = 0x80;
-            while (n < 64)
-                data[n++] = 0x00;
-            transform(data, state);
-            std::fill(std::begin(data), std::end(data), 0);
+            block[n++] = 0x80;
+            while (n < BLOCK_BYTES) block[n++] = 0x00;
+            transform(block, state);
+            std::fill(block, block + BLOCK_BYTES - 8, 0);
         }
 
         // append the size in bits
-        const uint64_t totalBits = static_cast<uint64_t>(abs(std::distance(begin, end))) * 8;
-        data[63] = static_cast<uint8_t>(totalBits);
-        data[62] = static_cast<uint8_t>(totalBits >> 8);
-        data[61] = static_cast<uint8_t>(totalBits >> 16);
-        data[60] = static_cast<uint8_t>(totalBits >> 24);
-        data[59] = static_cast<uint8_t>(totalBits >> 32);
-        data[58] = static_cast<uint8_t>(totalBits >> 40);
-        data[57] = static_cast<uint8_t>(totalBits >> 48);
-        data[56] = static_cast<uint8_t>(totalBits >> 56);
-        transform(data, state);
+        const uint64_t totalBits = dataSize * 8;
+        block[63] = static_cast<uint8_t>(totalBits);
+        block[62] = static_cast<uint8_t>(totalBits >> 8);
+        block[61] = static_cast<uint8_t>(totalBits >> 16);
+        block[60] = static_cast<uint8_t>(totalBits >> 24);
+        block[59] = static_cast<uint8_t>(totalBits >> 32);
+        block[58] = static_cast<uint8_t>(totalBits >> 40);
+        block[57] = static_cast<uint8_t>(totalBits >> 48);
+        block[56] = static_cast<uint8_t>(totalBits >> 56);
+        transform(block, state);
 
         std::array<uint8_t, 32> result;
         // reverse all the bytes to big endian

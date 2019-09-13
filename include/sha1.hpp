@@ -85,7 +85,14 @@ namespace sha1
     inline std::array<uint8_t, DIGEST_INTS * 4> hash(const Iterator begin,
                                                      const Iterator end)
     {
-        uint32_t digest[DIGEST_INTS] = {0x67452301, 0xEFCDAB89, 0x98BADCFE, 0x10325476, 0xC3D2E1F0};
+        uint32_t state[DIGEST_INTS] = {
+            0x67452301,
+            0xEFCDAB89,
+            0x98BADCFE,
+            0x10325476,
+            0xC3D2E1F0
+        };
+
         std::vector<uint8_t> buffer;
         uint32_t block[BLOCK_INTS];
         Iterator i;
@@ -99,7 +106,7 @@ namespace sha1
                                                  buffer[4 * n + 1] << 16 |
                                                  buffer[4 * n + 0] << 24);
 
-            transform(block, digest);
+            transform(block, state);
         }
 
         // pad data left in the buffer
@@ -117,7 +124,7 @@ namespace sha1
 
         if (origSize > BLOCK_BYTES - 8)
         {
-            transform(block, digest);
+            transform(block, state);
             std::fill(block, block + BLOCK_INTS - 2, 0);
         }
 
@@ -125,16 +132,16 @@ namespace sha1
         const uint64_t totalBits = static_cast<uint64_t>(abs(std::distance(begin, end))) * 8;
         block[BLOCK_INTS - 1] = static_cast<uint32_t>(totalBits);
         block[BLOCK_INTS - 2] = static_cast<uint32_t>(totalBits >> 32);
-        transform(block, digest);
+        transform(block, state);
 
         std::array<uint8_t, DIGEST_INTS * 4> result;
         // reverse all the bytes to big endian
         for (uint32_t n = 0; n < DIGEST_INTS; n++)
         {
-            result[n * 4 + 0] = static_cast<uint8_t>(digest[n] >> 24);
-            result[n * 4 + 1] = static_cast<uint8_t>(digest[n] >> 16);
-            result[n * 4 + 2] = static_cast<uint8_t>(digest[n] >> 8);
-            result[n * 4 + 3] = static_cast<uint8_t>(digest[n]);
+            result[n * 4 + 0] = static_cast<uint8_t>(state[n] >> 24);
+            result[n * 4 + 1] = static_cast<uint8_t>(state[n] >> 16);
+            result[n * 4 + 2] = static_cast<uint8_t>(state[n] >> 8);
+            result[n * 4 + 3] = static_cast<uint8_t>(state[n]);
         }
 
         return result;
