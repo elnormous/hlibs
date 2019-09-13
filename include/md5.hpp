@@ -7,7 +7,6 @@
 
 #include <array>
 #include <cstdint>
-#include <vector>
 
 namespace md5
 {
@@ -191,7 +190,7 @@ namespace md5
 
     template <class Iterator>
     inline std::array<uint8_t, 16> generate(const Iterator begin,
-                                            const Iterator end)
+                                            const Iterator end) noexcept
     {
         uint32_t state[BLOCK_INTS] = {
             0x67452301,
@@ -200,39 +199,60 @@ namespace md5
             0x10325476
         };
 
-        std::vector<uint8_t> m(begin, end);
-        const size_t length = m.size() * 8;
-        m.push_back(0x80);
-
-        while (m.size() % 64 != 56)
-            m.push_back(0x00);
-
-        m.push_back(length & 0xFF);
-        m.push_back((length >> 8) & 0xFF);
-        m.push_back((length >> 16) & 0xFF);
-        m.push_back((length >> 24) & 0xFF);
-        m.push_back((length >> 32) & 0xFF);
-        m.push_back((length >> 40) & 0xFF);
-        m.push_back((length >> 48) & 0xFF);
-        m.push_back((length >> 56) & 0xFF);
-
-        for (uint32_t i = 0; i + 63 < m.size(); i += 64)
-            transform(&m[i], state);
-
-        std::array<uint8_t, 16> result;
-        for (uint32_t i = 0; i < 4; ++i)
+        uint8_t block[BLOCK_BYTES];
+        uint32_t dataSize = 0;
+        for (auto i = begin; i != end; ++i)
         {
-            result[i * 4] = state[i] & 0xFF;
-            result[i * 4 + 1] = (state[i] >> 8) & 0xFF;
-            result[i * 4 + 2] = (state[i] >> 16) & 0xFF;
-            result[i * 4 + 3] = (state[i] >> 24) & 0xFF;
+            block[dataSize] = *i;
+            dataSize++;
+            if (dataSize == BLOCK_BYTES)
+            {
+                transform(block, state);
+                dataSize = 0;
+            }
+        }
+
+        // Pad data left in the buffer
+        uint32_t n = dataSize;
+        if (dataSize < BLOCK_BYTES - 8)
+        {
+            block[n++] = 0x80;
+            while (n < BLOCK_BYTES - 8) block[n++] = 0x00;
+        }
+        else
+        {
+            block[n++] = 0x80;
+            while (n < BLOCK_BYTES) block[n++] = 0x00;
+            transform(block, state);
+            std::fill(block, block + BLOCK_BYTES - 8, 0);
+        }
+
+        // append the size in bits
+        const uint64_t totalBits = dataSize * 8;
+        block[56] = static_cast<uint8_t>(totalBits);
+        block[57] = static_cast<uint8_t>(totalBits >> 8);
+        block[58] = static_cast<uint8_t>(totalBits >> 16);
+        block[59] = static_cast<uint8_t>(totalBits >> 24);
+        block[60] = static_cast<uint8_t>(totalBits >> 32);
+        block[61] = static_cast<uint8_t>(totalBits >> 40);
+        block[62] = static_cast<uint8_t>(totalBits >> 48);
+        block[63] = static_cast<uint8_t>(totalBits >> 56);
+        transform(block, state);
+
+        std::array<uint8_t, DIGEST_INTS * 4> result;
+        for (uint32_t i = 0; i < DIGEST_INTS; i++)
+        {
+            result[i * 4 + 0] = static_cast<uint8_t>(state[i]);
+            result[i * 4 + 1] = static_cast<uint8_t>(state[i] >> 8);
+            result[i * 4 + 2] = static_cast<uint8_t>(state[i] >> 16);
+            result[i * 4 + 3] = static_cast<uint8_t>(state[i] >> 24);
         }
 
         return result;
     }
 
     template <class T>
-    inline std::array<uint8_t, 16> generate(const T& v)
+    inline std::array<uint8_t, 16> generate(const T& v) noexcept
     {
         return generate(std::begin(v), std::end(v));
     }
