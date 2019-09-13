@@ -34,33 +34,29 @@ namespace base64
     {
         std::string result;
         size_t c = 0;
-        uint8_t charArray3[3];
-        uint8_t charArray4[4];
+        uint8_t charArray[3];
 
         for (Iterator i = begin; i != end; ++i)
         {
-            charArray3[c++] = *i;
+            charArray[c++] = *i;
             if (c == 3)
             {
-                charArray4[0] = static_cast<uint8_t>((charArray3[0] & 0xFC) >> 2);
-                charArray4[1] = static_cast<uint8_t>(((charArray3[0] & 0x03) << 4) + ((charArray3[1] & 0xF0) >> 4));
-                charArray4[2] = static_cast<uint8_t>(((charArray3[1] & 0x0F) << 2) + ((charArray3[2] & 0xC0) >> 6));
-                charArray4[3] = static_cast<uint8_t>(charArray3[2] & 0x3f);
-
-                for (c = 0; c < 4; c++) result += CHARS[charArray4[c]];
+                result += CHARS[static_cast<uint8_t>((charArray[0] & 0xFC) >> 2)];
+                result += CHARS[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
+                result += CHARS[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
+                result += CHARS[static_cast<uint8_t>(charArray[2] & 0x3f)];
                 c = 0;
             }
         }
 
         if (c)
         {
-            for (size_t j = c; j < 3; j++) charArray3[j] = '\0';
+            for (size_t j = c; j < 3; j++) charArray[j] = '\0';
 
-            charArray4[0] = static_cast<uint8_t>((charArray3[0] & 0xFC) >> 2);
-            charArray4[1] = static_cast<uint8_t>(((charArray3[0] & 0x03) << 4) + ((charArray3[1] & 0xF0) >> 4));
-            charArray4[2] = static_cast<uint8_t>(((charArray3[1] & 0x0F) << 2) + ((charArray3[2] & 0xC0) >> 6));
+            result += CHARS[static_cast<uint8_t>((charArray[0] & 0xFC) >> 2)];
+            result += CHARS[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
+            result += CHARS[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
 
-            for (size_t j = 0; j < c + 1; j++) result += CHARS[charArray4[j]];
             while (++c < 4) result += '=';
         }
 
@@ -77,34 +73,30 @@ namespace base64
     inline std::vector<uint8_t> decode(const Iterator begin, const Iterator end)
     {
         uint32_t c = 0;
-        uint8_t charArray3[3];
-        uint8_t charArray4[4];
+        uint8_t charArray[4];
         std::vector<uint8_t> result;
 
         for (Iterator i = begin; i != end && *i != '='; ++i)
         {
-            charArray4[c++] = static_cast<uint8_t>(*i);
+            charArray[c++] = static_cast<uint8_t>(*i);
             if (c == 4)
             {
-                for (c = 0; c < 4; ++c) charArray4[c] = getIndex(charArray4[c]);
+                for (uint32_t j = 0; j < 4; ++j) charArray[j] = getIndex(charArray[j]);
 
-                charArray3[0] = static_cast<uint8_t>((charArray4[0] << 2) + ((charArray4[1] & 0x30) >> 4));
-                charArray3[1] = static_cast<uint8_t>(((charArray4[1] & 0x0F) << 4) + ((charArray4[2] & 0x3C) >> 2));
-                charArray3[2] = static_cast<uint8_t>(((charArray4[2] & 0x3) << 6) + charArray4[3]);
+                result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
+                result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
+                result.push_back(static_cast<uint8_t>(((charArray[2] & 0x3) << 6) + charArray[3]));
 
-                for (c = 0; c < 3; ++c) result.push_back(charArray3[c]);
                 c = 0;
             }
         }
 
         if (c)
         {
-            for (uint32_t j = 0; j < c; ++j) charArray4[j] = getIndex(charArray4[j]);
+            for (uint32_t j = 0; j < c; ++j) charArray[j] = getIndex(charArray[j]);
 
-            charArray3[0] = static_cast<uint8_t>((charArray4[0] << 2) + ((charArray4[1] & 0x30) >> 4));
-            charArray3[1] = static_cast<uint8_t>(((charArray4[1] & 0x0F) << 4) + ((charArray4[2] & 0x3C) >> 2));
-
-            for (uint32_t j = 0; j < c - 1; ++j) result.push_back(charArray3[j]);
+            result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
+            result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
         }
 
         return result;
