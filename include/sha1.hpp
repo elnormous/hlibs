@@ -24,8 +24,8 @@ namespace sha1
     static constexpr uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA1 block
     static constexpr uint32_t BLOCK_BYTES = BLOCK_INTS * 4;
 
-    inline void transform(const uint32_t block[BLOCK_BYTES],
-                          uint32_t digest[DIGEST_INTS]) noexcept
+    inline void transform(const uint32_t block[DIGEST_INTS],
+                          uint32_t state[DIGEST_INTS]) noexcept
     {
         uint32_t w[80];
         for (int i = 0; i < 16; ++i)
@@ -34,11 +34,11 @@ namespace sha1
         for (int i = 16; i < 80; ++i)
             w[i] = rotateLeft(w[i - 3] ^ w[i - 8] ^ w[i - 14] ^ w[i - 16], 1);
 
-        uint32_t a = digest[0];
-        uint32_t b = digest[1];
-        uint32_t c = digest[2];
-        uint32_t d = digest[3];
-        uint32_t e = digest[4];
+        uint32_t a = state[0];
+        uint32_t b = state[1];
+        uint32_t c = state[2];
+        uint32_t d = state[3];
+        uint32_t e = state[4];
 
         uint32_t f = 0;
         uint32_t k = 0;
@@ -74,11 +74,11 @@ namespace sha1
             a = temp;
         }
 
-        digest[0] += a;
-        digest[1] += b;
-        digest[2] += c;
-        digest[3] += d;
-        digest[4] += e;
+        state[0] += a;
+        state[1] += b;
+        state[2] += c;
+        state[3] += d;
+        state[4] += e;
     }
 
     template <class Iterator>
@@ -102,6 +102,7 @@ namespace sha1
             transform(block, digest);
         }
 
+        // pad data left in the buffer
         buffer.assign(i, end);
         buffer.push_back(0x80);
         const auto origSize = buffer.size();
@@ -109,10 +110,10 @@ namespace sha1
             buffer.push_back(0x00);
 
         for (uint32_t n = 0; n < BLOCK_INTS; n++)
-            block[n] = static_cast<uint32_t>(buffer[4 * n + 3] |
-                                             buffer[4 * n + 2] << 8 |
-                                             buffer[4 * n + 1] << 16 |
-                                             buffer[4 * n + 0] << 24);
+            block[n] = static_cast<uint32_t>(buffer[4 * n + 3]) |
+                static_cast<uint32_t>(buffer[4 * n + 2]) << 8 |
+                static_cast<uint32_t>(buffer[4 * n + 1]) << 16 |
+                static_cast<uint32_t>(buffer[4 * n + 0]) << 24;
 
         if (origSize > BLOCK_BYTES - 8)
         {
@@ -120,18 +121,20 @@ namespace sha1
             std::fill(block, block + BLOCK_INTS - 2, 0);
         }
 
+        // append the size in bits
         const uint64_t totalBits = static_cast<uint64_t>(abs(std::distance(begin, end))) * 8;
-        block[BLOCK_INTS - 1] = totalBits & 0xFFFFFFFF;
-        block[BLOCK_INTS - 2] = (totalBits >> 32) & 0xFFFFFFFF;
+        block[BLOCK_INTS - 1] = static_cast<uint32_t>(totalBits);
+        block[BLOCK_INTS - 2] = static_cast<uint32_t>(totalBits >> 32);
         transform(block, digest);
 
         std::array<uint8_t, DIGEST_INTS * 4> result;
+        // reverse all the bytes to big endian
         for (uint32_t n = 0; n < DIGEST_INTS; n++)
         {
-            result[n * 4 + 0] = (digest[n] >> 24) & 0xFF;
-            result[n * 4 + 1] = (digest[n] >> 16) & 0xFF;
-            result[n * 4 + 2] = (digest[n] >> 8) & 0xFF;
-            result[n * 4 + 3] = (digest[n] & 0xFF);
+            result[n * 4 + 0] = static_cast<uint8_t>(digest[n] >> 24);
+            result[n * 4 + 1] = static_cast<uint8_t>(digest[n] >> 16);
+            result[n * 4 + 2] = static_cast<uint8_t>(digest[n] >> 8);
+            result[n * 4 + 3] = static_cast<uint8_t>(digest[n]);
         }
 
         return result;

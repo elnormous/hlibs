@@ -7,6 +7,7 @@
 #include "fnv1.hpp"
 #include "md5.hpp"
 #include "sha1.hpp"
+#include "sha256.hpp"
 #include "utf8.hpp"
 #include "uuid.hpp"
 
@@ -106,6 +107,17 @@ static void testSha1()
     std::cout << "SHA1: " << hstr << std::endl;
 }
 
+static void testSha256()
+{
+    const auto h = sha256::hash(test);
+    const auto hstr = toString(h);
+
+    if (hstr != "2d8f37e9c67a0bab28d6cfc4c5d92055c5c69bb131948e198fc62c85d9016008")
+        throw std::runtime_error("Invalid sha256");
+
+    std::cout << "SHA256: " << hstr << std::endl;
+}
+
 static void testUtf8()
 {
     const std::string testString = u8"ÀÁÂÃÄÅÆ";
@@ -144,6 +156,7 @@ int main()
         testFnv1();
         testMd5();
         testSha1();
+        testSha256();
         testUtf8();
         testUuid();
     }
