@@ -124,7 +124,7 @@ namespace sha1
         }
 
         // append the size in bits
-        const uint64_t totalBits = static_cast<uint64_t>(abs(std::distance(begin, end))) * 8;
+        const uint64_t totalBits = dataSize * 8;
         block[63] = static_cast<uint8_t>(totalBits);
         block[62] = static_cast<uint8_t>(totalBits >> 8);
         block[61] = static_cast<uint8_t>(totalBits >> 16);
