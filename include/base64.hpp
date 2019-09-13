@@ -51,7 +51,7 @@ namespace base64
 
         if (c)
         {
-            for (size_t j = c; j < 3; j++) charArray[j] = '\0';
+            for (size_t j = c; j < 3; ++j) charArray[j] = '\0';
 
             result += CHARS[static_cast<uint8_t>((charArray[0] & 0xFC) >> 2)];
             result += CHARS[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
@@ -94,6 +94,7 @@ namespace base64
         if (c)
         {
             for (uint32_t j = 0; j < c; ++j) charArray[j] = getIndex(charArray[j]);
+            for (uint32_t j = c; j < 4; ++j) charArray[j] = 0;
 
             result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
             result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
