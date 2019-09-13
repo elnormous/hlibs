@@ -143,20 +143,20 @@ namespace sha256
         }
 
         // Pad data left in the buffer
-        uint32_t i = datalen;
+        uint32_t n = datalen;
         if (datalen < 56)
         {
-            data[i++] = 0x80;
-            while (i < 56)
-                data[i++] = 0x00;
+            data[n++] = 0x80;
+            while (n < 56)
+                data[n++] = 0x00;
         }
         else
         {
-            data[i++] = 0x80;
-            while (i < 64)
-                data[i++] = 0x00;
+            data[n++] = 0x80;
+            while (n < 64)
+                data[n++] = 0x00;
             transform(data, state);
-            memset(data, 0, 56);
+            std::fill(std::begin(data), std::end(data), 0);
         }
 
         // append the size in bits
@@ -173,7 +173,7 @@ namespace sha256
 
         std::array<uint8_t, 32> result;
         // reverse all the bytes to big endian
-        for (i = 0; i < 4; ++i)
+        for (uint32_t i = 0; i < 4; ++i)
         {
             result[i + 0] = static_cast<uint8_t>(state[0] >> (24 - i * 8));
             result[i + 4] = static_cast<uint8_t>(state[1] >> (24 - i * 8));
