@@ -37,8 +37,8 @@ namespace sha256
         0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
     };
 
-    static constexpr uint32_t DIGEST_INTS = 8; // number of 32bit integers per SHA1 digest
-    static constexpr uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA1 block
+    static constexpr uint32_t DIGEST_INTS = 8; // number of 32bit integers per SHA256 digest
+    static constexpr uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA256 block
     static constexpr uint32_t BLOCK_BYTES = BLOCK_INTS * 4;
 
     inline void transform(const uint8_t block[BLOCK_BYTES], uint32_t state[DIGEST_INTS]) noexcept
@@ -48,7 +48,7 @@ namespace sha256
             w[i] = (static_cast<uint32_t>(block[i * 4]) << 24) |
                 (static_cast<uint32_t>(block[i * 4 + 1]) << 16) |
                 (static_cast<uint32_t>(block[i * 4 + 2]) << 8) |
-                static_cast<uint32_t>(block[i * 4 + 3]);;
+                static_cast<uint32_t>(block[i * 4 + 3]);
 
         for (uint32_t i = 16; i < 64; ++i)
         {
