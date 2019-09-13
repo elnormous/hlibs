@@ -189,8 +189,8 @@ namespace md5
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, 16> generate(const Iterator begin,
-                                            const Iterator end) noexcept
+    inline std::array<uint8_t, DIGEST_INTS * 4> generate(const Iterator begin,
+                                                         const Iterator end) noexcept
     {
         uint32_t state[BLOCK_INTS] = {
             0x67452301,
@@ -252,7 +252,7 @@ namespace md5
     }
 
     template <class T>
-    inline std::array<uint8_t, 16> generate(const T& v) noexcept
+    inline std::array<uint8_t, DIGEST_INTS * 4> generate(const T& v) noexcept
     {
         return generate(std::begin(v), std::end(v));
     }
