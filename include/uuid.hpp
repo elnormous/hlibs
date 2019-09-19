@@ -62,7 +62,7 @@ namespace uuid
 
     inline std::string generateString()
     {
-        static const char* digits = "0123456789abcdef";
+        constexpr char digits[] = "0123456789abcdef";
 
         const Uuid u = generate();
 
