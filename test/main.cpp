@@ -45,7 +45,7 @@ namespace
         if (b != "VGVzdCAxMiE=")
             throw std::runtime_error("Invalid base64");
 
-        std::cout << "Base64: " << b << std::endl;
+        std::cout << "Base64: " << b << '\n';
 
         const auto b2 = base64::decode(b);
 
@@ -60,14 +60,14 @@ namespace
         if (c8 != 0x20)
             throw std::runtime_error("Invalid CRC8!");
 
-        std::cout << "CRC8: " << std::hex << static_cast<uint32_t>(c8) << std::endl;
+        std::cout << "CRC8: " << std::hex << static_cast<uint32_t>(c8) << '\n';
 
         const auto c32 = crc32::generate(test);
 
         if (c32 != 0xc8a61cc1)
             throw std::runtime_error("Invalid CRC32");
 
-        std::cout << "CRC32: " << std::hex << c32 << std::endl;
+        std::cout << "CRC32: " << std::hex << c32 << '\n';
     }
 
     void testFnv1()
@@ -77,14 +77,14 @@ namespace
         if (f32 != 0x296a37b7)
             throw std::runtime_error("Invalid FNV1 32-bit");
 
-        std::cout << "FNV32: " << std::hex << f32 << std::endl;
+        std::cout << "FNV32: " << std::hex << f32 << '\n';
 
         const auto f64 = fnv1::hash<uint64_t>(test);
 
         if (f64 != 0x98645a51cb3becf7)
             throw std::runtime_error("Invalid FNV1 64-bit");
 
-        std::cout << "FNV64: " << std::hex << f64 << std::endl;
+        std::cout << "FNV64: " << std::hex << f64 << '\n';
     }
 
     void testMd5()
@@ -95,7 +95,7 @@ namespace
         if (dstr != "9575b2604f8fd72edb743e95bd88b36d")
             throw std::runtime_error("Invalid md5");
 
-        std::cout << "MD5: " << dstr << std::endl;
+        std::cout << "MD5: " << dstr << '\n';
     }
 
     void testSha1()
@@ -106,7 +106,7 @@ namespace
         if (hstr != "ca593e38a74c94d97c9e0ead291340ae6a824060")
             throw std::runtime_error("Invalid sha1");
 
-        std::cout << "SHA1: " << hstr << std::endl;
+        std::cout << "SHA1: " << hstr << '\n';
     }
 
     void testSha256()
@@ -117,7 +117,7 @@ namespace
         if (hstr != "2d8f37e9c67a0bab28d6cfc4c5d92055c5c69bb131948e198fc62c85d9016008")
             throw std::runtime_error("Invalid sha256");
 
-        std::cout << "SHA256: " << hstr << std::endl;
+        std::cout << "SHA256: " << hstr << '\n';
     }
 
     void testUtf8()
@@ -134,7 +134,7 @@ namespace
         if (utf8String != testString)
             throw std::runtime_error("Invalid UTF-8");
 
-        std::cout << "UTF8: " << utf8String << std::endl;
+        std::cout << "UTF8: " << utf8String << '\n';
     }
 
     void testUuid()
@@ -146,7 +146,7 @@ namespace
         if ((hexToInt(g[19]) & 0x0C) != 0x8)
             throw std::runtime_error("Wrong UUID variant");
 
-        std::cout << "UUID: " << g << std::endl;
+        std::cout << "UUID: " << g << '\n';
     }
 }
 
@@ -165,7 +165,7 @@ int main()
     }
     catch (const std::exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        std::cerr << e.what() << '\n';
         return EXIT_FAILURE;
     }
 
