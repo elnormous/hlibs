@@ -26,38 +26,43 @@ namespace uuid
         static std::random_device rd;
         static std::mt19937_64 mt(rd());
 
-        Uuid result;
-
         const uint64_t randomTime = mt();
 
-        result.timeLow = ((randomTime >> 24) & 0x000000FF) |
+        const uint32_t timeLow = ((randomTime >> 24) & 0x000000FF) |
             ((randomTime >> 8) & 0x0000FF00) |
             ((randomTime << 8) & 0x00FF0000) |
             ((randomTime << 24) & 0xFF000000);
 
-        result.timeMid = static_cast<uint16_t>(((randomTime >> 40) & 0x00FF) |
-                                               ((randomTime >> 24) & 0xFF00));
+        const uint16_t timeMid = static_cast<uint16_t>(((randomTime >> 40) & 0x00FF) |
+                                                       ((randomTime >> 24) & 0xFF00));
 
-        result.timeHiAndVersion = static_cast<uint16_t>(((0x04 << 12) & 0xF000) |
-                                                        ((randomTime >> 56) & 0x00FF) |
-                                                        ((randomTime >> 40) & 0x0F00));
+        const uint16_t timeHiAndVersion = static_cast<uint16_t>(((0x04 << 12) & 0xF000) |
+                                                                ((randomTime >> 56) & 0x00FF) |
+                                                                ((randomTime >> 40) & 0x0F00));
 
         const uint16_t clockSequence = static_cast<uint16_t>(mt() & 0x3FFF); // 14-bit random
 
-        result.clockSeqHiAndReserved = static_cast<uint8_t>(0x80 | // bit 6 and 7
-                                                            ((clockSequence >> 8) & 0x3F));
-        result.clockSeqLow = static_cast<uint8_t>(clockSequence & 0xFF);
+        const uint8_t clockSeqHiAndReserved = static_cast<uint8_t>(0x80 | // bit 6 and 7
+                                                                   ((clockSequence >> 8) & 0x3F));
+        const uint8_t clockSeqLow = static_cast<uint8_t>(clockSequence & 0xFF);
 
         const uint64_t random = mt();
 
-        result.node[0] = (random >> 48) & 0xFF;
-        result.node[1] = (random >> 40) & 0xFF;
-        result.node[2] = (random >> 32) & 0xFF;
-        result.node[3] = (random >> 24) & 0xFF;
-        result.node[4] = (random >> 16) & 0xFF;
-        result.node[5] = (random >> 0) & 0xFF;
-
-        return result;
+        return {
+            timeLow,
+            timeMid,
+            timeHiAndVersion,
+            clockSeqHiAndReserved,
+            clockSeqLow,
+            {
+                static_cast<uint8_t>(random >> 48),
+                static_cast<uint8_t>(random >> 40),
+                static_cast<uint8_t>(random >> 32),
+                static_cast<uint8_t>(random >> 24),
+                static_cast<uint8_t>(random >> 16),
+                static_cast<uint8_t>(random >> 0)
+            }
+        };
     }
 
     inline std::string generateString()
