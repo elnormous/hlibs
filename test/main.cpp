@@ -13,6 +13,29 @@
 
 namespace
 {
+    class TestRunner
+    {
+    public:
+        template <class T, class ...Args>
+        void run(T test, Args ...args)
+        {
+            try
+            {
+                test(args...);
+            }
+            catch (std::exception& e)
+            {
+                std::cerr << e.what() << '\n';
+                result = false;
+            }
+        }
+
+        bool getResult() const noexcept { return result; }
+
+    private:
+        bool result = true;
+    };
+
     template <class T>
     inline std::string toString(const T& v)
     {
@@ -152,22 +175,18 @@ namespace
 
 int main()
 {
-    try
-    {
-        testBase64();
-        testCrc();
-        testFnv1();
-        testMd5();
-        testSha1();
-        testSha256();
-        testUtf8();
-        testUuid();
-    }
-    catch (const std::exception& e)
-    {
-        std::cerr << e.what() << '\n';
-        return EXIT_FAILURE;
-    }
+    TestRunner testRunner;
+    testRunner.run(testBase64);
+    testRunner.run(testCrc);
+    testRunner.run(testFnv1);
+    testRunner.run(testMd5);
+    testRunner.run(testSha1);
+    testRunner.run(testSha256);
+    testRunner.run(testUtf8);
+    testRunner.run(testUuid);
 
-    return EXIT_SUCCESS;
+    if (testRunner.getResult())
+        std::cout << "Success\n";
+
+    return testRunner.getResult() ? EXIT_SUCCESS : EXIT_FAILURE;
 }
