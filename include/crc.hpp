@@ -11,7 +11,7 @@ namespace crc8
 {
     namespace
     {
-        constexpr uint8_t CRC_TABLE[256] = {
+        constexpr uint8_t crcTable[256] = {
             0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31,
             0x24, 0x23, 0x2A, 0x2D, 0x70, 0x77, 0x7E, 0x79, 0x6C, 0x6B, 0x62, 0x65,
             0x48, 0x4F, 0x46, 0x41, 0x54, 0x53, 0x5A, 0x5D, 0xE0, 0xE7, 0xEE, 0xE9,
@@ -41,7 +41,7 @@ namespace crc8
 	constexpr uint8_t generate(const Iterator i, const Iterator end,
                                const uint8_t init = 0x00) noexcept
 	{
-        return ((i != end) ? generate<0x0>(i + 1, end, CRC_TABLE[init ^ static_cast<uint32_t>(*i)]) : init) ^ xorOut;
+        return ((i != end) ? generate<0x0>(i + 1, end, crcTable[init ^ static_cast<uint32_t>(*i)]) : init) ^ xorOut;
 	}
 
     template <class T>
@@ -55,7 +55,7 @@ namespace crc32
 {
     namespace
     {
-        constexpr uint32_t CRC_TABLE[256] = {
+        constexpr uint32_t crcTable[256] = {
             0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
             0x0EDB8832, 0x79DCB8A4, 0xE0D5E91E, 0x97D2D988, 0x09B64C2B, 0x7EB17CBD, 0xE7B82D07, 0x90BF1D91,
             0x1DB71064, 0x6AB020F2, 0xF3B97148, 0x84BE41DE, 0x1ADAD47D, 0x6DDDE4EB, 0xF4D4B551, 0x83D385C7,
@@ -93,7 +93,7 @@ namespace crc32
 
 	/*inline void generateTable() noexcept
 	{
-		constexpr uint32_t POLYNOMIAL = 0xEDB88320;
+		constexpr uint32_t polynomial = 0xEDB88320;
 		uint8_t b = 0;
 		do
 		{
@@ -101,11 +101,11 @@ namespace crc32
 			for (uint32_t bit = 0; bit < 8; ++bit)
 			{
 				if (remainder & 1)
-					remainder = (remainder >> 1) ^ POLYNOMIAL;
+					remainder = (remainder >> 1) ^ polynomial;
 				else
 					remainder = (remainder >> 1);
 			}
-			CRC_TABLE[b] = remainder;
+			crcTable[b] = remainder;
 		}
 		while (0 != ++b);
 	}*/
@@ -114,7 +114,7 @@ namespace crc32
     constexpr uint32_t generate(const Iterator i, const Iterator end,
                                 const uint32_t init = 0xFFFFFFFF) noexcept
     {
-        return ((i != end) ? generate<0x0>(i + 1, end, (init >> 8) ^ CRC_TABLE[(init ^ static_cast<uint32_t>(*i)) & 0xFF]) : init) ^ xorOut;
+        return ((i != end) ? generate<0x0>(i + 1, end, (init >> 8) ^ crcTable[(init ^ static_cast<uint32_t>(*i)) & 0xFF]) : init) ^ xorOut;
     }
 
     template <class T>

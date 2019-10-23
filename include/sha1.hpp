@@ -20,12 +20,12 @@ namespace sha1
             return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
         }
 
-        constexpr uint32_t DIGEST_INTS = 5; // number of 32bit integers per SHA1 digest
-        constexpr uint32_t BLOCK_INTS = 16; // number of 32bit integers per SHA1 block
-        constexpr uint32_t BLOCK_BYTES = BLOCK_INTS * 4;
+        constexpr uint32_t digestInts = 5; // number of 32bit integers per SHA1 digest
+        constexpr uint32_t blockInts = 16; // number of 32bit integers per SHA1 block
+        constexpr uint32_t blockBytes = blockInts * 4;
 
-        inline void transform(const uint8_t block[BLOCK_BYTES],
-                              uint32_t state[DIGEST_INTS]) noexcept
+        inline void transform(const uint8_t block[blockBytes],
+                              uint32_t state[digestInts]) noexcept
         {
             uint32_t w[80];
             for (uint32_t i = 0; i < 16; ++i)
@@ -86,10 +86,10 @@ namespace sha1
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, DIGEST_INTS * 4> hash(const Iterator begin,
-                                                     const Iterator end) noexcept
+    inline std::array<uint8_t, digestInts * 4> hash(const Iterator begin,
+                                                    const Iterator end) noexcept
     {
-        uint32_t state[DIGEST_INTS] = {
+        uint32_t state[digestInts] = {
             0x67452301,
             0xEFCDAB89,
             0x98BADCFE,
@@ -98,13 +98,13 @@ namespace sha1
         };
 
         std::vector<uint8_t> buffer;
-        uint8_t block[BLOCK_BYTES];
+        uint8_t block[blockBytes];
         uint32_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {
             block[dataSize] = *i;
             dataSize++;
-            if (dataSize == BLOCK_BYTES)
+            if (dataSize == blockBytes)
             {
                 transform(block, state);
                 dataSize = 0;
@@ -113,17 +113,17 @@ namespace sha1
 
         // Pad data left in the buffer
         uint32_t n = dataSize;
-        if (dataSize < BLOCK_BYTES - 8)
+        if (dataSize < blockBytes - 8)
         {
             block[n++] = 0x80;
-            while (n < BLOCK_BYTES - 8) block[n++] = 0x00;
+            while (n < blockBytes - 8) block[n++] = 0x00;
         }
         else
         {
             block[n++] = 0x80;
-            while (n < BLOCK_BYTES) block[n++] = 0x00;
+            while (n < blockBytes) block[n++] = 0x00;
             transform(block, state);
-            std::fill(block, block + BLOCK_BYTES - 8, 0);
+            std::fill(block, block + blockBytes - 8, 0);
         }
 
         // append the size in bits
@@ -138,9 +138,9 @@ namespace sha1
         block[56] = static_cast<uint8_t>(totalBits >> 56);
         transform(block, state);
 
-        std::array<uint8_t, DIGEST_INTS * 4> result;
+        std::array<uint8_t, digestInts * 4> result;
         // reverse all the bytes to big endian
-        for (uint32_t i = 0; i < DIGEST_INTS; i++)
+        for (uint32_t i = 0; i < digestInts; i++)
         {
             result[i * 4 + 0] = static_cast<uint8_t>(state[i] >> 24);
             result[i * 4 + 1] = static_cast<uint8_t>(state[i] >> 16);
@@ -152,7 +152,7 @@ namespace sha1
     }
 
     template <class T>
-    inline std::array<uint8_t, DIGEST_INTS * 4> hash(const T& v)
+    inline std::array<uint8_t, digestInts * 4> hash(const T& v)
     {
         return hash(std::begin(v), std::end(v));
     }

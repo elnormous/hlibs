@@ -14,7 +14,7 @@ namespace base64
 {
     namespace
     {
-        constexpr char CHARS[] = {
+        constexpr char chars[] = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -44,10 +44,10 @@ namespace base64
             charArray[c++] = *i;
             if (c == 3)
             {
-                result += CHARS[static_cast<uint8_t>((charArray[0] & 0xFC) >> 2)];
-                result += CHARS[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
-                result += CHARS[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
-                result += CHARS[static_cast<uint8_t>(charArray[2] & 0x3f)];
+                result += chars[static_cast<uint8_t>((charArray[0] & 0xFC) >> 2)];
+                result += chars[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
+                result += chars[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
+                result += chars[static_cast<uint8_t>(charArray[2] & 0x3f)];
                 c = 0;
             }
         }
@@ -56,9 +56,9 @@ namespace base64
         {
             for (size_t j = c; j < 3; ++j) charArray[j] = '\0';
 
-            result += CHARS[static_cast<uint8_t>((charArray[0] & 0xFC) >> 2)];
-            result += CHARS[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
-            result += CHARS[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
+            result += chars[static_cast<uint8_t>((charArray[0] & 0xFC) >> 2)];
+            result += chars[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
+            result += chars[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
 
             while (++c < 4) result += '=';
         }
