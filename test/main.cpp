@@ -59,10 +59,10 @@ namespace
             throw std::out_of_range("Invalid hex digit");
     }
 
-    const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
-
     void testBase64()
     {
+        const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+
         const auto b = base64::encode(test);
 
         if (b != "VGVzdCAxMiE=")
@@ -78,6 +78,8 @@ namespace
 
     void testCrc()
     {
+        const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+
         const auto c8 = crc8::generate(test);
 
         if (c8 != 0x20)
@@ -95,6 +97,8 @@ namespace
 
     void testFnv1()
     {
+        const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+
         const auto f32 = fnv1::hash<uint32_t>(test);
 
         if (f32 != 0x296a37b7)
@@ -112,35 +116,59 @@ namespace
 
     void testMd5()
     {
-        const auto d = md5::generate(test);
-        const auto dstr = toString(d);
+        const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
+            {{}, "d41d8cd98f00b204e9800998ecf8427e"},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "9575b2604f8fd72edb743e95bd88b36d"}
+        };
 
-        if (dstr != "9575b2604f8fd72edb743e95bd88b36d")
-            throw std::runtime_error("Invalid md5");
+        for (auto& testCase : testCases)
+        {
+            const auto d = md5::generate(testCase.first);
+            const auto dstr = toString(d);
 
-        std::cout << "MD5: " << dstr << '\n';
+            if (dstr != testCase.second)
+                throw std::runtime_error("Invalid md5");
+
+            std::cout << "MD5: " << dstr << '\n';
+        }
     }
 
     void testSha1()
     {
-        const auto h = sha1::hash(test);
-        const auto hstr = toString(h);
+        const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
+            {{}, "da39a3ee5e6b4b0d3255bfef95601890afd80709"},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "ca593e38a74c94d97c9e0ead291340ae6a824060"}
+        };
 
-        if (hstr != "ca593e38a74c94d97c9e0ead291340ae6a824060")
-            throw std::runtime_error("Invalid sha1");
+        for (auto& testCase : testCases)
+        {
+            const auto h = sha1::hash(testCase.first);
+            const auto hstr = toString(h);
 
-        std::cout << "SHA1: " << hstr << '\n';
+            if (hstr != testCase.second)
+                throw std::runtime_error("Invalid sha1");
+
+            std::cout << "SHA1: " << hstr << '\n';
+        }
     }
 
     void testSha256()
     {
-        const auto h = sha256::hash(test);
-        const auto hstr = toString(h);
+        const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
+            {{}, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "2d8f37e9c67a0bab28d6cfc4c5d92055c5c69bb131948e198fc62c85d9016008"}
+        };
 
-        if (hstr != "2d8f37e9c67a0bab28d6cfc4c5d92055c5c69bb131948e198fc62c85d9016008")
-            throw std::runtime_error("Invalid sha256");
+        for (auto& testCase : testCases)
+        {
+            const auto h = sha256::hash(testCase.first);
+            const auto hstr = toString(h);
 
-        std::cout << "SHA256: " << hstr << '\n';
+            if (hstr != testCase.second)
+                throw std::runtime_error("Invalid sha256");
+
+            std::cout << "SHA256: " << hstr << '\n';
+        }
     }
 
     void testUtf8()
