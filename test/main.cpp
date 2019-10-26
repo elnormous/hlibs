@@ -76,42 +76,76 @@ namespace
             throw std::runtime_error("Invalid decoded base64");
     }
 
-    void testCrc()
+    void testCrc8()
     {
-        const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+        const std::pair<std::vector<uint8_t>, uint8_t> testCases[] = {
+            {{}, 0x00},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x20}
+        };
 
-        const auto c8 = crc8::generate(test);
+        for (auto& testCase : testCases)
+        {
+            const auto c8 = crc8::generate(testCase.first);
 
-        if (c8 != 0x20)
-            throw std::runtime_error("Invalid CRC8!");
+            if (c8 != testCase.second)
+                throw std::runtime_error("Invalid CRC8!");
 
-        std::cout << "CRC8: " << std::hex << static_cast<uint32_t>(c8) << '\n';
-
-        const auto c32 = crc32::generate(test);
-
-        if (c32 != 0xc8a61cc1)
-            throw std::runtime_error("Invalid CRC32");
-
-        std::cout << "CRC32: " << std::hex << c32 << '\n';
+            std::cout << "CRC8: " << std::hex << static_cast<uint32_t>(c8) << '\n';
+        }
     }
 
-    void testFnv1()
+    void testCrc32()
     {
-        const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+        const std::pair<std::vector<uint8_t>, uint32_t> testCases[] = {
+            {{}, 0x00000000},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0xc8a61cc1}
+        };
 
-        const auto f32 = fnv1::hash<uint32_t>(test);
+        for (auto& testCase : testCases)
+        {
+            const auto c32 = crc32::generate(testCase.first);
 
-        if (f32 != 0x296a37b7)
-            throw std::runtime_error("Invalid FNV1 32-bit");
+            if (c32 != testCase.second)
+                throw std::runtime_error("Invalid CRC32");
 
-        std::cout << "FNV32: " << std::hex << f32 << '\n';
+            std::cout << "CRC32: " << std::hex << c32 << '\n';
+        }
+    }
 
-        const auto f64 = fnv1::hash<uint64_t>(test);
+    void testFnv132()
+    {
+        const std::pair<std::vector<uint8_t>, uint32_t> testCases[] = {
+            {{}, 0x811c9dc5},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x296a37b7}
+        };
 
-        if (f64 != 0x98645a51cb3becf7)
-            throw std::runtime_error("Invalid FNV1 64-bit");
+        for (auto& testCase : testCases)
+        {
+            const auto f32 = fnv1::hash<uint32_t>(testCase.first);
 
-        std::cout << "FNV64: " << std::hex << f64 << '\n';
+            if (f32 != testCase.second)
+                throw std::runtime_error("Invalid FNV1 32-bit");
+
+            std::cout << "FNV1 32: " << std::hex << f32 << '\n';
+        }
+    }
+
+    void testFnv164()
+    {
+        const std::pair<std::vector<uint8_t>, uint64_t> testCases[] = {
+            {{}, 0xcbf29ce484222325},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x98645a51cb3becf7}
+        };
+
+        for (auto& testCase : testCases)
+        {
+            const auto f64 = fnv1::hash<uint64_t>(testCase.first);
+
+            if (f64 != testCase.second)
+                throw std::runtime_error("Invalid FNV1 64-bit");
+
+            std::cout << "FNV1 64: " << std::hex << f64 << '\n';
+        }
     }
 
     void testMd5()
@@ -205,8 +239,10 @@ int main()
 {
     TestRunner testRunner;
     testRunner.run(testBase64);
-    testRunner.run(testCrc);
-    testRunner.run(testFnv1);
+    testRunner.run(testCrc8);
+    testRunner.run(testCrc32);
+    testRunner.run(testFnv132);
+    testRunner.run(testFnv164);
     testRunner.run(testMd5);
     testRunner.run(testSha1);
     testRunner.run(testSha256);
