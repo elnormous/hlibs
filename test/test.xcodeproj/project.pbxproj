@@ -30,6 +30,7 @@
 		30E08689232B183700F90FAF /* crc.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = crc.hpp; sourceTree = "<group>"; };
 		30E0868A232B183700F90FAF /* base64.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = base64.hpp; sourceTree = "<group>"; };
 		30E0868B232B183700F90FAF /* md5.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = md5.hpp; sourceTree = "<group>"; };
+		30F150DD2363AC3600536199 /* aes.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = aes.hpp; sourceTree = "<group>"; };
 		C6199A38232B990400EC15DD /* sha2.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sha2.hpp; sourceTree = "<group>"; };
 		C6C90FD321A5A24D00B5FCB7 /* test */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = test; sourceTree = BUILT_PRODUCTS_DIR; };
 		C6C90FD621A5A24D00B5FCB7 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@
 		30E08684232B168C00F90FAF /* include */ = {
 			isa = PBXGroup;
 			children = (
+				30F150DD2363AC3600536199 /* aes.hpp */,
 				30E0868A232B183700F90FAF /* base64.hpp */,
 				30E08689232B183700F90FAF /* crc.hpp */,
 				30E08688232B183700F90FAF /* fnv1.hpp */,

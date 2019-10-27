@@ -2,6 +2,7 @@
 #include <stdexcept>
 #include <string>
 #include <vector>
+#include "aes.hpp"
 #include "base64.hpp"
 #include "crc.hpp"
 #include "fnv1.hpp"
