@@ -99,9 +99,11 @@ namespace md5
         constexpr uint32_t digestInts = 4; // number of 32bit integers per MD5 digest
         constexpr uint32_t blockInts = 16; // number of 32bit integers per MD5 block
         constexpr uint32_t blockBytes = blockInts * 4;
+        using Block = uint8_t[blockBytes];
+        using State = uint32_t[digestInts];
 
-        inline void transform(const uint8_t block[blockBytes],
-                              uint32_t state[digestInts]) noexcept
+        inline void transform(const Block& block,
+                              State& state) noexcept
         {
             uint32_t w[16];
 
@@ -195,14 +197,14 @@ namespace md5
     inline std::array<uint8_t, digestInts * 4> generate(const Iterator begin,
                                                         const Iterator end) noexcept
     {
-        uint32_t state[blockInts] = {
+        State state = {
             0x67452301,
             0xEFCDAB89,
             0x98BADCFE,
             0x10325476
         };
 
-        uint8_t block[blockBytes];
+        Block block;
         uint32_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {

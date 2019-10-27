@@ -23,9 +23,11 @@ namespace sha1
         constexpr uint32_t digestInts = 5; // number of 32bit integers per SHA1 digest
         constexpr uint32_t blockInts = 16; // number of 32bit integers per SHA1 block
         constexpr uint32_t blockBytes = blockInts * 4;
+        using Block = uint8_t[blockBytes];
+        using State = uint32_t[digestInts];
 
-        inline void transform(const uint8_t block[blockBytes],
-                              uint32_t state[digestInts]) noexcept
+        inline void transform(const Block& block,
+                              State& state) noexcept
         {
             uint32_t w[80];
             for (uint32_t i = 0; i < 16; ++i)
@@ -89,7 +91,7 @@ namespace sha1
     inline std::array<uint8_t, digestInts * 4> hash(const Iterator begin,
                                                     const Iterator end) noexcept
     {
-        uint32_t state[digestInts] = {
+        State state = {
             0x67452301,
             0xEFCDAB89,
             0x98BADCFE,
@@ -98,7 +100,7 @@ namespace sha1
         };
 
         std::vector<uint8_t> buffer;
-        uint8_t block[blockBytes];
+        Block block;
         uint32_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {
