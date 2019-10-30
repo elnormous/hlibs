@@ -71,7 +71,7 @@ namespace uuid
 
         const Uuid u = generate();
 
-        std::string result = {
+        return {
             digits[(u.timeLow >> 28) & 0x0F],
             digits[(u.timeLow >> 24) & 0x0F],
             digits[(u.timeLow >> 20) & 0x0F],
@@ -109,8 +109,6 @@ namespace uuid
             digits[(u.node[5] >> 4) & 0x0F],
             digits[(u.node[5] >> 0) & 0x0F]
         };
-
-        return result;
     }
 }
 
