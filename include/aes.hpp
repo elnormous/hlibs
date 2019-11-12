@@ -78,7 +78,49 @@ namespace aes
             0X17, 0X2B, 0X04, 0X7E, 0XBA, 0X77, 0XD6, 0X26,
             0XE1, 0X69, 0X14, 0X63, 0X55, 0X21, 0X0C, 0X7D
         };
+
+        constexpr size_t getRounds(size_t keyLength)
+        {
+            return keyLength / 32 + 6;
+        }
+
+        constexpr size_t getWords(size_t keyLength)
+        {
+            return keyLength / 32;
+        }
+
+        constexpr size_t nb = 4; // number of words in an AES block (Nb)
+        using Word = uint8_t[4];
+        using Block = Word[nb];
+        using RoundKey = Word[4];
+
+        void subBytes(Block& state) noexcept
+        {
+            for (size_t i = 0; i < 4; ++i)
+                for (size_t j = 0; j < nb; ++j)
+                    state[i][j] = sbox[state[i][j]];
+        }
+
+        void shiftRow(Block& state, const size_t i, const size_t n) noexcept
+        {
+            for (size_t k = 0; k < n; k++)
+            {
+                uint8_t t = state[i][0];
+                for (size_t j = 0; j < nb - 1; ++j)
+                    state[i][j] = state[i][j + 1];
+
+                state[i][nb - 1] = t;
+            }
+        }
+
+        void shiftRows(Block& state) noexcept
+        {
+            shiftRow(state, 1, 1);
+            shiftRow(state, 2, 2);
+            shiftRow(state, 3, 3);
+        }
     }
+
 }
 
 #endif // AES_HPP
