@@ -2,3 +2,6 @@ test/test.xcodeproj/project.xcworkspace
 test/test.xcodeproj/xcuserdata
 *.o
 test/test
+test/.vs
+test/Win32
+test/x64
