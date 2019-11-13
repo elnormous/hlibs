@@ -79,12 +79,12 @@ namespace aes
             0XE1, 0X69, 0X14, 0X63, 0X55, 0X21, 0X0C, 0X7D
         };
 
-        constexpr size_t getRounds(size_t keyLength)
+        constexpr size_t getRoundCount(size_t keyLength)
         {
             return keyLength / 32 + 6;
         }
 
-        constexpr size_t getWords(size_t keyLength)
+        constexpr size_t getWordCount(size_t keyLength)
         {
             return keyLength / 32;
         }
@@ -94,30 +94,35 @@ namespace aes
         using Block = Word[nb];
         using RoundKey = Word[4];
 
-        void subBytes(Block& state) noexcept
+        void subBytes(Block& block) noexcept
         {
             for (size_t i = 0; i < 4; ++i)
                 for (size_t j = 0; j < nb; ++j)
-                    state[i][j] = sbox[state[i][j]];
+                    block[i][j] = sbox[block[i][j]];
         }
 
-        void shiftRow(Block& state, const size_t i, const size_t n) noexcept
+        void shiftRow(Block& block, const size_t i, const size_t n) noexcept
         {
             for (size_t k = 0; k < n; k++)
             {
-                uint8_t t = state[i][0];
+                uint8_t t = block[i][0];
                 for (size_t j = 0; j < nb - 1; ++j)
-                    state[i][j] = state[i][j + 1];
+                    block[i][j] = block[i][j + 1];
 
-                state[i][nb - 1] = t;
+                block[i][nb - 1] = t;
             }
         }
 
-        void shiftRows(Block& state) noexcept
+        void shiftRows(Block& block) noexcept
         {
-            shiftRow(state, 1, 1);
-            shiftRow(state, 2, 2);
-            shiftRow(state, 3, 3);
+            shiftRow(block, 1, 1);
+            shiftRow(block, 2, 2);
+            shiftRow(block, 3, 3);
+        }
+
+        constexpr uint8_t xtime(uint8_t b) noexcept
+        {
+            return static_cast<uint8_t>((b << 1) ^ (b & 0x80 ? 0x1B : 0));
         }
     }
 
