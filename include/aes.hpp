@@ -90,8 +90,23 @@ namespace aes
         }
 
         constexpr size_t nb = 4; // number of words in an AES block (Nb)
-        using Word = uint8_t[4];
-        using Block = Word[nb];
+
+        struct Word
+        {
+            uint8_t& operator[](size_t i) { return b[i]; }
+            uint8_t operator[](size_t i) const { return b[i]; }
+
+            uint8_t b[4];
+        };
+
+        struct Block
+        {
+            Word& operator[](size_t i) { return w[i]; }
+            const Word& operator[](size_t i) const { return w[i]; }
+
+            Word w[nb];
+        };
+
         using RoundKey = Word[4];
 
         void subBytes(Block& block) noexcept
