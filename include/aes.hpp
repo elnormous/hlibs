@@ -101,6 +101,13 @@ namespace aes
                     block[i][j] = sbox[block[i][j]];
         }
 
+        void invSubBytes(Block& block) noexcept
+        {
+            for (size_t i = 0; i < 4; ++i)
+                for (size_t j = 0; j < nb; ++j)
+                    block[i][j] = inverseSbox[block[i][j]];
+        }
+
         void shiftRow(Block& block, const size_t i, const size_t n) noexcept
         {
             for (size_t k = 0; k < n; k++)
@@ -120,9 +127,11 @@ namespace aes
             shiftRow(block, 3, 3);
         }
 
-        constexpr uint8_t xtime(uint8_t b) noexcept
+        void invShiftRows(Block& block) noexcept
         {
-            return static_cast<uint8_t>((b << 1) ^ (b & 0x80 ? 0x1B : 0));
+            shiftRow(block, 1, nb - 1);
+            shiftRow(block, 2, nb - 2);
+            shiftRow(block, 3, nb - 3);
         }
     }
 
