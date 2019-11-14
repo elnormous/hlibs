@@ -148,6 +148,25 @@ namespace aes
             shiftRow(block, 2, nb - 2);
             shiftRow(block, 3, nb - 3);
         }
+
+        uint8_t mulBytes(uint8_t a, uint8_t b) noexcept
+        {
+            uint8_t c = 0;
+            for (size_t i = 0; i < 8; ++i)
+            {
+                if (b & 0x01)
+                {
+                    uint8_t d = a;
+                    for (size_t j = 0; j < i; ++j)
+                        d = static_cast<uint8_t>((d << 1) ^ (d & 0x80 ? 0x1B : 0));
+
+                    c = c ^ d;
+                }
+
+                b >>= 1;
+            }
+            return c;
+        }
     }
 
 }
