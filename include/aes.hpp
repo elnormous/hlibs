@@ -89,7 +89,8 @@ namespace aes
             return keyLength / 32;
         }
 
-        constexpr size_t nb = 4; // number of words in an AES block (Nb)
+        constexpr size_t blockWordCount = 4; // number of words in an AES block (Nb)
+        constexpr size_t blockByteCount = 4 * blockWordCount;
 
         struct Word
         {
@@ -104,22 +105,24 @@ namespace aes
             Word& operator[](size_t i) { return w[i]; }
             const Word& operator[](size_t i) const { return w[i]; }
 
-            Word w[nb];
+            Word w[blockWordCount];
         };
 
         using RoundKey = Word[4];
+        template <size_t keyLength>
+        using RoundKeys = RoundKey[getRoundCount(keyLength) + 1];
 
         void subBytes(Block& block) noexcept
         {
             for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < nb; ++j)
+                for (size_t j = 0; j < blockWordCount; ++j)
                     block[i][j] = sbox[block[i][j]];
         }
 
         void invSubBytes(Block& block) noexcept
         {
             for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < nb; ++j)
+                for (size_t j = 0; j < blockWordCount; ++j)
                     block[i][j] = inverseSbox[block[i][j]];
         }
 
@@ -128,10 +131,10 @@ namespace aes
             for (size_t k = 0; k < n; k++)
             {
                 uint8_t t = block[i][0];
-                for (size_t j = 0; j < nb - 1; ++j)
+                for (size_t j = 0; j < blockWordCount - 1; ++j)
                     block[i][j] = block[i][j + 1];
 
-                block[i][nb - 1] = t;
+                block[i][blockWordCount - 1] = t;
             }
         }
 
@@ -144,9 +147,9 @@ namespace aes
 
         void invShiftRows(Block& block) noexcept
         {
-            shiftRow(block, 1, nb - 1);
-            shiftRow(block, 2, nb - 2);
-            shiftRow(block, 3, nb - 3);
+            shiftRow(block, 1, blockWordCount - 1);
+            shiftRow(block, 2, blockWordCount - 2);
+            shiftRow(block, 3, blockWordCount - 3);
         }
 
         uint8_t mulBytes(uint8_t a, uint8_t b) noexcept
@@ -166,6 +169,84 @@ namespace aes
                 b >>= 1;
             }
             return c;
+        }
+
+        void mixColumns(Block& block) noexcept
+        {
+            for (size_t j = 0; j < blockWordCount; ++j)
+            {
+                const Word s = {
+                    block[0][j],
+                    block[1][j],
+                    block[2][j],
+                    block[3][j]
+                };
+
+                const Word s1 = {
+                    static_cast<uint8_t>(mulBytes(0x02, s[0]) ^ mulBytes(0x03, s[1]) ^ s[2] ^ s[3]),
+                    static_cast<uint8_t>(s[0] ^ mulBytes(0x02, s[1]) ^ mulBytes(0x03, s[2]) ^ s[3]),
+                    static_cast<uint8_t>(s[0] ^ s[1] ^ mulBytes(0x02, s[2]) ^ mulBytes(0x03, s[3])),
+                    static_cast<uint8_t>(mulBytes(0x03, s[0]) ^ s[1] ^ s[2] ^ mulBytes(0x02, s[3]))
+                };
+
+                for (size_t i = 0; i < 4; ++i)
+                    block[i][j] = s1[i];
+          }
+        }
+
+        void invMixColumns(Block& block) noexcept
+        {
+            for (size_t j = 0; j < blockWordCount; ++j)
+            {
+                const Word s = {
+                    block[0][j],
+                    block[1][j],
+                    block[2][j],
+                    block[3][j]
+                };
+
+                Word s1;
+                s1[0] = mulBytes(0x0e, s[0]) ^ mulBytes(0x0b, s[1]) ^ mulBytes(0x0d, s[2]) ^ mulBytes(0x09, s[3]);
+                s1[1] = mulBytes(0x09, s[0]) ^ mulBytes(0x0e, s[1]) ^ mulBytes(0x0b, s[2]) ^ mulBytes(0x0d, s[3]);
+                s1[2] = mulBytes(0x0d, s[0]) ^ mulBytes(0x09, s[1]) ^ mulBytes(0x0e, s[2]) ^ mulBytes(0x0b, s[3]);
+                s1[3] = mulBytes(0x0b, s[0]) ^ mulBytes(0x0d, s[1]) ^ mulBytes(0x09, s[2]) ^ mulBytes(0x0e, s[3]);
+
+                for (size_t i = 0; i < 4; ++i)
+                    block[i][j] = s1[i];
+            }
+        }
+
+        void addRoundKey(Block& block, const RoundKey& roundKey) noexcept
+        {
+            for (size_t i = 0; i < 4; ++i)
+                for (size_t j = 0; j < blockWordCount; ++j)
+                    block[i][j] = block[i][j] ^ roundKey[j][i];
+        }
+
+        void subWord(Word& a) noexcept
+        {
+            for (size_t i = 0; i < 4; ++i)
+                a[i] = sbox[a[i]];
+        }
+
+        void rotWord(Word& a) noexcept
+        {
+            const uint8_t c = a[0];
+            a[0] = a[1];
+            a[1] = a[2];
+            a[2] = a[3];
+            a[3] = c;
+        }
+
+        void xorWords(const Word& a, const Word& b, Word& c) noexcept
+        {
+            for (size_t i = 0; i < 4; ++i)
+                c[i] = a[i] ^ b[i];
+        }
+
+        constexpr uint8_t roundConstant(size_t n) noexcept
+        {
+            return (n == 1) ? 1 : (2 * roundConstant(n - 1)) ^ (roundConstant(n - 1) >= 0x80 ? 0x1B : 0);
         }
     }
 
