@@ -244,9 +244,9 @@ namespace aes
                 c[i] = a[i] ^ b[i];
         }
 
-        constexpr uint8_t roundConstant(size_t n) noexcept
+        constexpr uint8_t roundConstant(size_t i) noexcept
         {
-            return (n == 1) ? 1 : (2 * roundConstant(n - 1)) ^ (roundConstant(n - 1) >= 0x80 ? 0x1B : 0);
+            return (i == 1) ? 1 : (2 * roundConstant(i - 1)) ^ (roundConstant(i - 1) >= 0x80 ? 0x1B : 0);
         }
     }
 
