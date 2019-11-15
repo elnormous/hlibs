@@ -9,6 +9,7 @@ namespace aes
 {
     namespace
     {
+        // substitution-box 16x16 matrix
         static constexpr uint8_t sbox[256] = {
             0X63, 0X7C, 0X77, 0X7B, 0XF2, 0X6B, 0X6F, 0XC5,
             0X30, 0X01, 0X67, 0X2B, 0XFE, 0XD7, 0XAB, 0X76,
@@ -44,6 +45,7 @@ namespace aes
             0X41, 0X99, 0X2D, 0X0F, 0XB0, 0X54, 0XBB, 0X16
         };
 
+        // inverse substitution-box 16x16 matrix
         static constexpr uint8_t inverseSbox[256] = {
             0X52, 0X09, 0X6A, 0XD5, 0X30, 0X36, 0XA5, 0X38,
             0XBF, 0X40, 0XA3, 0X9E, 0X81, 0XF3, 0XD7, 0XFB,
@@ -79,12 +81,14 @@ namespace aes
             0XE1, 0X69, 0X14, 0X63, 0X55, 0X21, 0X0C, 0X7D
         };
 
+        // number of rounds (Nr)
         constexpr size_t getRoundCount(size_t keyLength)
         {
             return keyLength / 32 + 6;
         }
 
-        constexpr size_t getWordCount(size_t keyLength)
+        // number of 32-bit words in cipher key (Nk)
+        constexpr size_t getKeyWordCount(size_t keyLength) noexcept
         {
             return keyLength / 32;
         }
@@ -222,7 +226,7 @@ namespace aes
                 for (size_t j = 0; j < blockWordCount; ++j)
                     c[i][j] = a[i][j] ^ b[i][j];
         }
-        
+
         void addRoundKey(Block& block, const RoundKey& roundKey) noexcept
         {
             for (size_t i = 0; i < 4; ++i)
@@ -254,6 +258,99 @@ namespace aes
         constexpr uint8_t roundConstant(size_t i) noexcept
         {
             return (i == 1) ? 1 : (2 * roundConstant(i - 1)) ^ (roundConstant(i - 1) >= 0x80 ? 0x1B : 0);
+        }
+
+        template<size_t keyLength, class Key>
+        void expandKey(const Key& key, RoundKeys<keyLength>& roundKeys) noexcept
+        {
+            for (size_t i = 0; i < blockWordCount * (getRoundCount(keyLength) + 1); ++i)
+            {
+                if (i < getKeyWordCount(keyLength))
+                {
+                    roundKeys[i / 4][i % 4][0] = key[i * 4 + 0];
+                    roundKeys[i / 4][i % 4][1] = key[i * 4 + 1];
+                    roundKeys[i / 4][i % 4][2] = key[i * 4 + 2];
+                    roundKeys[i / 4][i % 4][3] = key[i * 4 + 3];
+                }
+                else
+                {
+                    const size_t previousWordIndex = i - 1;
+                    Word temp = roundKeys[previousWordIndex / 4][previousWordIndex % 4];
+
+                    if (i % getKeyWordCount(keyLength) == 0)
+                    {
+                        rotWord(temp);
+                        subWord(temp);
+                        Word rCon = {roundConstant(i / getKeyWordCount(keyLength)), 0, 0, 0};
+                        xorWords(temp, rCon, temp);
+                    }
+                    else if (getKeyWordCount(keyLength) > 6 && i % getKeyWordCount(keyLength) == 4)
+                        subWord(temp);
+
+                    const size_t beforeKeyIndex = i - getKeyWordCount(keyLength);
+                    xorWords(roundKeys[beforeKeyIndex / 4][beforeKeyIndex % 4], temp, roundKeys[i / 4][i % 4]);
+                }
+            }
+        }
+
+        template<size_t keyLength, class Key>
+        void encryptBlock(const Block& in, Block& out, const Key& key) noexcept
+        {
+            RoundKeys<keyLength> roundKeys;
+            expandKey<keyLength>(key, roundKeys);
+
+            Block state;
+            for (size_t i = 0; i < 4; ++i)
+                for (size_t j = 0; j < blockWordCount; ++j)
+                    state[i][j] = in[j][i];
+
+            addRoundKey(state, roundKeys[0]);
+
+            for (size_t round = 1; round <= getRoundCount(keyLength) - 1; ++round)
+            {
+                subBytes(state);
+                shiftRows(state);
+                mixColumns(state);
+                addRoundKey(state, roundKeys[round]);
+            }
+
+            subBytes(state);
+            shiftRows(state);
+            addRoundKey(state, roundKeys[getRoundCount(keyLength)]);
+
+            for (size_t i = 0; i < 4; ++i)
+                for (size_t j = 0; j < blockWordCount; ++j)
+                    out[j][i] = state[i][j];
+        }
+
+        template<size_t keyLength, class Key>
+        void decryptBlock(const Block& in, Block& out, const Key& key) noexcept
+        {
+            RoundKeys<keyLength> roundKeys;
+            expandKey<keyLength>(key, roundKeys);
+
+            Block state;
+            for (size_t i = 0; i < 4; ++i)
+                for (size_t j = 0; j < blockWordCount; ++j)
+                    state[i][j] = in[j][i];
+
+            addRoundKey(state, roundKeys[getRoundCount(keyLength)]);
+
+            for (size_t round = getRoundCount(keyLength) - 1; round >= 1; --round)
+            {
+                invSubBytes(state);
+                invShiftRows(state);
+                addRoundKey(state, roundKeys[round]);
+                invMixColumns(state);
+            }
+
+            invSubBytes(state);
+            invShiftRows(state);
+            addRoundKey(state, roundKeys[0]);
+
+            for (size_t i = 0; i < 4; ++i)
+                for (size_t j = 0; j < blockWordCount; ++j)
+                    out[j][i] = state[i][j];
         }
     }
 
