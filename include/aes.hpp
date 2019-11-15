@@ -257,7 +257,7 @@ namespace aes
 
         constexpr uint8_t roundConstant(size_t i) noexcept
         {
-            return (i == 1) ? 1 : (2 * roundConstant(i - 1)) ^ (roundConstant(i - 1) >= 0x80 ? 0x1B : 0);
+            return (i == 1) ? 1 : static_cast<uint8_t>(2 * roundConstant(i - 1)) ^ (roundConstant(i - 1) >= 0x80 ? 0x1B : 0);
         }
 
         template<size_t keyLength, class Key>
