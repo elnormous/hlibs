@@ -216,6 +216,13 @@ namespace aes
             }
         }
 
+        void xorBlocks(const Block& a, const Block& b, Block& c) noexcept
+        {
+            for (size_t i = 0; i < 4; ++i)
+                for (size_t j = 0; j < blockWordCount; ++j)
+                    c[i][j] = a[i][j] ^ b[i][j];
+        }
+        
         void addRoundKey(Block& block, const RoundKey& roundKey) noexcept
         {
             for (size_t i = 0; i < 4; ++i)
