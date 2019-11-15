@@ -294,7 +294,7 @@ namespace aes
         }
 
         template<size_t keyLength, class Key>
-        void encryptBlock(const Block& in, Block& out, const Key& key) noexcept
+        void encryptBlock(const Block& block, Block& encryptedBlock, const Key& key) noexcept
         {
             RoundKeys<keyLength> roundKeys;
             expandKey<keyLength>(key, roundKeys);
@@ -302,7 +302,7 @@ namespace aes
             Block state;
             for (size_t i = 0; i < 4; ++i)
                 for (size_t j = 0; j < blockWordCount; ++j)
-                    state[i][j] = in[j][i];
+                    state[i][j] = block[j][i];
 
             addRoundKey(state, roundKeys[0]);
 
@@ -320,11 +320,11 @@ namespace aes
 
             for (size_t i = 0; i < 4; ++i)
                 for (size_t j = 0; j < blockWordCount; ++j)
-                    out[j][i] = state[i][j];
+                    encryptedBlock[j][i] = state[i][j];
         }
 
         template<size_t keyLength, class Key>
-        void decryptBlock(const Block& in, Block& out, const Key& key) noexcept
+        void decryptBlock(const Block& block, Block& decryptedBlock, const Key& key) noexcept
         {
             RoundKeys<keyLength> roundKeys;
             expandKey<keyLength>(key, roundKeys);
@@ -332,7 +332,7 @@ namespace aes
             Block state;
             for (size_t i = 0; i < 4; ++i)
                 for (size_t j = 0; j < blockWordCount; ++j)
-                    state[i][j] = in[j][i];
+                    state[i][j] = block[j][i];
 
             addRoundKey(state, roundKeys[getRoundCount(keyLength)]);
 
@@ -350,10 +350,9 @@ namespace aes
 
             for (size_t i = 0; i < 4; ++i)
                 for (size_t j = 0; j < blockWordCount; ++j)
-                    out[j][i] = state[i][j];
+                    decryptedBlock[j][i] = state[i][j];
         }
     }
-
 }
 
 #endif // AES_HPP
