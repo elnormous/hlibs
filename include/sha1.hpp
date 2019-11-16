@@ -14,17 +14,17 @@ namespace sha1
 {
     namespace
     {
-        constexpr uint32_t rotateLeft(const uint32_t value,
-                                      const uint32_t bits) noexcept
-        {
-            return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
-        }
-
         constexpr uint32_t digestInts = 5; // number of 32bit integers per SHA1 digest
         constexpr uint32_t blockInts = 16; // number of 32bit integers per SHA1 block
         constexpr uint32_t blockBytes = blockInts * 4;
         using Block = uint8_t[blockBytes];
         using State = uint32_t[digestInts];
+
+        constexpr uint32_t rotateLeft(const uint32_t value,
+                                      const uint32_t bits) noexcept
+        {
+            return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
+        }
 
         inline void transform(const Block& block,
                               State& state) noexcept
