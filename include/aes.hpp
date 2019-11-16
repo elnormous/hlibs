@@ -165,7 +165,7 @@ namespace aes
             return (i == 1) ? 1 : static_cast<uint8_t>(2 * roundConstant(i - 1)) ^ (roundConstant(i - 1) >= 0x80 ? 0x1B : 0);
         }
 
-        template<size_t keyLength, class Key>
+        template <size_t keyLength, class Key>
         void expandKey(const Key& key, RoundKeys<keyLength>& roundKeys) noexcept
         {
             for (size_t i = 0; i < blockWordCount * (getRoundCount(keyLength) + 1); ++i)
@@ -313,7 +313,7 @@ namespace aes
                         w[i][j] ^= roundKey[j][i];
             }
 
-            template<size_t keyLength, class Key>
+            template <size_t keyLength, class Key>
             void encrypt(const Key& key) noexcept
             {
                 RoundKeys<keyLength> roundKeys;
@@ -343,7 +343,7 @@ namespace aes
                         w[j][i] = state[i][j];
             }
 
-            template<size_t keyLength, class Key>
+            template <size_t keyLength, class Key>
             void decrypt(const Key& key) noexcept
             {
                 RoundKeys<keyLength> roundKeys;
