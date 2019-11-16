@@ -82,7 +82,7 @@ namespace aes
         };
 
         // number of rounds (Nr)
-        constexpr size_t getRoundCount(size_t keyLength)
+        constexpr size_t getRoundCount(size_t keyLength) noexcept
         {
             return keyLength / 32 + 6;
         }
@@ -96,65 +96,50 @@ namespace aes
         constexpr size_t blockWordCount = 4; // number of words in an AES block (Nb)
         constexpr size_t blockByteCount = 4 * blockWordCount;
 
-        struct Word
+        class Word
         {
+        public:
             uint8_t& operator[](size_t i) { return b[i]; }
             uint8_t operator[](size_t i) const { return b[i]; }
 
+            Word operator^(const Word& other) const noexcept
+            {
+                Word result = *this;
+                for (size_t i = 0; i < 4; ++i)
+                    result[i] ^= other[i];
+
+                return result;
+            }
+
+            Word& operator^=(const Word& other) noexcept
+            {
+                for (size_t i = 0; i < 4; ++i)
+                    b[i] ^= other.b[i];
+
+                return *this;
+            }
+
+            void sub() noexcept
+            {
+                for (size_t i = 0; i < 4; ++i)
+                    b[i] = sbox[b[i]];
+            }
+
+            void rot() noexcept
+            {
+                const uint8_t c = b[0];
+                b[0] = b[1];
+                b[1] = b[2];
+                b[2] = b[3];
+                b[3] = c;
+            }
+
             uint8_t b[4];
-        };
-
-        struct Block
-        {
-            Word& operator[](size_t i) { return w[i]; }
-            const Word& operator[](size_t i) const { return w[i]; }
-
-            Word w[blockWordCount];
         };
 
         using RoundKey = Word[4];
         template <size_t keyLength>
         using RoundKeys = RoundKey[getRoundCount(keyLength) + 1];
-
-        void subBytes(Block& block) noexcept
-        {
-            for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < blockWordCount; ++j)
-                    block[i][j] = sbox[block[i][j]];
-        }
-
-        void invSubBytes(Block& block) noexcept
-        {
-            for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < blockWordCount; ++j)
-                    block[i][j] = inverseSbox[block[i][j]];
-        }
-
-        void shiftRow(Block& block, const size_t i, const size_t n) noexcept
-        {
-            for (size_t k = 0; k < n; k++)
-            {
-                uint8_t t = block[i][0];
-                for (size_t j = 0; j < blockWordCount - 1; ++j)
-                    block[i][j] = block[i][j + 1];
-
-                block[i][blockWordCount - 1] = t;
-            }
-        }
-
-        void shiftRows(Block& block) noexcept
-        {
-            shiftRow(block, 1, 1);
-            shiftRow(block, 2, 2);
-            shiftRow(block, 3, 3);
-        }
-
-        void invShiftRows(Block& block) noexcept
-        {
-            shiftRow(block, 1, blockWordCount - 1);
-            shiftRow(block, 2, blockWordCount - 2);
-            shiftRow(block, 3, blockWordCount - 3);
-        }
 
         uint8_t mulBytes(uint8_t a, uint8_t b) noexcept
         {
@@ -173,86 +158,6 @@ namespace aes
                 b >>= 1;
             }
             return c;
-        }
-
-        void mixColumns(Block& block) noexcept
-        {
-            for (size_t j = 0; j < blockWordCount; ++j)
-            {
-                const Word s = {
-                    block[0][j],
-                    block[1][j],
-                    block[2][j],
-                    block[3][j]
-                };
-
-                const Word s1 = {
-                    static_cast<uint8_t>(mulBytes(0x02, s[0]) ^ mulBytes(0x03, s[1]) ^ s[2] ^ s[3]),
-                    static_cast<uint8_t>(s[0] ^ mulBytes(0x02, s[1]) ^ mulBytes(0x03, s[2]) ^ s[3]),
-                    static_cast<uint8_t>(s[0] ^ s[1] ^ mulBytes(0x02, s[2]) ^ mulBytes(0x03, s[3])),
-                    static_cast<uint8_t>(mulBytes(0x03, s[0]) ^ s[1] ^ s[2] ^ mulBytes(0x02, s[3]))
-                };
-
-                for (size_t i = 0; i < 4; ++i)
-                    block[i][j] = s1[i];
-          }
-        }
-
-        void invMixColumns(Block& block) noexcept
-        {
-            for (size_t j = 0; j < blockWordCount; ++j)
-            {
-                const Word s = {
-                    block[0][j],
-                    block[1][j],
-                    block[2][j],
-                    block[3][j]
-                };
-
-                Word s1;
-                s1[0] = mulBytes(0x0e, s[0]) ^ mulBytes(0x0b, s[1]) ^ mulBytes(0x0d, s[2]) ^ mulBytes(0x09, s[3]);
-                s1[1] = mulBytes(0x09, s[0]) ^ mulBytes(0x0e, s[1]) ^ mulBytes(0x0b, s[2]) ^ mulBytes(0x0d, s[3]);
-                s1[2] = mulBytes(0x0d, s[0]) ^ mulBytes(0x09, s[1]) ^ mulBytes(0x0e, s[2]) ^ mulBytes(0x0b, s[3]);
-                s1[3] = mulBytes(0x0b, s[0]) ^ mulBytes(0x0d, s[1]) ^ mulBytes(0x09, s[2]) ^ mulBytes(0x0e, s[3]);
-
-                for (size_t i = 0; i < 4; ++i)
-                    block[i][j] = s1[i];
-            }
-        }
-
-        void xorBlocks(const Block& a, const Block& b, Block& c) noexcept
-        {
-            for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < blockWordCount; ++j)
-                    c[i][j] = a[i][j] ^ b[i][j];
-        }
-
-        void addRoundKey(Block& block, const RoundKey& roundKey) noexcept
-        {
-            for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < blockWordCount; ++j)
-                    block[i][j] = block[i][j] ^ roundKey[j][i];
-        }
-
-        void subWord(Word& a) noexcept
-        {
-            for (size_t i = 0; i < 4; ++i)
-                a[i] = sbox[a[i]];
-        }
-
-        void rotWord(Word& a) noexcept
-        {
-            const uint8_t c = a[0];
-            a[0] = a[1];
-            a[1] = a[2];
-            a[2] = a[3];
-            a[3] = c;
-        }
-
-        void xorWords(const Word& a, const Word& b, Word& c) noexcept
-        {
-            for (size_t i = 0; i < 4; ++i)
-                c[i] = a[i] ^ b[i];
         }
 
         constexpr uint8_t roundConstant(size_t i) noexcept
@@ -279,79 +184,197 @@ namespace aes
 
                     if (i % getKeyWordCount(keyLength) == 0)
                     {
-                        rotWord(temp);
-                        subWord(temp);
+                        temp.rot();
+                        temp.sub();
                         Word rCon = {roundConstant(i / getKeyWordCount(keyLength)), 0, 0, 0};
-                        xorWords(temp, rCon, temp);
+                        temp ^= rCon;
                     }
                     else if (getKeyWordCount(keyLength) > 6 && i % getKeyWordCount(keyLength) == 4)
-                        subWord(temp);
+                        temp.sub();
 
                     const size_t beforeKeyIndex = i - getKeyWordCount(keyLength);
-                    xorWords(roundKeys[beforeKeyIndex / 4][beforeKeyIndex % 4], temp, roundKeys[i / 4][i % 4]);
+                    roundKeys[i / 4][i % 4] = roundKeys[beforeKeyIndex / 4][beforeKeyIndex % 4] ^ temp;
                 }
             }
         }
 
-        template<size_t keyLength, class Key>
-        void encryptBlock(const Block& block, Block& encryptedBlock, const Key& key) noexcept
+        class Block
         {
-            RoundKeys<keyLength> roundKeys;
-            expandKey<keyLength>(key, roundKeys);
+        public:
+            Word& operator[](size_t i) { return w[i]; }
+            const Word& operator[](size_t i) const { return w[i]; }
 
-            Block state;
-            for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < blockWordCount; ++j)
-                    state[i][j] = block[j][i];
-
-            addRoundKey(state, roundKeys[0]);
-
-            for (size_t round = 1; round <= getRoundCount(keyLength) - 1; ++round)
+            Block operator^(const Block& other) const noexcept
             {
-                subBytes(state);
-                shiftRows(state);
-                mixColumns(state);
-                addRoundKey(state, roundKeys[round]);
+                Block result = *this;
+                for (size_t i = 0; i < blockWordCount; ++i)
+                    result.w[i] ^= other.w[i];
+
+                return result;
             }
 
-            subBytes(state);
-            shiftRows(state);
-            addRoundKey(state, roundKeys[getRoundCount(keyLength)]);
-
-            for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < blockWordCount; ++j)
-                    encryptedBlock[j][i] = state[i][j];
-        }
-
-        template<size_t keyLength, class Key>
-        void decryptBlock(const Block& block, Block& decryptedBlock, const Key& key) noexcept
-        {
-            RoundKeys<keyLength> roundKeys;
-            expandKey<keyLength>(key, roundKeys);
-
-            Block state;
-            for (size_t i = 0; i < 4; ++i)
-                for (size_t j = 0; j < blockWordCount; ++j)
-                    state[i][j] = block[j][i];
-
-            addRoundKey(state, roundKeys[getRoundCount(keyLength)]);
-
-            for (size_t round = getRoundCount(keyLength) - 1; round >= 1; --round)
+            Block& operator^=(const Block& other) noexcept
             {
-                invSubBytes(state);
-                invShiftRows(state);
-                addRoundKey(state, roundKeys[round]);
-                invMixColumns(state);
+                for (size_t i = 0; i < blockWordCount; ++i)
+                    w[i] ^= other.w[i];
+
+                return *this;
             }
 
-            invSubBytes(state);
-            invShiftRows(state);
-            addRoundKey(state, roundKeys[0]);
+            void subBytes() noexcept
+            {
+                for (size_t i = 0; i < 4; ++i)
+                    for (size_t j = 0; j < blockWordCount; ++j)
+                        w[i][j] = sbox[w[i][j]];
+            }
 
-            for (size_t i = 0; i < 4; ++i)
+            void invSubBytes() noexcept
+            {
+                for (size_t i = 0; i < 4; ++i)
+                    for (size_t j = 0; j < blockWordCount; ++j)
+                        w[i][j] = inverseSbox[w[i][j]];
+            }
+
+            void shiftRow(const size_t i, const size_t n) noexcept
+            {
+                for (size_t k = 0; k < n; k++)
+                {
+                    uint8_t t = w[i][0];
+                    w[i][0] = w[i][1];
+                    w[i][1] = w[i][2];
+                    w[i][2] = w[i][3];
+                    w[i][3] = t;
+                }
+            }
+
+            void shiftRows() noexcept
+            {
+                shiftRow(1, 1);
+                shiftRow(2, 2);
+                shiftRow(3, 3);
+            }
+
+            void invShiftRows() noexcept
+            {
+                shiftRow(1, blockWordCount - 1);
+                shiftRow(2, blockWordCount - 2);
+                shiftRow(3, blockWordCount - 3);
+            }
+
+            void mixColumns() noexcept
+            {
                 for (size_t j = 0; j < blockWordCount; ++j)
-                    decryptedBlock[j][i] = state[i][j];
-        }
+                {
+                    const Word s = {
+                        w[0][j],
+                        w[1][j],
+                        w[2][j],
+                        w[3][j]
+                    };
+
+                    const Word s1 = {
+                        static_cast<uint8_t>(mulBytes(0x02, s[0]) ^ mulBytes(0x03, s[1]) ^ s[2] ^ s[3]),
+                        static_cast<uint8_t>(s[0] ^ mulBytes(0x02, s[1]) ^ mulBytes(0x03, s[2]) ^ s[3]),
+                        static_cast<uint8_t>(s[0] ^ s[1] ^ mulBytes(0x02, s[2]) ^ mulBytes(0x03, s[3])),
+                        static_cast<uint8_t>(mulBytes(0x03, s[0]) ^ s[1] ^ s[2] ^ mulBytes(0x02, s[3]))
+                    };
+
+                    for (size_t i = 0; i < 4; ++i)
+                        w[i][j] = s1[i];
+              }
+            }
+
+            void invMixColumns() noexcept
+            {
+                for (size_t j = 0; j < blockWordCount; ++j)
+                {
+                    const Word s = {
+                        w[0][j],
+                        w[1][j],
+                        w[2][j],
+                        w[3][j]
+                    };
+
+                    Word s1;
+                    s1[0] = mulBytes(0x0E, s[0]) ^ mulBytes(0x0B, s[1]) ^ mulBytes(0x0D, s[2]) ^ mulBytes(0x09, s[3]);
+                    s1[1] = mulBytes(0x09, s[0]) ^ mulBytes(0x0E, s[1]) ^ mulBytes(0x0B, s[2]) ^ mulBytes(0x0D, s[3]);
+                    s1[2] = mulBytes(0x0D, s[0]) ^ mulBytes(0x09, s[1]) ^ mulBytes(0x0E, s[2]) ^ mulBytes(0x0B, s[3]);
+                    s1[3] = mulBytes(0x0B, s[0]) ^ mulBytes(0x0D, s[1]) ^ mulBytes(0x09, s[2]) ^ mulBytes(0x0E, s[3]);
+
+                    for (size_t i = 0; i < 4; ++i)
+                        w[i][j] = s1[i];
+                }
+            }
+
+            void addRoundKey(const RoundKey& roundKey) noexcept
+            {
+                for (size_t i = 0; i < blockWordCount; ++i)
+                    for (size_t j = 0; j < 4; ++j)
+                        w[i][j] ^= roundKey[j][i];
+            }
+
+            template<size_t keyLength, class Key>
+            void encrypt(const Key& key) noexcept
+            {
+                RoundKeys<keyLength> roundKeys;
+                expandKey<keyLength>(key, roundKeys);
+
+                Block state;
+                for (size_t i = 0; i < 4; ++i)
+                    for (size_t j = 0; j < blockWordCount; ++j)
+                        state[i][j] = w[j][i];
+
+                state.addRoundKey(roundKeys[0]);
+
+                for (size_t round = 1; round <= getRoundCount(keyLength) - 1; ++round)
+                {
+                    state.subBytes();
+                    state.shiftRows();
+                    state.mixColumns();
+                    state.addRoundKey(roundKeys[round]);
+                }
+
+                state.subBytes();
+                state.shiftRows();
+                state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
+
+                for (size_t i = 0; i < 4; ++i)
+                    for (size_t j = 0; j < blockWordCount; ++j)
+                        w[j][i] = state[i][j];
+            }
+
+            template<size_t keyLength, class Key>
+            void decrypt(const Key& key) noexcept
+            {
+                RoundKeys<keyLength> roundKeys;
+                expandKey<keyLength>(key, roundKeys);
+
+                Block state;
+                for (size_t i = 0; i < 4; ++i)
+                    for (size_t j = 0; j < blockWordCount; ++j)
+                        state[i][j] = w[j][i];
+
+                state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
+
+                for (size_t round = getRoundCount(keyLength) - 1; round >= 1; --round)
+                {
+                    state.invSubBytes();
+                    state.invShiftRows();
+                    state.addRoundKey(roundKeys[round]);
+                    state.invMixColumns();
+                }
+
+                state.invSubBytes();
+                state.invShiftRows();
+                state.addRoundKey(roundKeys[0]);
+
+                for (size_t i = 0; i < 4; ++i)
+                    for (size_t j = 0; j < blockWordCount; ++j)
+                        w[j][i] = state[i][j];
+            }
+
+            Word w[blockWordCount];
+        };
     }
 }
 
