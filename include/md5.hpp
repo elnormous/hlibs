@@ -105,11 +105,11 @@ namespace md5
             return rotateLeft(a + i(b, c, d) + x + ac, sh) + b;
         }
 
-        constexpr uint32_t digestInts = 4; // number of 32bit integers per MD5 digest
-        constexpr uint32_t blockInts = 16; // number of 32bit integers per MD5 block
-        constexpr uint32_t blockBytes = blockInts * 4;
-        using Block = uint8_t[blockBytes];
-        using State = uint32_t[digestInts];
+        constexpr uint32_t digestIntCount = 4; // number of 32bit integers per MD5 digest
+        constexpr uint32_t blockIntCount = 16; // number of 32bit integers per MD5 block
+        constexpr uint32_t blockByteCount = blockIntCount * 4;
+        using Block = uint8_t[blockByteCount];
+        using State = uint32_t[digestIntCount];
 
         inline void transform(const Block& block,
                               State& state) noexcept
@@ -203,7 +203,7 @@ namespace md5
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, digestInts * 4> generate(const Iterator begin,
+    inline std::array<uint8_t, digestIntCount * 4> generate(const Iterator begin,
                                                         const Iterator end) noexcept
     {
         State state = {
@@ -219,7 +219,7 @@ namespace md5
         {
             block[dataSize] = *i;
             dataSize++;
-            if (dataSize == blockBytes)
+            if (dataSize == blockByteCount)
             {
                 transform(block, state);
                 dataSize = 0;
@@ -228,17 +228,17 @@ namespace md5
 
         // Pad data left in the buffer
         uint32_t n = dataSize;
-        if (dataSize < blockBytes - 8)
+        if (dataSize < blockByteCount - 8)
         {
             block[n++] = 0x80;
-            while (n < blockBytes - 8) block[n++] = 0x00;
+            while (n < blockByteCount - 8) block[n++] = 0x00;
         }
         else
         {
             block[n++] = 0x80;
-            while (n < blockBytes) block[n++] = 0x00;
+            while (n < blockByteCount) block[n++] = 0x00;
             transform(block, state);
-            std::fill(block, block + blockBytes - 8, 0);
+            std::fill(block, block + blockByteCount - 8, 0);
         }
 
         // append the size in bits
@@ -253,8 +253,8 @@ namespace md5
         block[63] = static_cast<uint8_t>(totalBits >> 56);
         transform(block, state);
 
-        std::array<uint8_t, digestInts * 4> result;
-        for (uint32_t i = 0; i < digestInts; i++)
+        std::array<uint8_t, digestIntCount * 4> result;
+        for (uint32_t i = 0; i < digestIntCount; i++)
         {
             result[i * 4 + 0] = static_cast<uint8_t>(state[i]);
             result[i * 4 + 1] = static_cast<uint8_t>(state[i] >> 8);
@@ -266,7 +266,7 @@ namespace md5
     }
 
     template <class T>
-    inline std::array<uint8_t, digestInts * 4> generate(const T& v) noexcept
+    inline std::array<uint8_t, digestIntCount * 4> generate(const T& v) noexcept
     {
         return generate(std::begin(v), std::end(v));
     }

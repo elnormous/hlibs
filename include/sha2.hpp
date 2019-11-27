@@ -33,11 +33,11 @@ namespace sha256
             0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
         };
 
-        constexpr uint32_t digestInts = 8; // number of 32bit integers per SHA256 digest
-        constexpr uint32_t blockInts = 16; // number of 32bit integers per SHA256 block
-        constexpr uint32_t blockBytes = blockInts * 4;
-        using Block = uint8_t[blockBytes];
-        using State = uint32_t[digestInts];
+        constexpr uint32_t digestIntCount = 8; // number of 32bit integers per SHA256 digest
+        constexpr uint32_t blockIntCount = 16; // number of 32bit integers per SHA256 block
+        constexpr uint32_t blockByteCount = blockIntCount * 4;
+        using Block = uint8_t[blockByteCount];
+        using State = uint32_t[digestIntCount];
 
         constexpr uint32_t rotateRight(const uint32_t value,
                                        const uint32_t bits) noexcept
@@ -103,7 +103,7 @@ namespace sha256
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, digestInts * 4> hash(const Iterator begin,
+    inline std::array<uint8_t, digestIntCount * 4> hash(const Iterator begin,
                                                     const Iterator end) noexcept
     {
         State state = {
@@ -123,7 +123,7 @@ namespace sha256
         {
             block[dataSize] = *i;
             dataSize++;
-            if (dataSize == blockBytes)
+            if (dataSize == blockByteCount)
             {
                 transform(block, state);
                 dataSize = 0;
@@ -132,17 +132,17 @@ namespace sha256
 
         // Pad data left in the buffer
         uint32_t n = dataSize;
-        if (dataSize < blockBytes - 8)
+        if (dataSize < blockByteCount - 8)
         {
             block[n++] = 0x80;
-            while (n < blockBytes - 8) block[n++] = 0x00;
+            while (n < blockByteCount - 8) block[n++] = 0x00;
         }
         else
         {
             block[n++] = 0x80;
-            while (n < blockBytes) block[n++] = 0x00;
+            while (n < blockByteCount) block[n++] = 0x00;
             transform(block, state);
-            std::fill(block, block + blockBytes - 8, 0);
+            std::fill(block, block + blockByteCount - 8, 0);
         }
 
         // append the size in bits
@@ -157,9 +157,9 @@ namespace sha256
         block[56] = static_cast<uint8_t>(totalBits >> 56);
         transform(block, state);
 
-        std::array<uint8_t, digestInts * 4> result;
+        std::array<uint8_t, digestIntCount * 4> result;
         // reverse all the bytes to big endian
-        for (uint32_t i = 0; i < digestInts; i++)
+        for (uint32_t i = 0; i < digestIntCount; i++)
         {
             result[i * 4 + 0] = static_cast<uint8_t>(state[i] >> 24);
             result[i * 4 + 1] = static_cast<uint8_t>(state[i] >> 16);
@@ -171,7 +171,7 @@ namespace sha256
     }
 
     template <class T>
-    inline std::array<uint8_t, digestInts * 4> hash(const T& v) noexcept
+    inline std::array<uint8_t, digestIntCount * 4> hash(const T& v) noexcept
     {
         return hash(std::begin(v), std::end(v));
     }
