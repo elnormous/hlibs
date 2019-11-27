@@ -95,6 +95,7 @@ namespace aes
 
         constexpr size_t blockWordCount = 4; // number of words in an AES block (Nb)
         constexpr size_t blockByteCount = 4 * blockWordCount;
+        constexpr size_t wordByteCount = 4;
 
         class Word
         {
@@ -105,7 +106,7 @@ namespace aes
             Word operator^(const Word& other) const noexcept
             {
                 Word result = *this;
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     result[i] ^= other[i];
 
                 return result;
@@ -113,7 +114,7 @@ namespace aes
 
             Word& operator^=(const Word& other) noexcept
             {
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     b[i] ^= other.b[i];
 
                 return *this;
@@ -121,7 +122,7 @@ namespace aes
 
             void sub() noexcept
             {
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     b[i] = sbox[b[i]];
             }
 
@@ -134,7 +135,7 @@ namespace aes
                 b[3] = c;
             }
 
-            uint8_t b[4];
+            uint8_t b[wordByteCount];
         };
 
         using RoundKey = Word[4];
@@ -223,14 +224,14 @@ namespace aes
 
             void subBytes() noexcept
             {
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
                         w[i][j] = sbox[w[i][j]];
             }
 
             void invSubBytes() noexcept
             {
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
                         w[i][j] = inverseSbox[w[i][j]];
             }
@@ -279,7 +280,7 @@ namespace aes
                         static_cast<uint8_t>(mulBytes(0x03, s[0]) ^ s[1] ^ s[2] ^ mulBytes(0x02, s[3]))
                     };
 
-                    for (size_t i = 0; i < 4; ++i)
+                    for (size_t i = 0; i < wordByteCount; ++i)
                         w[i][j] = s1[i];
               }
             }
@@ -301,7 +302,7 @@ namespace aes
                     s1[2] = mulBytes(0x0D, s[0]) ^ mulBytes(0x09, s[1]) ^ mulBytes(0x0E, s[2]) ^ mulBytes(0x0B, s[3]);
                     s1[3] = mulBytes(0x0B, s[0]) ^ mulBytes(0x0D, s[1]) ^ mulBytes(0x09, s[2]) ^ mulBytes(0x0E, s[3]);
 
-                    for (size_t i = 0; i < 4; ++i)
+                    for (size_t i = 0; i < wordByteCount; ++i)
                         w[i][j] = s1[i];
                 }
             }
@@ -309,7 +310,7 @@ namespace aes
             void addRoundKey(const RoundKey& roundKey) noexcept
             {
                 for (size_t i = 0; i < blockWordCount; ++i)
-                    for (size_t j = 0; j < 4; ++j)
+                    for (size_t j = 0; j < wordByteCount; ++j)
                         w[i][j] ^= roundKey[j][i];
             }
 
@@ -320,7 +321,7 @@ namespace aes
                 expandKey<keyLength>(key, roundKeys);
 
                 Block state;
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
                         state[i][j] = w[j][i];
 
@@ -338,7 +339,7 @@ namespace aes
                 state.shiftRows();
                 state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
 
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
                         w[j][i] = state[i][j];
             }
@@ -350,7 +351,7 @@ namespace aes
                 expandKey<keyLength>(key, roundKeys);
 
                 Block state;
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
                         state[i][j] = w[j][i];
 
@@ -368,7 +369,7 @@ namespace aes
                 state.invShiftRows();
                 state.addRoundKey(roundKeys[0]);
 
-                for (size_t i = 0; i < 4; ++i)
+                for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
                         w[j][i] = state[i][j];
             }
