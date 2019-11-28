@@ -44,7 +44,6 @@ namespace md5
             return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
         }
 
-        // F, G, H and I are basic MD5 functions
         constexpr uint32_t f(const uint32_t x,
                              const uint32_t y,
                              const uint32_t z) noexcept
@@ -204,7 +203,7 @@ namespace md5
 
     template <class Iterator>
     inline std::array<uint8_t, digestIntCount * 4> generate(const Iterator begin,
-                                                        const Iterator end) noexcept
+                                                            const Iterator end) noexcept
     {
         State state = {
             0x67452301,
@@ -226,7 +225,7 @@ namespace md5
             }
         }
 
-        // Pad data left in the buffer
+        // pad data left in the buffer
         uint32_t n = dataSize;
         if (dataSize < blockByteCount - 8)
         {

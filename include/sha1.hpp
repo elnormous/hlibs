@@ -89,7 +89,7 @@ namespace sha1
 
     template <class Iterator>
     inline std::array<uint8_t, digestIntCount * 4> hash(const Iterator begin,
-                                                    const Iterator end) noexcept
+                                                        const Iterator end) noexcept
     {
         State state = {
             0x67452301,
@@ -113,7 +113,7 @@ namespace sha1
             }
         }
 
-        // Pad data left in the buffer
+        // pad data left in the buffer
         uint32_t n = dataSize;
         if (dataSize < blockByteCount - 8)
         {

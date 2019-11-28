@@ -104,7 +104,7 @@ namespace sha256
 
     template <class Iterator>
     inline std::array<uint8_t, digestIntCount * 4> hash(const Iterator begin,
-                                                    const Iterator end) noexcept
+                                                        const Iterator end) noexcept
     {
         State state = {
             0x6A09E667,
@@ -130,7 +130,7 @@ namespace sha256
             }
         }
 
-        // Pad data left in the buffer
+        // pad data left in the buffer
         uint32_t n = dataSize;
         if (dataSize < blockByteCount - 8)
         {
