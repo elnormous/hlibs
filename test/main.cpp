@@ -18,7 +18,7 @@ namespace
     {
     public:
         template <class T, class ...Args>
-        void run(T test, Args ...args)
+        void run(T test, Args ...args) noexcept
         {
             try
             {
@@ -31,7 +31,7 @@ namespace
             }
         }
 
-        bool getResult() const noexcept { return result; }
+        inline bool getResult() const noexcept { return result; }
 
     private:
         bool result = true;
@@ -89,7 +89,7 @@ namespace
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x20}
         };
 
-        for (auto& testCase : testCases)
+        for (const auto& testCase : testCases)
         {
             const auto c8 = crc8::generate(testCase.first);
 
@@ -112,7 +112,7 @@ namespace
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0xc8a61cc1}
         };
 
-        for (auto& testCase : testCases)
+        for (const auto& testCase : testCases)
         {
             const auto c32 = crc32::generate(testCase.first);
 
@@ -135,7 +135,7 @@ namespace
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x296a37b7}
         };
 
-        for (auto& testCase : testCases)
+        for (const auto& testCase : testCases)
         {
             const auto f32 = fnv1::hash<uint32_t>(testCase.first);
 
@@ -158,7 +158,7 @@ namespace
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x98645a51cb3becf7}
         };
 
-        for (auto& testCase : testCases)
+        for (const auto& testCase : testCases)
         {
             const auto f64 = fnv1::hash<uint64_t>(testCase.first);
 
@@ -181,7 +181,7 @@ namespace
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "9575b2604f8fd72edb743e95bd88b36d"}
         };
 
-        for (auto& testCase : testCases)
+        for (const auto& testCase : testCases)
         {
             const auto d = md5::generate(testCase.first);
             const auto dstr = toString(d);
@@ -205,7 +205,7 @@ namespace
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "ca593e38a74c94d97c9e0ead291340ae6a824060"}
         };
 
-        for (auto& testCase : testCases)
+        for (const auto& testCase : testCases)
         {
             const auto h = sha1::hash(testCase.first);
             const auto hstr = toString(h);
@@ -229,7 +229,7 @@ namespace
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "2d8f37e9c67a0bab28d6cfc4c5d92055c5c69bb131948e198fc62c85d9016008"}
         };
 
-        for (auto& testCase : testCases)
+        for (const auto& testCase : testCases)
         {
             const auto h = sha256::hash(testCase.first);
             const auto hstr = toString(h);
