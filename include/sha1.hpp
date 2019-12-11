@@ -15,6 +15,7 @@ namespace sha1
     namespace
     {
         constexpr uint32_t digestIntCount = 5; // number of 32bit integers per SHA1 digest
+        constexpr uint32_t digestByteCount = digestIntCount * 4;
         constexpr uint32_t blockIntCount = 16; // number of 32bit integers per SHA1 block
         constexpr uint32_t blockByteCount = blockIntCount * 4;
         using Block = uint8_t[blockByteCount];
@@ -88,8 +89,8 @@ namespace sha1
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, digestIntCount * 4> hash(const Iterator begin,
-                                                        const Iterator end) noexcept
+    inline std::array<uint8_t, digestByteCount> hash(const Iterator begin,
+                                                     const Iterator end) noexcept
     {
         State state = {
             0x67452301,
@@ -140,7 +141,7 @@ namespace sha1
         block[56] = static_cast<uint8_t>(totalBits >> 56);
         transform(block, state);
 
-        std::array<uint8_t, digestIntCount * 4> result;
+        std::array<uint8_t, digestByteCount> result;
         // reverse all the bytes to big endian
         for (uint32_t i = 0; i < digestIntCount; i++)
         {
@@ -154,7 +155,7 @@ namespace sha1
     }
 
     template <class T>
-    inline std::array<uint8_t, digestIntCount * 4> hash(const T& v)
+    inline std::array<uint8_t, digestByteCount hash(const T& v)
     {
         return hash(std::begin(v), std::end(v));
     }

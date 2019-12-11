@@ -34,6 +34,7 @@ namespace sha256
         };
 
         constexpr uint32_t digestIntCount = 8; // number of 32bit integers per SHA256 digest
+        constexpr uint32_t digestByteCount = digestIntCount * 4;
         constexpr uint32_t blockIntCount = 16; // number of 32bit integers per SHA256 block
         constexpr uint32_t blockByteCount = blockIntCount * 4;
         using Block = uint8_t[blockByteCount];
@@ -59,7 +60,7 @@ namespace sha256
             {
                 const uint32_t sigma0 = rotateRight(w[i - 15], 7) ^ rotateRight(w[i - 15], 18) ^ (w[i - 15] >> 3);
                 const uint32_t sigma1 = rotateRight(w[i - 2], 17) ^ rotateRight(w[i - 2], 19) ^ (w[i - 2] >> 10);
-                w[i] = w[i-16] + sigma0 + w[i-7] + sigma1;
+                w[i] = w[i - 16] + sigma0 + w[i - 7] + sigma1;
             }
 
             uint32_t a = state[0];
@@ -103,8 +104,8 @@ namespace sha256
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, digestIntCount * 4> hash(const Iterator begin,
-                                                        const Iterator end) noexcept
+    inline std::array<uint8_t, digestByteCount> hash(const Iterator begin,
+                                                     const Iterator end) noexcept
     {
         State state = {
             0x6A09E667,
@@ -157,7 +158,7 @@ namespace sha256
         block[56] = static_cast<uint8_t>(totalBits >> 56);
         transform(block, state);
 
-        std::array<uint8_t, digestIntCount * 4> result;
+        std::array<uint8_t, digestByteCount> result;
         // reverse all the bytes to big endian
         for (uint32_t i = 0; i < digestIntCount; i++)
         {
@@ -171,7 +172,7 @@ namespace sha256
     }
 
     template <class T>
-    inline std::array<uint8_t, digestIntCount * 4> hash(const T& v) noexcept
+    inline std::array<uint8_t, digestByteCount> hash(const T& v) noexcept
     {
         return hash(std::begin(v), std::end(v));
     }
