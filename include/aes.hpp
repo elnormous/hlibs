@@ -97,7 +97,7 @@ namespace aes
         constexpr size_t blockByteCount = 4 * blockWordCount;
         constexpr size_t wordByteCount = 4;
 
-        class Word
+        class Word final
         {
         public:
             uint8_t& operator[](size_t i) { return b[i]; }
@@ -199,7 +199,7 @@ namespace aes
             }
         }
 
-        class Block
+        class Block final
         {
         public:
             Word& operator[](size_t i) { return w[i]; }

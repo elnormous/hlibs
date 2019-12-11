@@ -14,7 +14,7 @@
 
 namespace
 {
-    class TestRunner
+    class TestRunner final
     {
     public:
         template <class T, class ...Args>

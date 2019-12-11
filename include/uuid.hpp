@@ -11,7 +11,7 @@
 
 namespace uuid
 {
-    struct Uuid
+    struct Uuid final
     {
         uint32_t  timeLow;
         uint16_t  timeMid;
