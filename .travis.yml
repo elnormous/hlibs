@@ -11,4 +11,5 @@ addons:
 script:
   - build-wrapper-linux-x86-64 --out-dir bw-output make -C test
   - test/test
-  - sonar-scanner -Dproject.settings=../sonar-project.properties
+  - gcov test/main.cpp
+  - sonar-scanner

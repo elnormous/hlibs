@@ -2,7 +2,7 @@ MAKEFILE_PATH:=$(abspath $(lastword $(MAKEFILE_LIST)))
 ROOT_DIR:=$(realpath $(dir $(MAKEFILE_PATH)))
 debug=0
 CXXFLAGS=-c -std=c++11 -Wall -O2 -I$(ROOT_DIR)/../include
-LDFLAGS=-O2
+LDFLAGS=-O2 -fprofile-arcs -ftest-coverage
 SOURCES=$(ROOT_DIR)/main.cpp
 BASE_NAMES=$(basename $(SOURCES))
 OBJECTS=$(BASE_NAMES:=.o)
