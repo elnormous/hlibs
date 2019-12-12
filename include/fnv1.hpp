@@ -11,8 +11,8 @@ namespace fnv1
 {
     namespace
     {
-        template <typename T> T prime() noexcept;
-        template <typename T> T offsetBasis() noexcept;
+        template <typename T> constexpr T prime() noexcept;
+        template <typename T> constexpr T offsetBasis() noexcept;
 
         template <>
         constexpr uint32_t prime<uint32_t>() noexcept { return 16777619u; }
