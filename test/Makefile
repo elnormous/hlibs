@@ -2,7 +2,7 @@ MAKEFILE_PATH:=$(abspath $(lastword $(MAKEFILE_LIST)))
 ROOT_DIR:=$(realpath $(dir $(MAKEFILE_PATH)))
 debug=0
 CXXFLAGS=-c -std=c++11 -Wall -O2 -I$(ROOT_DIR)/../include
-LDFLAGS=-O2 -fprofile-arcs -ftest-coverage
+LDFLAGS=-O2
 SOURCES=$(ROOT_DIR)/main.cpp
 BASE_NAMES=$(basename $(SOURCES))
 OBJECTS=$(BASE_NAMES:=.o)
@@ -14,10 +14,10 @@ all: CXXFLAGS+=-DDEBUG -g
 endif
 
 $(EXECUTABLE): $(OBJECTS)
-	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@
+	$(CXX) $(OBJECTS) $(LDFLAGS) -o $@ -fprofile-arcs -ftest-coverage
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) $< -o $@
+	$(CXX) $(CXXFLAGS) $< -o $@ -fprofile-arcs -ftest-coverage
 
 .PHONY: clean
 clean:
