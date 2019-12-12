@@ -37,11 +37,11 @@ namespace crc8
         };
     }
 
-    template <uint32_t xorOut = 0x0, class Iterator>
+    template <uint32_t xorResult = 0x0, class Iterator>
 	constexpr uint8_t generate(const Iterator i, const Iterator end,
                                const uint8_t init = 0x00) noexcept
 	{
-        return ((i != end) ? generate<0x0>(i + 1, end, crcTable[init ^ static_cast<uint32_t>(*i)]) : init) ^ xorOut;
+        return ((i != end) ? generate<0x0>(i + 1, end, crcTable[init ^ static_cast<uint32_t>(*i)]) : init) ^ xorResult;
 	}
 
     template <class T>
