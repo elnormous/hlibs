@@ -155,7 +155,7 @@ namespace sha1
     }
 
     template <class T>
-    inline std::array<uint8_t, digestByteCount hash(const T& v)
+    inline std::array<uint8_t, digestByteCount> hash(const T& v)
     {
         return hash(std::begin(v), std::end(v));
     }
