@@ -10,7 +10,7 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: |
+- script:
     - cd test
     - make
     - ./test
