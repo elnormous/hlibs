@@ -14,6 +14,13 @@
 
 namespace
 {
+    class TestError final: public std::logic_error
+    {
+    public:
+        TestError(const std::string& str): std::logic_error(str) {}
+        TestError(const char* str): std::logic_error(str) {}
+    };
+
     class TestRunner final
     {
     public:
@@ -24,7 +31,7 @@ namespace
             {
                 test(args...);
             }
-            catch (std::exception& e)
+            catch (const TestError& e)
             {
                 std::cerr << e.what() << '\n';
                 result = false;
@@ -67,14 +74,14 @@ namespace
         const auto b = base64::encode(test);
 
         if (b != "VGVzdCAxMiE=")
-            throw std::logic_error("Invalid base64");
+            throw TestError("Invalid base64");
 
         std::cout << "Base64: " << b << '\n';
 
         const auto b2 = base64::decode(b);
 
         if (b2 != test)
-            throw std::logic_error("Invalid decoded base64");
+            throw TestError("Invalid decoded base64");
     }
 
     void testCrc8()
@@ -94,7 +101,7 @@ namespace
             const auto c8 = crc8::generate(testCase.first);
 
             if (c8 != testCase.second)
-                throw std::logic_error("Invalid CRC8!");
+                throw TestError("Invalid CRC8!");
 
             std::cout << "CRC8: " << std::hex << static_cast<uint32_t>(c8) << '\n';
         }
@@ -117,7 +124,7 @@ namespace
             const auto c32 = crc32::generate(testCase.first);
 
             if (c32 != testCase.second)
-                throw std::logic_error("Invalid CRC32");
+                throw TestError("Invalid CRC32");
 
             std::cout << "CRC32: " << std::hex << c32 << '\n';
         }
@@ -140,7 +147,7 @@ namespace
             const auto f32 = fnv1::hash<uint32_t>(testCase.first);
 
             if (f32 != testCase.second)
-                throw std::logic_error("Invalid FNV1 32-bit");
+                throw TestError("Invalid FNV1 32-bit");
 
             std::cout << "FNV1 32: " << std::hex << f32 << '\n';
         }
@@ -163,7 +170,7 @@ namespace
             const auto f64 = fnv1::hash<uint64_t>(testCase.first);
 
             if (f64 != testCase.second)
-                throw std::logic_error("Invalid FNV1 64-bit");
+                throw TestError("Invalid FNV1 64-bit");
 
             std::cout << "FNV1 64: " << std::hex << f64 << '\n';
         }
@@ -187,7 +194,7 @@ namespace
             const auto dstr = toString(d);
 
             if (dstr != testCase.second)
-                throw std::logic_error("Invalid md5");
+                throw TestError("Invalid md5");
 
             std::cout << "MD5: " << dstr << '\n';
         }
@@ -211,7 +218,7 @@ namespace
             const auto hstr = toString(h);
 
             if (hstr != testCase.second)
-                throw std::logic_error("Invalid sha1");
+                throw TestError("Invalid sha1");
 
             std::cout << "SHA1: " << hstr << '\n';
         }
@@ -235,7 +242,7 @@ namespace
             const auto hstr = toString(h);
 
             if (hstr != testCase.second)
-                throw std::logic_error("Invalid sha256");
+                throw TestError("Invalid sha256");
 
             std::cout << "SHA256: " << hstr << '\n';
         }
@@ -248,12 +255,12 @@ namespace
         const auto utf32String = utf8::toUtf32(testString);
 
         if (utf32String != U"ÀÁÂÃÄÅÆ")
-            throw std::logic_error("Invalid UTF-32");
+            throw TestError("Invalid UTF-32");
 
         const auto utf8String = utf8::fromUtf32(utf32String);
 
         if (utf8String != testString)
-            throw std::logic_error("Invalid UTF-8");
+            throw TestError("Invalid UTF-8");
 
         std::cout << "UTF8: " << utf8String << '\n';
     }
@@ -262,10 +269,10 @@ namespace
     {
         const auto g = uuid::generateString();
         if (g[14] != '4')
-            throw std::logic_error("Wrong UUID version");
+            throw TestError("Wrong UUID version");
 
         if ((hexToInt(g[19]) & 0x0C) != 0x8)
-            throw std::logic_error("Wrong UUID variant");
+            throw TestError("Wrong UUID variant");
 
         std::cout << "UUID: " << g << '\n';
     }
