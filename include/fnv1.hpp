@@ -15,16 +15,16 @@ namespace fnv1
         template <typename T> T offsetBasis() noexcept;
 
         template <>
-        constexpr uint32_t prime() noexcept { return 16777619u; }
+        constexpr uint32_t prime<uint32_t>() noexcept { return 16777619u; }
 
         template <>
-        constexpr uint32_t offsetBasis() noexcept { return 2166136261u; }
+        constexpr uint32_t offsetBasis<uint32_t>() noexcept { return 2166136261u; }
 
         template <>
-        constexpr uint64_t prime() noexcept { return 1099511628211u; }
+        constexpr uint64_t prime<uint64_t>() noexcept { return 1099511628211u; }
 
         template <>
-        constexpr uint64_t offsetBasis() noexcept { return 14695981039346656037u; }
+        constexpr uint64_t offsetBasis<uint64_t>() noexcept { return 14695981039346656037u; }
     }
 
     template <typename Result, typename Iterator>
