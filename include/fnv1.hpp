@@ -9,23 +9,20 @@
 
 namespace fnv1
 {
-    namespace
-    {
-        template <typename T> constexpr T prime() noexcept;
-        template <typename T> constexpr T offsetBasis() noexcept;
+    template <typename T> constexpr T prime() noexcept;
+    template <typename T> constexpr T offsetBasis() noexcept;
 
-        template <>
-        constexpr uint32_t prime<uint32_t>() noexcept { return 16777619U; }
+    template <>
+    constexpr uint32_t prime<uint32_t>() noexcept { return 16777619U; }
 
-        template <>
-        constexpr uint32_t offsetBasis<uint32_t>() noexcept { return 2166136261U; }
+    template <>
+    constexpr uint32_t offsetBasis<uint32_t>() noexcept { return 2166136261U; }
 
-        template <>
-        constexpr uint64_t prime<uint64_t>() noexcept { return 1099511628211U; }
+    template <>
+    constexpr uint64_t prime<uint64_t>() noexcept { return 1099511628211U; }
 
-        template <>
-        constexpr uint64_t offsetBasis<uint64_t>() noexcept { return 14695981039346656037U; }
-    }
+    template <>
+    constexpr uint64_t offsetBasis<uint64_t>() noexcept { return 14695981039346656037U; }
 
     template <typename Result, typename Iterator>
     constexpr Result hash(const Iterator i, const Iterator end,

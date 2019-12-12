@@ -12,24 +12,21 @@
 
 namespace base64
 {
-    namespace
-    {
-        constexpr char chars[] = {
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
-        };
+    constexpr char chars[] = {
+        'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+        'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+        '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+    };
 
-        constexpr uint8_t getIndex(const uint8_t c)
-        {
-            return (c >= 'A' && c <= 'Z') ? c - 'A' :
-                (c >= 'a' && c <= 'z') ? 26 + (c - 'a') :
-                (c >= '0' && c <= '9') ? 52 + (c - '0') :
-                (c == '+') ? 62 : (c == '/') ? 63 :
-                throw std::out_of_range("Invalid Base64 digit");
-        }
+    constexpr uint8_t getIndex(const uint8_t c)
+    {
+        return (c >= 'A' && c <= 'Z') ? c - 'A' :
+            (c >= 'a' && c <= 'z') ? 26 + (c - 'a') :
+            (c >= '0' && c <= '9') ? 52 + (c - '0') :
+            (c == '+') ? 62 : (c == '/') ? 63 :
+            throw std::out_of_range("Invalid Base64 digit");
     }
 
     template <class Iterator>
