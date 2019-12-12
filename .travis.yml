@@ -12,4 +12,4 @@ script:
   - cd test
   - build-wrapper-linux-x86-64 --out-dir bw-output make
   - ./test
-  - sonar-scanner
+  - sonar-scanner -Dproject.settings=../sonar-project.properties
