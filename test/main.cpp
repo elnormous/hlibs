@@ -17,8 +17,8 @@ namespace
     class TestError final: public std::logic_error
     {
     public:
-        TestError(const std::string& str): std::logic_error(str) {}
-        TestError(const char* str): std::logic_error(str) {}
+        explicit TestError(const std::string& str): std::logic_error(str) {}
+        explicit TestError(const char* str): std::logic_error(str) {}
     };
 
     class TestRunner final
