@@ -250,19 +250,30 @@ namespace
 
     void testUtf8()
     {
-        const std::string testString = u8"ÀÁÂÃÄÅÆ\u2020\U00010102";
+        const std::pair<std::string, std::vector<char32_t>> testCases[] = {
+            {{}, {}},
+            {"\u0001", {0x01}},
+            {u8"aÀÁ\u2020\U00010102", {0x61, 0xC0, 0xC1, 0x2020, 0x10102}}
+        };
 
-        const auto utf32String = utf8::toUtf32(testString);
+        for (const auto& testCase : testCases)
+        {
+            const auto utf32String = utf8::toUtf32(testCase.first);
 
-        if (utf32String != U"ÀÁÂÃÄÅÆ\u2020\U00010102")
-            throw TestError("Invalid UTF-32");
+            if (utf32String.length() != testCase.second.size())
+                throw TestError("Invalid UTF-32 length");
 
-        const auto utf8String = utf8::fromUtf32(utf32String);
+            for (size_t i = 0; i < testCase.second.size(); ++i)
+                if (utf32String[i] != testCase.second[i])
+                    throw TestError("Invalid UTF-32 character");
 
-        if (utf8String != testString)
-            throw TestError("Invalid UTF-8");
+            const auto utf8String = utf8::fromUtf32(utf32String);
 
-        std::cout << "UTF8: " << utf8String << '\n';
+            if (utf8String != testCase.first)
+                throw TestError("Invalid UTF-8");
+
+            std::cout << "UTF8: " << utf8String << '\n';
+        }
     }
 
     void testUuid()
