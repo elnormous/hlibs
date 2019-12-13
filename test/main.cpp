@@ -250,11 +250,11 @@ namespace
 
     void testUtf8()
     {
-        const std::string testString = u8"ÀÁÂÃÄÅÆ";
+        const std::string testString = u8"ÀÁÂÃÄÅÆ\u2020\U00010102";
 
         const auto utf32String = utf8::toUtf32(testString);
 
-        if (utf32String != U"ÀÁÂÃÄÅÆ")
+        if (utf32String != U"ÀÁÂÃÄÅÆ\u2020\U00010102")
             throw TestError("Invalid UTF-32");
 
         const auto utf8String = utf8::fromUtf32(utf32String);
