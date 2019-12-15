@@ -185,18 +185,27 @@ namespace
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, "b373e3ddc3438d7c10c76f3ad9d4c401"},
-            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "9575b2604f8fd72edb743e95bd88b36d"}
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "9575b2604f8fd72edb743e95bd88b36d"},
+            {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+            }, "aabd2b2a451504e119a243d8e775fdad"}
         };
 
         for (const auto& testCase : testCases)
         {
             const auto d = md5::generate(testCase.first);
-            const auto dstr = toString(d);
+            const auto str = toString(d);
 
-            if (dstr != testCase.second)
-                throw TestError("Invalid md5");
+            if (str != testCase.second)
+                throw TestError("Invalid md5 " + str);
 
-            std::cout << "MD5: " << dstr << '\n';
+            std::cout << "MD5: " << str << '\n';
         }
     }
 
@@ -224,12 +233,12 @@ namespace
         for (const auto& testCase : testCases)
         {
             const auto h = sha1::hash(testCase.first);
-            const auto hstr = toString(h);
+            const auto str = toString(h);
 
-            if (hstr != testCase.second)
-                throw TestError("Invalid sha1 " + hstr);
+            if (str != testCase.second)
+                throw TestError("Invalid sha1 " + str);
 
-            std::cout << "SHA1: " << hstr << '\n';
+            std::cout << "SHA1: " << str << '\n';
         }
     }
 
@@ -248,12 +257,12 @@ namespace
         for (const auto& testCase : testCases)
         {
             const auto h = sha256::hash(testCase.first);
-            const auto hstr = toString(h);
+            const auto str = toString(h);
 
-            if (hstr != testCase.second)
-                throw TestError("Invalid sha256");
+            if (str != testCase.second)
+                throw TestError("Invalid sha256 " + str);
 
-            std::cout << "SHA256: " << hstr << '\n';
+            std::cout << "SHA256: " << str << '\n';
         }
     }
 
