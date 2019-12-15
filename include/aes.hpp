@@ -140,7 +140,7 @@ namespace aes
     template <size_t keyLength>
     using RoundKeys = RoundKey[getRoundCount(keyLength) + 1];
 
-    uint8_t mulBytes(uint8_t a, uint8_t b) noexcept
+    inline uint8_t mulBytes(uint8_t a, uint8_t b) noexcept
     {
         uint8_t c = 0;
         for (size_t i = 0; i < 8; ++i)
