@@ -120,8 +120,7 @@ namespace sha256
         for (auto i = begin; i != end; ++i)
         {
             block[dataSize % blockByteCount] = *i;
-            dataSize++;
-            if (dataSize % blockByteCount == 0)
+            if (++dataSize % blockByteCount == 0)
                 transform(block, state);
         }
 
