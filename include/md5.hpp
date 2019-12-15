@@ -214,18 +214,15 @@ namespace md5
         uint32_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {
-            block[dataSize] = *i;
+            block[dataSize % blockByteCount] = *i;
             dataSize++;
-            if (dataSize == blockByteCount)
-            {
+            if (dataSize % blockByteCount == 0)
                 transform(block, state);
-                dataSize = 0;
-            }
         }
 
         // pad data left in the buffer
-        uint32_t n = dataSize;
-        if (dataSize < blockByteCount - 8)
+        uint32_t n = dataSize % blockByteCount;
+        if (n < blockByteCount - 8)
         {
             block[n++] = 0x80;
             while (n < blockByteCount - 8) block[n++] = 0x00;
