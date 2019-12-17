@@ -12,7 +12,7 @@
 
 namespace base64
 {
-    class ParseError: public std::logic_error
+    class ParseError final: public std::logic_error
     {
     public:
         explicit ParseError(const std::string& str): std::logic_error(str) {}
