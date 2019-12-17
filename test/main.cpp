@@ -84,8 +84,6 @@ namespace
             if (b != testCase.second)
                 throw TestError("Invalid base64 " + b);
 
-            std::cout << "Base64: " << b << '\n';
-
             const auto b2 = base64::decode(b);
 
             if (b2 != testCase.first)
@@ -111,8 +109,6 @@ namespace
 
             if (c8 != testCase.second)
                 throw TestError("Invalid CRC8!");
-
-            std::cout << "CRC8: " << std::hex << static_cast<uint32_t>(c8) << '\n';
         }
     }
 
@@ -134,8 +130,6 @@ namespace
 
             if (c32 != testCase.second)
                 throw TestError("Invalid CRC32");
-
-            std::cout << "CRC32: " << std::hex << c32 << '\n';
         }
     }
 
@@ -157,8 +151,6 @@ namespace
 
             if (f32 != testCase.second)
                 throw TestError("Invalid FNV1 32-bit");
-
-            std::cout << "FNV1 32: " << std::hex << f32 << '\n';
         }
     }
 
@@ -180,8 +172,6 @@ namespace
 
             if (f64 != testCase.second)
                 throw TestError("Invalid FNV1 64-bit");
-
-            std::cout << "FNV1 64: " << std::hex << f64 << '\n';
         }
     }
 
@@ -213,8 +203,6 @@ namespace
 
             if (str != testCase.second)
                 throw TestError("Invalid md5 " + str);
-
-            std::cout << "MD5: " << str << '\n';
         }
     }
 
@@ -246,8 +234,6 @@ namespace
 
             if (str != testCase.second)
                 throw TestError("Invalid sha1 " + str);
-
-            std::cout << "SHA1: " << str << '\n';
         }
     }
 
@@ -279,8 +265,6 @@ namespace
 
             if (str != testCase.second)
                 throw TestError("Invalid sha256 " + str);
-
-            std::cout << "SHA256: " << str << '\n';
         }
     }
 
@@ -307,8 +291,6 @@ namespace
 
             if (utf8String != testCase.first)
                 throw TestError("Invalid UTF-8");
-
-            std::cout << "UTF8: " << utf8String << '\n';
         }
     }
 
@@ -320,8 +302,6 @@ namespace
 
         if ((hexToInt(g[19]) & 0x0C) != 0x8)
             throw TestError("Wrong UUID variant");
-
-        std::cout << "UUID: " << g << '\n';
     }
 }
 
