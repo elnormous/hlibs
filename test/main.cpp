@@ -69,19 +69,28 @@ namespace
 
     void testBase64()
     {
-        const std::vector<uint8_t> test = {'T', 'e', 's', 't', ' ', '1', '2', '!'};
+        const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
+            {{}, ""},
+            {{'0'}, "MA=="},
+            {{'0', '0'}, "MDA="},
+            {{'0', '0', '0'}, "MDAw"},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "VGVzdCAxMiE="}
+        };
 
-        const auto b = base64::encode(test);
+        for (const auto& testCase : testCases)
+        {
+            const auto b = base64::encode(testCase.first);
 
-        if (b != "VGVzdCAxMiE=")
-            throw TestError("Invalid base64");
+            if (b != testCase.second)
+                throw TestError("Invalid base64 " + b);
 
-        std::cout << "Base64: " << b << '\n';
+            std::cout << "Base64: " << b << '\n';
 
-        const auto b2 = base64::decode(b);
+            const auto b2 = base64::decode(b);
 
-        if (b2 != test)
-            throw TestError("Invalid decoded base64");
+            if (b2 != testCase.first)
+                throw TestError("Invalid decoded base64");
+        }
     }
 
     void testCrc8()

@@ -93,12 +93,12 @@ namespace base64
             }
         }
 
-        if (c)
+        if (c >= 2)
         {
-            for (uint32_t j = c; j < 4; ++j) charArray[j] = 0;
-
             result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
-            if (c > 1) result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
+
+            if (c == 3)
+                result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
         }
 
         return result;
