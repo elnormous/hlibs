@@ -12,6 +12,13 @@
 
 namespace base64
 {
+    class ParseError: public std::logic_error
+    {
+    public:
+        explicit ParseError(const std::string& str): std::logic_error(str) {}
+        explicit ParseError(const char* str): std::logic_error(str) {}
+    };
+
     constexpr char chars[] = {
         'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
         'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
@@ -93,12 +100,17 @@ namespace base64
             }
         }
 
-        if (c >= 2)
+        if (c)
         {
-            result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
-
-            if (c == 3)
+            if (c == 1)
+                throw ParseError("Invalid Base64");
+            else if (c == 2)
+                result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
+            else if (c == 3)
+            {
+                result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
                 result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
+            }
         }
 
         return result;
