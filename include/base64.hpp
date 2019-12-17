@@ -65,7 +65,11 @@ namespace base64
             else
             {
                 result += chars[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
-                result += chars[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
+
+                if (c == 2)
+                    result += chars[static_cast<uint8_t>((charArray[1] & 0x0F) << 2)];
+                else if (c == 3)
+                    result += chars[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
             }
 
             while (++c < 4) result += '=';
