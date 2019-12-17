@@ -51,11 +51,15 @@ namespace base64
 
         if (c)
         {
-            for (size_t j = c; j < 3; ++j) charArray[j] = '\0';
-
             result += chars[static_cast<uint8_t>((charArray[0] & 0xFC) >> 2)];
-            result += chars[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
-            result += chars[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
+
+            if (c == 1)
+                result += chars[static_cast<uint8_t>((charArray[0] & 0x03) << 4)];
+            else
+            {
+                result += chars[static_cast<uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
+                result += chars[static_cast<uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
+            }
 
             while (++c < 4) result += '=';
         }
@@ -78,11 +82,9 @@ namespace base64
 
         for (Iterator i = begin; i != end && *i != '='; ++i)
         {
-            charArray[c++] = static_cast<uint8_t>(*i);
+            charArray[c++] = getIndex(static_cast<uint8_t>(*i));
             if (c == 4)
             {
-                for (uint32_t j = 0; j < 4; ++j) charArray[j] = getIndex(charArray[j]);
-
                 result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
                 result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
                 result.push_back(static_cast<uint8_t>(((charArray[2] & 0x3) << 6) + charArray[3]));
@@ -93,11 +95,10 @@ namespace base64
 
         if (c)
         {
-            for (uint32_t j = 0; j < c; ++j) charArray[j] = getIndex(charArray[j]);
             for (uint32_t j = c; j < 4; ++j) charArray[j] = 0;
 
             result.push_back(static_cast<uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
-            result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
+            if (c > 1) result.push_back(static_cast<uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
         }
 
         return result;
