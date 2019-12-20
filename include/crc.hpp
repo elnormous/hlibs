@@ -85,25 +85,6 @@ namespace crc32
         0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94, 0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
     };
 
-	/*inline void generateTable() noexcept
-	{
-		constexpr uint32_t polynomial = 0xEDB88320;
-		uint8_t b = 0;
-		do
-		{
-			uint32_t remainder = b;
-			for (uint32_t bit = 0; bit < 8; ++bit)
-			{
-				if (remainder & 1)
-					remainder = (remainder >> 1) ^ polynomial;
-				else
-					remainder = (remainder >> 1);
-			}
-			crcTable[b] = remainder;
-		}
-		while (0 != ++b);
-	}*/
-
     template <uint32_t xorOut = 0xFFFFFFFF, class Iterator>
     constexpr uint32_t generate(const Iterator i, const Iterator end,
                                 const uint32_t init = 0xFFFFFFFF) noexcept
