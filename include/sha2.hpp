@@ -31,10 +31,10 @@ namespace sha256
         0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
     };
 
-    constexpr uint32_t digestIntCount = 8; // number of 32bit integers per SHA256 digest
-    constexpr uint32_t digestByteCount = digestIntCount * 4;
-    constexpr uint32_t blockIntCount = 16; // number of 32bit integers per SHA256 block
-    constexpr uint32_t blockByteCount = blockIntCount * 4;
+    constexpr size_t digestIntCount = 8; // number of 32bit integers per SHA256 digest
+    constexpr size_t digestByteCount = digestIntCount * 4;
+    constexpr size_t blockIntCount = 16; // number of 32bit integers per SHA256 block
+    constexpr size_t blockByteCount = blockIntCount * 4;
     using Block = uint8_t[blockByteCount];
     using State = uint32_t[digestIntCount];
 
