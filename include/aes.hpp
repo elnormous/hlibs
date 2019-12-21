@@ -553,6 +553,8 @@ namespace aes
             for (const Word w : decryptedBlock.w)
                 for (const uint8_t b : w.b)
                     *resultIterator++ = b;
+
+            decryptedBlock = block;
         }
 
         return result;
