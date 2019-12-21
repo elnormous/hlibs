@@ -132,7 +132,7 @@ namespace
             if (e != testCase.second)
                 throw TestError("Invalid AES");
 
-            const auto d = aes::encryptCfb<256>(e, key, inputVector);
+            const auto d = aes::decryptCfb<256>(e, key, inputVector);
 
             if (!std::equal(testCase.first.begin(), testCase.first.end(), d.begin()))
                 throw TestError("Invalid AES");
