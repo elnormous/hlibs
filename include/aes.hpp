@@ -394,10 +394,10 @@ namespace aes
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key>
-    std::vector<uint8_t> encryptEcb(const Data& data, const Key& key)
+    template <size_t keyLength, class Iterator, class Key>
+    std::vector<uint8_t> encryptEcb(Iterator begin, Iterator end, const Key& key)
     {
-        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         auto resultIterator = result.begin();
@@ -416,9 +416,15 @@ namespace aes
     }
 
     template <size_t keyLength, class Data, class Key>
-    std::vector<uint8_t> decryptEcb(const Data& data, const Key& key)
+    std::vector<uint8_t> encryptEcb(const Data& data, const Key& key)
     {
-        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        return encryptEcb<keyLength>(std::begin(data), std::end(data), key);
+    }
+
+    template <size_t keyLength, class Iterator, class Key>
+    std::vector<uint8_t> decryptEcb(Iterator begin, Iterator end, const Key& key)
+    {
+        std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         auto resultIterator = result.begin();
@@ -436,10 +442,17 @@ namespace aes
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InputVector>
-    std::vector<uint8_t> encryptCbc(const Data& data, const Key& key, const InputVector& inputVector)
+    template <size_t keyLength, class Data, class Key>
+    std::vector<uint8_t> decryptEcb(const Data& data, const Key& key)
     {
-        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        return decryptEcb<keyLength>(std::begin(data), std::end(data), key);
+    }
+
+    template <size_t keyLength, class Iterator, class Key, class InputVector>
+    std::vector<uint8_t> encryptCbc(Iterator begin, Iterator end, const Key& key,
+                                    const InputVector& inputVector)
+    {
+        std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         Block dataBlock;
@@ -466,9 +479,17 @@ namespace aes
     }
 
     template <size_t keyLength, class Data, class Key, class InputVector>
-    std::vector<uint8_t> decryptCbc(const Data& data, const Key& key, const InputVector& inputVector)
+    std::vector<uint8_t> encryptCbc(const Data& data, const Key& key,
+                                    const InputVector& inputVector)
     {
-        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        return encryptCbc<keyLength>(std::begin(data), std::end(data), key, inputVector);
+    }
+
+    template <size_t keyLength, class Iterator, class Key, class InputVector>
+    std::vector<uint8_t> decryptCbc(Iterator begin, Iterator end, const Key& key,
+                                    const InputVector& inputVector)
+    {
+        std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         Block dataBlock;
@@ -478,7 +499,7 @@ namespace aes
             for (uint8_t& b : w.b)
                 b = *inputVectorIterator++;
 
-        auto dataIterator = std::begin(data);
+        auto dataIterator = begin;
         auto resultIterator = result.begin();
 
         for (Block& block : blocks)
@@ -501,9 +522,17 @@ namespace aes
     }
 
     template <size_t keyLength, class Data, class Key, class InputVector>
-    std::vector<uint8_t> encryptCfb(const Data& data, const Key& key, const InputVector& inputVector)
+    std::vector<uint8_t> decryptCbc(const Data& data, const Key& key,
+                                    const InputVector& inputVector)
     {
-        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        return decryptCbc<keyLength>(std::begin(data), std::end(data), key, inputVector);
+    }
+
+    template <size_t keyLength, class Iterator, class Key, class InputVector>
+    std::vector<uint8_t> encryptCfb(Iterator begin, Iterator end, const Key& key,
+                                    const InputVector& inputVector)
+    {
+        std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         Block encryptedBlock;
@@ -530,9 +559,17 @@ namespace aes
     }
 
     template <size_t keyLength, class Data, class Key, class InputVector>
-    std::vector<uint8_t> decryptCfb(const Data& data, const Key& key, const InputVector& inputVector)
+    std::vector<uint8_t> encryptCfb(const Data& data, const Key& key,
+                                    const InputVector& inputVector)
     {
-        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        return encryptCfb<keyLength>(std::begin(data), std::end(data), key, inputVector);
+    }
+
+    template <size_t keyLength, class Iterator, class Key, class InputVector>
+    std::vector<uint8_t> decryptCfb(Iterator begin, Iterator end, const Key& key,
+                                    const InputVector& inputVector)
+    {
+        std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         Block decryptedBlock;
@@ -558,6 +595,13 @@ namespace aes
         }
 
         return result;
+    }
+
+    template <size_t keyLength, class Data, class Key, class InputVector>
+    std::vector<uint8_t> decryptCfb(const Data& data, const Key& key,
+                                    const InputVector& inputVector)
+    {
+        return decryptCfb<keyLength>(std::begin(data), std::end(data), key, inputVector);
     }
 }
 
