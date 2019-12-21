@@ -5,6 +5,7 @@
 Header-only C++ libraries that require no dependencies.
 
 Currently the following algorithms are supported:
+* AES
 * Base64
 * CRC8/CRC32
 * FNV1
