@@ -451,7 +451,7 @@ namespace aes
 
         auto resultIterator = result.begin();
 
-        for (Block& block : blocks)
+        for (const Block& block : blocks)
         {
             dataBlock ^= block;
             dataBlock.encrypt<keyLength>(key);
@@ -515,7 +515,7 @@ namespace aes
 
         auto resultIterator = result.begin();
 
-        for (Block& block : blocks)
+        for (const Block& block : blocks)
         {
             encryptedBlock.encrypt<keyLength>(key);
             encryptedBlock ^= block;
@@ -544,7 +544,7 @@ namespace aes
 
         auto resultIterator = result.begin();
 
-        for (Block& block : blocks)
+        for (const Block& block : blocks)
         {
             decryptedBlock.encrypt<keyLength>(key);
             decryptedBlock ^= block;
