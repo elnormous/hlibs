@@ -481,13 +481,13 @@ namespace aes
         auto dataIterator = std::begin(data);
         auto resultIterator = result.begin();
 
-        for (size_t i = 0; i < blocks.size(); ++i)
+        for (Block& block : blocks)
         {
-            blocks[i].decrypt<keyLength>(key);
-            blocks[i] ^= dataBlock;
+            block.decrypt<keyLength>(key);
+            block ^= dataBlock;
 
             // copy the block to output
-            for (const Word w : blocks[i].w)
+            for (const Word w : block.w)
                 for (const uint8_t b : w.b)
                     *resultIterator++ = b;
 
