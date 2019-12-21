@@ -374,6 +374,189 @@ namespace aes
 
         Word w[blockWordCount];
     };
+
+    template <class Iterator>
+    std::vector<Block> convertToBlocks(Iterator begin, Iterator end)
+    {
+        std::vector<Block> result;
+
+        size_t b = 0;
+        for (auto i = begin; i != end; ++i, ++b)
+        {
+            if (result.size() < b / blockByteCount + 1)
+                result.resize(b / blockByteCount + 1);
+
+            Block& block = result[b / blockByteCount];
+            Word& word = block[(b / wordByteCount) % blockWordCount];
+            word[b % wordByteCount] = *i;
+        }
+
+        return result;
+    }
+
+    template <size_t keyLength, class Data, class Key>
+    std::vector<uint8_t> encryptEcb(const Data& data, const Key& key)
+    {
+        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+
+        auto resultIterator = result.begin();
+
+        for (Block& block : blocks)
+        {
+            block.encrypt<keyLength>(key);
+
+            // copy the block to output
+            for (const Word w : block.w)
+                for (const uint8_t b : w.b)
+                    *resultIterator++ = b;
+        }
+
+        return result;
+    }
+
+    template <size_t keyLength, class Data, class Key>
+    std::vector<uint8_t> decryptEcb(const Data& data, const Key& key)
+    {
+        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+
+        auto resultIterator = result.begin();
+
+        for (Block& block : blocks)
+        {
+            block.decrypt<keyLength, Key>(key);
+
+            // copy the block to output
+            for (const Word w : block.w)
+                for (const uint8_t b : w.b)
+                    *resultIterator++ = b;
+        }
+
+        return result;
+    }
+
+    template <size_t keyLength, class Data, class Key, class InputVector>
+    std::vector<uint8_t> encryptCbc(const Data& data, const Key& key, const InputVector& inputVector)
+    {
+        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+
+        Block dataBlock;
+
+        auto inputVectorIterator = std::begin(inputVector);
+        for (Word& w : dataBlock.w)
+            for (uint8_t& b : w.b)
+                b = *inputVectorIterator++;
+
+        auto resultIterator = result.begin();
+
+        for (Block& block : blocks)
+        {
+            dataBlock ^= block;
+            dataBlock.encrypt<keyLength>(key);
+
+            // copy the block to output
+            for (const Word w : dataBlock.w)
+                for (const uint8_t b : w.b)
+                    *resultIterator++ = b;
+        }
+
+        return result;
+    }
+
+    template <size_t keyLength, class Data, class Key, class InputVector>
+    std::vector<uint8_t> decryptCbc(const Data& data, const Key& key, const InputVector& inputVector)
+    {
+        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+
+        Block dataBlock;
+
+        auto inputVectorIterator = std::begin(inputVector);
+        for (Word& w : dataBlock.w)
+            for (uint8_t& b : w.b)
+                b = *inputVectorIterator++;
+
+        auto dataIterator = std::begin(data);
+        auto resultIterator = result.begin();
+
+        for (size_t i = 0; i < blocks.size(); ++i)
+        {
+            blocks[i].decrypt<keyLength>(key);
+            blocks[i] ^= dataBlock;
+
+            // copy the block to output
+            for (const Word w : blocks[i].w)
+                for (const uint8_t b : w.b)
+                    *resultIterator++ = b;
+
+            // copy the data to data block
+            for (Word& w : dataBlock.w)
+                for (uint8_t& b : w.b)
+                    b = *dataIterator++;
+        }
+
+        return result;
+    }
+
+    template <size_t keyLength, class Data, class Key, class InputVector>
+    std::vector<uint8_t> encryptCfb(const Data& data, const Key& key, const InputVector& inputVector)
+    {
+        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+
+        Block encryptedBlock;
+
+        auto inputVectorIterator = std::begin(inputVector);
+        for (Word& w : encryptedBlock.w)
+            for (uint8_t& b : w.b)
+                b = *inputVectorIterator++;
+
+        auto resultIterator = result.begin();
+
+        for (Block& block : blocks)
+        {
+            encryptedBlock.encrypt<keyLength>(key);
+            encryptedBlock ^= block;
+
+            // copy the block to output
+            for (const Word w : encryptedBlock.w)
+                for (const uint8_t b : w.b)
+                    *resultIterator++ = b;
+        }
+
+        return result;
+    }
+
+    template <size_t keyLength, class Data, class Key, class InputVector>
+    std::vector<uint8_t> decryptCfb(const Data& data, const Key& key, const InputVector& inputVector)
+    {
+        std::vector<Block> blocks = convertToBlocks(std::begin(data), std::end(data));
+        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+
+        Block decryptedBlock;
+
+        auto inputVectorIterator = std::begin(inputVector);
+        for (Word& w : decryptedBlock.w)
+            for (uint8_t& b : w.b)
+                b = *inputVectorIterator++;
+
+        auto resultIterator = result.begin();
+
+        for (Block& block : blocks)
+        {
+            decryptedBlock.encrypt<keyLength>(key);
+            decryptedBlock ^= block;
+
+            // copy the block to output
+            for (const Word w : decryptedBlock.w)
+                for (const uint8_t b : w.b)
+                    *resultIterator++ = b;
+        }
+
+        return result;
+    }
 }
 
 #endif // AES_HPP
