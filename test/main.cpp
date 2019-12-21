@@ -119,6 +119,24 @@ namespace
             if (!std::equal(testCase.first.begin(), testCase.first.end(), d.begin()))
                 throw TestError("Invalid AES");
         }
+
+        const std::pair<std::vector<uint8_t>, std::vector<uint8_t>> testCasesCfb[] = {
+            {{}, {}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x53, 0x87, 0x11, 0x7B, 0x5D, 0x8F, 0x57, 0xEE}}
+        };
+
+        for (const auto& testCase : testCasesCfb)
+        {
+            const auto e = aes::encryptCfb<256>(testCase.first, key, inputVector);
+
+            if (e != testCase.second)
+                throw TestError("Invalid AES");
+
+            const auto d = aes::encryptCfb<256>(e, key, inputVector);
+
+            if (!std::equal(testCase.first.begin(), testCase.first.end(), d.begin()))
+                throw TestError("Invalid AES");
+        }
     }
 
     void testBase64()
