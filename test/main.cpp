@@ -67,6 +67,40 @@ namespace
             throw std::out_of_range("Invalid hex digit");
     }
 
+    void testAes()
+    {
+        uint8_t key[] = {
+            0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
+            0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
+            0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
+            0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F
+        };
+
+        uint8_t inputVector[] = {
+            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,0xFF,
+            0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+        };
+
+        const std::pair<std::vector<uint8_t>, std::vector<uint8_t>> testCasesCbc[] = {
+            {{}, {}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x9A, 0x10, 0x85, 0x12, 0x4D, 0x37, 0xA9, 0xF6, 0xDB, 0xA6, 0x2E, 0x5E, 0x97, 0x79, 0x41, 0x90}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0x1, 0x3, 0x3E, 0xC1, 0xC3, 0x49, 0x9F, 0x87, 0x78, 0xE3, 0x8F, 0xB0, 0xC8, 0x46, 0xB2, 0x18, 0xDA, 0x47, 0xEB, 0xE9, 0xDF, 0x12, 0x95, 0x5, 0xEE, 0x87, 0x18, 0x81, 0xD3, 0xF4, 0xFF, 0xEA}}
+        };
+
+        for (const auto& testCase : testCasesCbc)
+        {
+            const auto e = aes::encryptCbc<256>(testCase.first, key, inputVector);
+
+            if (e != testCase.second)
+                throw TestError("Invalid AES");
+
+            const auto d = aes::decryptCbc<256>(e, key, inputVector);
+
+            if (!std::equal(testCase.first.begin(), testCase.first.end(), d.begin()))
+                throw TestError("Invalid AES");
+        }
+    }
+
     void testBase64()
     {
         const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
@@ -308,6 +342,7 @@ namespace
 int main()
 {
     TestRunner testRunner;
+    testRunner.run(testAes);
     testRunner.run(testBase64);
     testRunner.run(testCrc8);
     testRunner.run(testCrc32);
