@@ -100,14 +100,11 @@ namespace aes
         class Word final
         {
         public:
-            uint8_t& operator[](size_t i) { return b[i]; }
-            uint8_t operator[](size_t i) const { return b[i]; }
-
             Word operator^(const Word& other) const noexcept
             {
                 Word result = *this;
                 for (size_t i = 0; i < wordByteCount; ++i)
-                    result[i] ^= other[i];
+                    result.b[i] ^= other.b[i];
 
                 return result;
             }
@@ -173,10 +170,10 @@ namespace aes
             {
                 if (i < getKeyWordCount(keyLength))
                 {
-                    roundKeys[i / 4][i % 4][0] = key[i * 4 + 0];
-                    roundKeys[i / 4][i % 4][1] = key[i * 4 + 1];
-                    roundKeys[i / 4][i % 4][2] = key[i * 4 + 2];
-                    roundKeys[i / 4][i % 4][3] = key[i * 4 + 3];
+                    roundKeys[i / 4][i % 4].b[0] = key[i * 4 + 0];
+                    roundKeys[i / 4][i % 4].b[1] = key[i * 4 + 1];
+                    roundKeys[i / 4][i % 4].b[2] = key[i * 4 + 2];
+                    roundKeys[i / 4][i % 4].b[3] = key[i * 4 + 3];
                 }
                 else
                 {
@@ -202,9 +199,6 @@ namespace aes
         class Block final
         {
         public:
-            Word& operator[](size_t i) { return w[i]; }
-            const Word& operator[](size_t i) const { return w[i]; }
-
             Block operator^(const Block& other) const noexcept
             {
                 Block result = *this;
@@ -226,25 +220,25 @@ namespace aes
             {
                 for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
-                        w[i][j] = sbox[w[i][j]];
+                        w[i].b[j] = sbox[w[i].b[j]];
             }
 
             void invSubBytes() noexcept
             {
                 for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
-                        w[i][j] = inverseSbox[w[i][j]];
+                        w[i].b[j] = inverseSbox[w[i].b[j]];
             }
 
             void shiftRow(const size_t i, const size_t n) noexcept
             {
                 for (size_t k = 0; k < n; k++)
                 {
-                    uint8_t t = w[i][0];
-                    w[i][0] = w[i][1];
-                    w[i][1] = w[i][2];
-                    w[i][2] = w[i][3];
-                    w[i][3] = t;
+                    uint8_t t = w[i].b[0];
+                    w[i].b[0] = w[i].b[1];
+                    w[i].b[1] = w[i].b[2];
+                    w[i].b[2] = w[i].b[3];
+                    w[i].b[3] = t;
                 }
             }
 
@@ -267,21 +261,21 @@ namespace aes
                 for (size_t j = 0; j < blockWordCount; ++j)
                 {
                     const Word s = {
-                        w[0][j],
-                        w[1][j],
-                        w[2][j],
-                        w[3][j]
+                        w[0].b[j],
+                        w[1].b[j],
+                        w[2].b[j],
+                        w[3].b[j]
                     };
 
                     const Word s1 = {
-                        static_cast<uint8_t>(mulBytes(0x02, s[0]) ^ mulBytes(0x03, s[1]) ^ s[2] ^ s[3]),
-                        static_cast<uint8_t>(s[0] ^ mulBytes(0x02, s[1]) ^ mulBytes(0x03, s[2]) ^ s[3]),
-                        static_cast<uint8_t>(s[0] ^ s[1] ^ mulBytes(0x02, s[2]) ^ mulBytes(0x03, s[3])),
-                        static_cast<uint8_t>(mulBytes(0x03, s[0]) ^ s[1] ^ s[2] ^ mulBytes(0x02, s[3]))
+                        static_cast<uint8_t>(mulBytes(0x02, s.b[0]) ^ mulBytes(0x03, s.b[1]) ^ s.b[2] ^ s.b[3]),
+                        static_cast<uint8_t>(s.b[0] ^ mulBytes(0x02, s.b[1]) ^ mulBytes(0x03, s.b[2]) ^ s.b[3]),
+                        static_cast<uint8_t>(s.b[0] ^ s.b[1] ^ mulBytes(0x02, s.b[2]) ^ mulBytes(0x03, s.b[3])),
+                        static_cast<uint8_t>(mulBytes(0x03, s.b[0]) ^ s.b[1] ^ s.b[2] ^ mulBytes(0x02, s.b[3]))
                     };
 
                     for (size_t i = 0; i < wordByteCount; ++i)
-                        w[i][j] = s1[i];
+                        w[i].b[j] = s1.b[i];
               }
             }
 
@@ -290,20 +284,20 @@ namespace aes
                 for (size_t j = 0; j < blockWordCount; ++j)
                 {
                     const Word s = {
-                        w[0][j],
-                        w[1][j],
-                        w[2][j],
-                        w[3][j]
+                        w[0].b[j],
+                        w[1].b[j],
+                        w[2].b[j],
+                        w[3].b[j]
                     };
 
                     Word s1;
-                    s1[0] = mulBytes(0x0E, s[0]) ^ mulBytes(0x0B, s[1]) ^ mulBytes(0x0D, s[2]) ^ mulBytes(0x09, s[3]);
-                    s1[1] = mulBytes(0x09, s[0]) ^ mulBytes(0x0E, s[1]) ^ mulBytes(0x0B, s[2]) ^ mulBytes(0x0D, s[3]);
-                    s1[2] = mulBytes(0x0D, s[0]) ^ mulBytes(0x09, s[1]) ^ mulBytes(0x0E, s[2]) ^ mulBytes(0x0B, s[3]);
-                    s1[3] = mulBytes(0x0B, s[0]) ^ mulBytes(0x0D, s[1]) ^ mulBytes(0x09, s[2]) ^ mulBytes(0x0E, s[3]);
+                    s1.b[0] = mulBytes(0x0E, s.b[0]) ^ mulBytes(0x0B, s.b[1]) ^ mulBytes(0x0D, s.b[2]) ^ mulBytes(0x09, s.b[3]);
+                    s1.b[1] = mulBytes(0x09, s.b[0]) ^ mulBytes(0x0E, s.b[1]) ^ mulBytes(0x0B, s.b[2]) ^ mulBytes(0x0D, s.b[3]);
+                    s1.b[2] = mulBytes(0x0D, s.b[0]) ^ mulBytes(0x09, s.b[1]) ^ mulBytes(0x0E, s.b[2]) ^ mulBytes(0x0B, s.b[3]);
+                    s1.b[3] = mulBytes(0x0B, s.b[0]) ^ mulBytes(0x0D, s.b[1]) ^ mulBytes(0x09, s.b[2]) ^ mulBytes(0x0E, s.b[3]);
 
                     for (size_t i = 0; i < wordByteCount; ++i)
-                        w[i][j] = s1[i];
+                        w[i].b[j] = s1.b[i];
                 }
             }
 
@@ -311,7 +305,7 @@ namespace aes
             {
                 for (size_t i = 0; i < blockWordCount; ++i)
                     for (size_t j = 0; j < wordByteCount; ++j)
-                        w[i][j] ^= roundKey[j][i];
+                        w[i].b[j] ^= roundKey[j].b[i];
             }
 
             template <size_t keyLength, class Key>
@@ -323,7 +317,7 @@ namespace aes
                 Block state;
                 for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
-                        state[i][j] = w[j][i];
+                        state.w[i].b[j] = w[j].b[i];
 
                 state.addRoundKey(roundKeys[0]);
 
@@ -341,7 +335,7 @@ namespace aes
 
                 for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
-                        w[j][i] = state[i][j];
+                        w[j].b[i] = state.w[i].b[j];
             }
 
             template <size_t keyLength, class Key>
@@ -353,7 +347,7 @@ namespace aes
                 Block state;
                 for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
-                        state[i][j] = w[j][i];
+                        state.w[i].b[j] = w[j].b[i];
 
                 state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
 
@@ -371,7 +365,7 @@ namespace aes
 
                 for (size_t i = 0; i < wordByteCount; ++i)
                     for (size_t j = 0; j < blockWordCount; ++j)
-                        w[j][i] = state[i][j];
+                        w[j].b[i] = state.w[i].b[j];
             }
 
             Word w[blockWordCount];
@@ -389,8 +383,8 @@ namespace aes
                     result.resize(b / blockByteCount + 1);
 
                 Block& block = result[b / blockByteCount];
-                Word& word = block[(b / wordByteCount) % blockWordCount];
-                word[b % wordByteCount] = *i;
+                Word& word = block.w[(b / wordByteCount) % blockWordCount];
+                word.b[b % wordByteCount] = *i;
             }
 
             return result;
