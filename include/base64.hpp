@@ -12,6 +12,13 @@
 
 namespace base64
 {
+    class ParseError final: public std::logic_error
+    {
+    public:
+        explicit ParseError(const std::string& str): std::logic_error(str) {}
+        explicit ParseError(const char* str): std::logic_error(str) {}
+    };
+
     inline namespace detail
     {
         constexpr char chars[] = {
@@ -28,16 +35,9 @@ namespace base64
                 (c >= 'a' && c <= 'z') ? 26 + (c - 'a') :
                 (c >= '0' && c <= '9') ? 52 + (c - '0') :
                 (c == '+') ? 62 : (c == '/') ? 63 :
-                throw std::out_of_range("Invalid Base64 digit");
+                throw ParseError("Invalid Base64 digit");
         }
     }
-
-    class ParseError final: public std::logic_error
-    {
-    public:
-        explicit ParseError(const std::string& str): std::logic_error(str) {}
-        explicit ParseError(const char* str): std::logic_error(str) {}
-    };
 
     template <class Iterator>
     inline std::string encode(const Iterator begin, const Iterator end)
