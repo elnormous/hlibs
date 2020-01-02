@@ -69,6 +69,35 @@ namespace uuid
     T generate();
 
     template <>
+    inline std::array<uint8_t, 16> generate<std::array<uint8_t, 16>>()
+    {
+        const Uuid u = generate();
+
+        return std::array<uint8_t, 16>{
+            static_cast<uint8_t>(u.timeLow >> 24),
+            static_cast<uint8_t>(u.timeLow >> 16),
+            static_cast<uint8_t>(u.timeLow >> 8),
+            static_cast<uint8_t>(u.timeLow),
+
+            static_cast<uint8_t>(u.timeMid >> 8),
+            static_cast<uint8_t>(u.timeMid),
+
+            static_cast<uint8_t>(u.timeHiAndVersion >> 8),
+            static_cast<uint8_t>(u.timeHiAndVersion),
+
+            static_cast<uint8_t>(u.clockSeqHiAndReserved),
+            static_cast<uint8_t>(u.clockSeqLow),
+
+            static_cast<uint8_t>(u.node[0]),
+            static_cast<uint8_t>(u.node[1]),
+            static_cast<uint8_t>(u.node[2]),
+            static_cast<uint8_t>(u.node[3]),
+            static_cast<uint8_t>(u.node[4]),
+            static_cast<uint8_t>(u.node[5])
+        };
+    }
+
+    template <>
     inline std::string generate<std::string>()
     {
         constexpr char digits[] = "0123456789abcdef";

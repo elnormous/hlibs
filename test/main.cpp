@@ -369,6 +369,14 @@ namespace
 
     void testUuid()
     {
+        const auto a = uuid::generate<std::array<uint8_t, 16>>();
+
+        if (a[6] >> 4 != 4)
+            throw TestError("Wrong UUID version");
+
+        if ((a[8] & 0xC0) != 0x80)
+            throw TestError("Wrong UUID variant");
+
         const auto s = uuid::generate<std::string>();
         if (s[14] != '4')
             throw TestError("Wrong UUID version");
