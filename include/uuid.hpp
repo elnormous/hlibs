@@ -65,7 +65,11 @@ namespace uuid
         };
     }
 
-    inline std::string generateString()
+    template <class T>
+    T generate();
+
+    template <>
+    inline std::string generate<std::string>()
     {
         constexpr char digits[] = "0123456789abcdef";
 

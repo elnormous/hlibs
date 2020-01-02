@@ -369,11 +369,11 @@ namespace
 
     void testUuid()
     {
-        const auto g = uuid::generateString();
-        if (g[14] != '4')
+        const auto s = uuid::generate<std::string>();
+        if (s[14] != '4')
             throw TestError("Wrong UUID version");
 
-        if ((hexToInt(g[19]) & 0x0C) != 0x8)
+        if ((hexToInt(s[19]) & 0x0C) != 0x8)
             throw TestError("Wrong UUID variant");
     }
 }
