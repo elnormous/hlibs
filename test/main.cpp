@@ -185,6 +185,27 @@ namespace
         }
     }
 
+    void testCrc16()
+    {
+        const std::pair<std::vector<uint8_t>, uint16_t> testCases[] = {
+            {{}, 0x00},
+            {{'0'}, 0x1B2B},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x5DA2},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x4614}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto c16 = crc16::generate(testCase.first);
+
+            if (c16 != testCase.second)
+                throw TestError("Invalid CRC16!");
+        }
+    }
+
     void testCrc32()
     {
         const std::pair<std::vector<uint8_t>, uint32_t> testCases[] = {
@@ -392,6 +413,7 @@ int main()
     testRunner.run(testAes);
     testRunner.run(testBase64);
     testRunner.run(testCrc8);
+    testRunner.run(testCrc16);
     testRunner.run(testCrc32);
     testRunner.run(testFnv132);
     testRunner.run(testFnv164);
