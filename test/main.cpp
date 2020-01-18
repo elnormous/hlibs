@@ -178,7 +178,7 @@ namespace
 
         for (const auto& testCase : testCases)
         {
-            const auto c8 = crc8::generate(testCase.first);
+            const auto c8 = crc::generate<uint8_t>(testCase.first);
 
             if (c8 != testCase.second)
                 throw TestError("Invalid CRC8!");
@@ -199,7 +199,7 @@ namespace
 
         for (const auto& testCase : testCases)
         {
-            const auto c16 = crc16::generate(testCase.first);
+            const auto c16 = crc::generate<uint16_t>(testCase.first);
 
             if (c16 != testCase.second)
                 throw TestError("Invalid CRC16!");
@@ -220,7 +220,7 @@ namespace
 
         for (const auto& testCase : testCases)
         {
-            const auto c32 = crc32::generate(testCase.first);
+            const auto c32 = crc::generate<uint32_t>(testCase.first);
 
             if (c32 != testCase.second)
                 throw TestError("Invalid CRC32");
