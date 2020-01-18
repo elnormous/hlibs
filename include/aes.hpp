@@ -158,9 +158,9 @@ namespace aes
             return c;
         }
 
-        constexpr uint8_t roundConstant(size_t i) noexcept
+        constexpr uint8_t getRoundConstant(size_t i) noexcept
         {
-            return (i == 1) ? 1 : static_cast<uint8_t>(2 * roundConstant(i - 1)) ^ (roundConstant(i - 1) >= 0x80 ? 0x1B : 0);
+            return (i == 1) ? 0x01 : static_cast<uint8_t>(0x02 * getRoundConstant(i - 1)) ^ (getRoundConstant(i - 1) >= 0x80 ? 0x1B : 0x00);
         }
 
         template <size_t keyLength, class Key>
@@ -184,7 +184,7 @@ namespace aes
                     {
                         temp.rot();
                         temp.sub();
-                        Word rCon = {roundConstant(i / getKeyWordCount(keyLength)), 0, 0, 0};
+                        Word rCon = {getRoundConstant(i / getKeyWordCount(keyLength)), 0, 0, 0};
                         temp ^= rCon;
                     }
                     else if (getKeyWordCount(keyLength) > 6 && i % getKeyWordCount(keyLength) == 4)
