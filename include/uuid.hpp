@@ -65,8 +65,7 @@ namespace uuid
         };
     }
 
-    template <class T>
-    T generate();
+    template <class T> T generate();
 
     template <>
     inline std::array<uint8_t, 16> generate<std::array<uint8_t, 16>>()
@@ -85,15 +84,15 @@ namespace uuid
             static_cast<uint8_t>(u.timeHiAndVersion >> 8),
             static_cast<uint8_t>(u.timeHiAndVersion),
 
-            static_cast<uint8_t>(u.clockSeqHiAndReserved),
-            static_cast<uint8_t>(u.clockSeqLow),
+            u.clockSeqHiAndReserved,
+            u.clockSeqLow,
 
-            static_cast<uint8_t>(u.node[0]),
-            static_cast<uint8_t>(u.node[1]),
-            static_cast<uint8_t>(u.node[2]),
-            static_cast<uint8_t>(u.node[3]),
-            static_cast<uint8_t>(u.node[4]),
-            static_cast<uint8_t>(u.node[5])
+            u.node[0],
+            u.node[1],
+            u.node[2],
+            u.node[3],
+            u.node[4],
+            u.node[5]
         };
     }
 
