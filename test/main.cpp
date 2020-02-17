@@ -96,7 +96,7 @@ namespace
                 throw TestError("Invalid AES");
         }
 
-        constexpr uint8_t inputVector[] = {
+        constexpr uint8_t initVector[] = {
             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,0xFF,
             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
         };
@@ -109,12 +109,12 @@ namespace
 
         for (const auto& testCase : testCasesCbc)
         {
-            const auto e = aes::encryptCbc<256>(testCase.first, key, inputVector);
+            const auto e = aes::encryptCbc<256>(testCase.first, key, initVector);
 
             if (e != testCase.second)
                 throw TestError("Invalid AES");
 
-            const auto d = aes::decryptCbc<256>(e, key, inputVector);
+            const auto d = aes::decryptCbc<256>(e, key, initVector);
 
             if (!std::equal(testCase.first.begin(), testCase.first.end(), d.begin()))
                 throw TestError("Invalid AES");
@@ -128,12 +128,12 @@ namespace
 
         for (const auto& testCase : testCasesCfb)
         {
-            const auto e = aes::encryptCfb<256>(testCase.first, key, inputVector);
+            const auto e = aes::encryptCfb<256>(testCase.first, key, initVector);
 
             if (e != testCase.second)
                 throw TestError("Invalid AES");
 
-            const auto d = aes::decryptCfb<256>(e, key, inputVector);
+            const auto d = aes::decryptCfb<256>(e, key, initVector);
 
             if (!std::equal(testCase.first.begin(), testCase.first.end(), d.begin()))
                 throw TestError("Invalid AES");
