@@ -445,19 +445,19 @@ namespace aes
         return decryptEcb<keyLength>(std::begin(data), std::end(data), key);
     }
 
-    template <size_t keyLength, class Iterator, class Key, class InputVector>
+    template <size_t keyLength, class Iterator, class Key, class InitVector>
     std::vector<uint8_t> encryptCbc(Iterator begin, Iterator end, const Key& key,
-                                    const InputVector& inputVector)
+                                    const InitVector& initVector)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         Block dataBlock;
 
-        auto inputVectorIterator = std::begin(inputVector);
+        auto initVectorIterator = std::begin(initVector);
         for (Word& w : dataBlock.w)
             for (uint8_t& b : w.b)
-                b = *inputVectorIterator++;
+                b = *initVectorIterator++;
 
         auto resultIterator = result.begin();
 
@@ -475,26 +475,26 @@ namespace aes
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InputVector>
+    template <size_t keyLength, class Data, class Key, class InitVector>
     std::vector<uint8_t> encryptCbc(const Data& data, const Key& key,
-                                    const InputVector& inputVector)
+                                    const InitVector& initVector)
     {
-        return encryptCbc<keyLength>(std::begin(data), std::end(data), key, inputVector);
+        return encryptCbc<keyLength>(std::begin(data), std::end(data), key, initVector);
     }
 
-    template <size_t keyLength, class Iterator, class Key, class InputVector>
+    template <size_t keyLength, class Iterator, class Key, class InitVector>
     std::vector<uint8_t> decryptCbc(Iterator begin, Iterator end, const Key& key,
-                                    const InputVector& inputVector)
+                                    const InitVector& initVector)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         Block dataBlock;
 
-        auto inputVectorIterator = std::begin(inputVector);
+        auto initVectorIterator = std::begin(initVector);
         for (Word& w : dataBlock.w)
             for (uint8_t& b : w.b)
-                b = *inputVectorIterator++;
+                b = *initVectorIterator++;
 
         auto dataIterator = begin;
         auto resultIterator = result.begin();
@@ -518,26 +518,26 @@ namespace aes
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InputVector>
+    template <size_t keyLength, class Data, class Key, class InitVector>
     std::vector<uint8_t> decryptCbc(const Data& data, const Key& key,
-                                    const InputVector& inputVector)
+                                    const InitVector& initVector)
     {
-        return decryptCbc<keyLength>(std::begin(data), std::end(data), key, inputVector);
+        return decryptCbc<keyLength>(std::begin(data), std::end(data), key, initVector);
     }
 
-    template <size_t keyLength, class Iterator, class Key, class InputVector>
+    template <size_t keyLength, class Iterator, class Key, class InitVector>
     std::vector<uint8_t> encryptCfb(Iterator begin, Iterator end, const Key& key,
-                                    const InputVector& inputVector)
+                                    const InitVector& initVector)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         Block encryptedBlock;
 
-        auto inputVectorIterator = std::begin(inputVector);
+        auto initVectorIterator = std::begin(initVector);
         for (Word& w : encryptedBlock.w)
             for (uint8_t& b : w.b)
-                b = *inputVectorIterator++;
+                b = *initVectorIterator++;
 
         auto resultIterator = result.begin();
 
@@ -555,26 +555,26 @@ namespace aes
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InputVector>
+    template <size_t keyLength, class Data, class Key, class InitVector>
     std::vector<uint8_t> encryptCfb(const Data& data, const Key& key,
-                                    const InputVector& inputVector)
+                                    const InitVector& initVector)
     {
-        return encryptCfb<keyLength>(std::begin(data), std::end(data), key, inputVector);
+        return encryptCfb<keyLength>(std::begin(data), std::end(data), key, initVector);
     }
 
-    template <size_t keyLength, class Iterator, class Key, class InputVector>
+    template <size_t keyLength, class Iterator, class Key, class InitVector>
     std::vector<uint8_t> decryptCfb(Iterator begin, Iterator end, const Key& key,
-                                    const InputVector& inputVector)
+                                    const InitVector& initVector)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
         std::vector<uint8_t> result(blocks.size() * blockByteCount);
 
         Block decryptedBlock;
 
-        auto inputVectorIterator = std::begin(inputVector);
+        auto initVectorIterator = std::begin(initVector);
         for (Word& w : decryptedBlock.w)
             for (uint8_t& b : w.b)
-                b = *inputVectorIterator++;
+                b = *initVectorIterator++;
 
         auto resultIterator = result.begin();
 
@@ -594,11 +594,11 @@ namespace aes
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InputVector>
+    template <size_t keyLength, class Data, class Key, class InitVector>
     std::vector<uint8_t> decryptCfb(const Data& data, const Key& key,
-                                    const InputVector& inputVector)
+                                    const InitVector& initVector)
     {
-        return decryptCfb<keyLength>(std::begin(data), std::end(data), key, inputVector);
+        return decryptCfb<keyLength>(std::begin(data), std::end(data), key, initVector);
     }
 }
 
