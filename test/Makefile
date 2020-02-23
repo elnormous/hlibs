@@ -1,9 +1,7 @@
-MAKEFILE_PATH:=$(abspath $(lastword $(MAKEFILE_LIST)))
-ROOT_DIR:=$(realpath $(dir $(MAKEFILE_PATH)))
 debug=0
-CXXFLAGS=-c -std=c++11 -Wall -O2 -I$(ROOT_DIR)/../include
+CXXFLAGS=-c -std=c++11 -Wall -O2 -I../include
 LDFLAGS=-O2
-SOURCES=$(ROOT_DIR)/main.cpp
+SOURCES=main.cpp
 BASE_NAMES=$(basename $(SOURCES))
 OBJECTS=$(BASE_NAMES:=.o)
 EXECUTABLE=test
@@ -22,7 +20,7 @@ $(EXECUTABLE): $(OBJECTS)
 .PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)
-	-del /f /q "$(ROOT_DIR)\$(EXECUTABLE).exe" "$(ROOT_DIR)\*.o"
+	-del /f /q "$(EXECUTABLE).exe" "*.o"
 else
-	$(RM) $(ROOT_DIR)/$(EXECUTABLE) $(ROOT_DIR)/*.o $(ROOT_DIR)/$(EXECUTABLE).exe
+	$(RM) $(EXECUTABLE) *.o $(EXECUTABLE).exe
 endif
