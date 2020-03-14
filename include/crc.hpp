@@ -11,11 +11,11 @@ namespace crc
 {
     inline namespace detail
     {
-        template <typename T> constexpr T getEntry(uint8_t i);
+        template <typename T> constexpr T getEntry(std::uint8_t i);
         template <typename T> constexpr T getInit();
         template <typename T> constexpr T getXorOut();
 
-        constexpr uint8_t table8[256] = {
+        constexpr std::uint8_t table8[256] = {
             0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31,
             0x24, 0x23, 0x2A, 0x2D, 0x70, 0x77, 0x7E, 0x79, 0x6C, 0x6B, 0x62, 0x65,
             0x48, 0x4F, 0x46, 0x41, 0x54, 0x53, 0x5A, 0x5D, 0xE0, 0xE7, 0xEE, 0xE9,
@@ -40,22 +40,22 @@ namespace crc
             0xFA, 0xFD, 0xF4, 0xF3
         };
 
-        template <> constexpr uint8_t getEntry<uint8_t>(uint8_t i)
+        template <> constexpr std::uint8_t getEntry<std::uint8_t>(std::uint8_t i)
         {
             return table8[i];
         }
 
-        template <> constexpr uint8_t getInit()
+        template <> constexpr std::uint8_t getInit()
         {
             return 0x00;
         }
 
-        template <> constexpr uint8_t getXorOut()
+        template <> constexpr std::uint8_t getXorOut()
         {
             return 0x00;
         }
 
-        constexpr uint16_t table16[256] = {
+        constexpr std::uint16_t table16[256] = {
             0x0000, 0x1189, 0x2312, 0x329B, 0x4624, 0x57AD, 0x6536, 0x74BF,
             0x8C48, 0x9DC1, 0xAF5A, 0xBED3, 0xCA6C, 0xDBE5, 0xE97E, 0xF8F7,
             0x1081, 0x0108, 0x3393, 0x221A, 0x56A5, 0x472C, 0x75B7, 0x643E,
@@ -90,22 +90,22 @@ namespace crc
             0x7BC7, 0x6A4E, 0x58D5, 0x495C, 0x3DE3, 0x2C6A, 0x1EF1, 0x0F78
         };
 
-        template <> constexpr uint16_t getEntry<uint16_t>(uint8_t i)
+        template <> constexpr std::uint16_t getEntry<std::uint16_t>(std::uint8_t i)
         {
             return table16[i];
         }
 
-        template <> constexpr uint16_t getInit()
+        template <> constexpr std::uint16_t getInit()
         {
             return 0x0000;
         }
 
-        template <> constexpr uint16_t getXorOut()
+        template <> constexpr std::uint16_t getXorOut()
         {
             return 0x0000;
         }
 
-        constexpr uint32_t table32[256] = {
+        constexpr std::uint32_t table32[256] = {
             0x00000000, 0x77073096, 0xEE0E612C, 0x990951BA, 0x076DC419, 0x706AF48F, 0xE963A535, 0x9E6495A3,
             0x0EDB8832, 0x79DCB8A4, 0xE0D5E91E, 0x97D2D988, 0x09B64C2B, 0x7EB17CBD, 0xE7B82D07, 0x90BF1D91,
             0x1DB71064, 0x6AB020F2, 0xF3B97148, 0x84BE41DE, 0x1ADAD47D, 0x6DDDE4EB, 0xF4D4B551, 0x83D385C7,
@@ -140,17 +140,17 @@ namespace crc
             0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94, 0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
         };
 
-        template <> constexpr uint32_t getEntry<uint32_t>(uint8_t i)
+        template <> constexpr std::uint32_t getEntry<std::uint32_t>(std::uint8_t i)
         {
             return table32[i];
         }
 
-        template <> constexpr uint32_t getInit()
+        template <> constexpr std::uint32_t getInit()
         {
             return 0xFFFFFFFF;
         }
 
-        template <> constexpr uint32_t getXorOut()
+        template <> constexpr std::uint32_t getXorOut()
         {
             return 0xFFFFFFFF;
         }
@@ -160,7 +160,7 @@ namespace crc
     constexpr T generate(const Iterator i, const Iterator end,
                          const T init = getInit<T>()) noexcept
     {
-        return ((i != end) ? generate<T, T(0)>(i + 1, end, (init >> 8) ^ getEntry<T>(static_cast<uint8_t>(init ^ *i))) : init) ^ xorOut;
+        return ((i != end) ? generate<T, T(0)>(i + 1, end, (init >> 8) ^ getEntry<T>(static_cast<std::uint8_t>(init ^ *i))) : init) ^ xorOut;
     }
 
     template <class T, class Data>

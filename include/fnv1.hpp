@@ -15,25 +15,25 @@ namespace fnv1
         template <typename T> constexpr T getOffsetBasis() noexcept;
 
         template <>
-        constexpr uint32_t getPrime<uint32_t>() noexcept
+        constexpr std::uint32_t getPrime<std::uint32_t>() noexcept
         {
             return 16777619U;
         }
 
         template <>
-        constexpr uint32_t getOffsetBasis<uint32_t>() noexcept
+        constexpr std::uint32_t getOffsetBasis<std::uint32_t>() noexcept
         {
             return 2166136261U;
         }
 
         template <>
-        constexpr uint64_t getPrime<uint64_t>() noexcept
+        constexpr std::uint64_t getPrime<std::uint64_t>() noexcept
         {
             return 1099511628211U;
         }
 
         template <>
-        constexpr uint64_t getOffsetBasis<uint64_t>() noexcept
+        constexpr std::uint64_t getOffsetBasis<std::uint64_t>() noexcept
         {
             return 14695981039346656037U;
         }

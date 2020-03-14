@@ -12,14 +12,14 @@ namespace md5
 {
     inline namespace detail
     {
-        constexpr uint8_t s[16] = {
+        constexpr std::uint8_t s[16] = {
             7, 12, 17, 22,
             5, 9, 14, 20,
             4, 11, 16, 23,
             6, 10, 15, 21
         };
 
-        constexpr uint32_t k[64] = {
+        constexpr std::uint32_t k[64] = {
             0xD76AA478, 0xE8C7B756, 0x242070DB, 0xC1BDCEEE,
             0xF57C0FAF, 0x4787C62A, 0xA8304613, 0xFD469501,
             0x698098D8, 0x8B44F7AF, 0xFFFF5BB1, 0x895CD7BE,
@@ -38,94 +38,94 @@ namespace md5
             0xF7537E82, 0xBD3AF235, 0x2AD7D2BB, 0xEB86D391
         };
 
-        constexpr uint32_t rotateLeft(const uint32_t value,
-                                      const uint32_t bits) noexcept
+        constexpr std::uint32_t rotateLeft(const std::uint32_t value,
+                                      const std::uint32_t bits) noexcept
         {
             return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
         }
 
-        constexpr uint32_t f(const uint32_t x,
-                             const uint32_t y,
-                             const uint32_t z) noexcept
+        constexpr std::uint32_t f(const std::uint32_t x,
+                             const std::uint32_t y,
+                             const std::uint32_t z) noexcept
         {
             return (x & y) | (~x & z);
         }
 
-        constexpr uint32_t g(const uint32_t x,
-                             const uint32_t y,
-                             const uint32_t z) noexcept
+        constexpr std::uint32_t g(const std::uint32_t x,
+                             const std::uint32_t y,
+                             const std::uint32_t z) noexcept
         {
             return (x & z) | (y & ~z);
         }
 
-        constexpr uint32_t h(const uint32_t x,
-                             const uint32_t y,
-                             const uint32_t z) noexcept
+        constexpr std::uint32_t h(const std::uint32_t x,
+                             const std::uint32_t y,
+                             const std::uint32_t z) noexcept
         {
             return x ^ y ^ z;
         }
 
-        constexpr uint32_t i(const uint32_t x,
-                             const uint32_t y,
-                             const uint32_t z) noexcept
+        constexpr std::uint32_t i(const std::uint32_t x,
+                             const std::uint32_t y,
+                             const std::uint32_t z) noexcept
         {
             return y ^ (x | ~z);
         }
 
-        constexpr uint32_t ff(const uint32_t a, const uint32_t b,
-                              const uint32_t c, const uint32_t d,
-                              const uint32_t x, const uint32_t sh,
-                              const uint32_t ac) noexcept
+        constexpr std::uint32_t ff(const std::uint32_t a, const std::uint32_t b,
+                              const std::uint32_t c, const std::uint32_t d,
+                              const std::uint32_t x, const std::uint32_t sh,
+                              const std::uint32_t ac) noexcept
         {
             return rotateLeft(a + f(b, c, d) + x + ac, sh) + b;
         }
 
-        constexpr uint32_t gg(const uint32_t a, const uint32_t b,
-                              const uint32_t c, const uint32_t d,
-                              const uint32_t x, const uint32_t sh,
-                              const uint32_t ac) noexcept
+        constexpr std::uint32_t gg(const std::uint32_t a, const std::uint32_t b,
+                              const std::uint32_t c, const std::uint32_t d,
+                              const std::uint32_t x, const std::uint32_t sh,
+                              const std::uint32_t ac) noexcept
         {
             return rotateLeft(a + g(b, c, d) + x + ac, sh) + b;
         }
 
-        constexpr uint32_t hh(const uint32_t a, const uint32_t b,
-                              const uint32_t c, const uint32_t d,
-                              const uint32_t x, const uint32_t sh,
-                              const uint32_t ac) noexcept
+        constexpr std::uint32_t hh(const std::uint32_t a, const std::uint32_t b,
+                              const std::uint32_t c, const std::uint32_t d,
+                              const std::uint32_t x, const std::uint32_t sh,
+                              const std::uint32_t ac) noexcept
         {
             return rotateLeft(a + h(b, c, d) + x + ac, sh) + b;
         }
 
-        constexpr uint32_t ii(const uint32_t a, const uint32_t b,
-                              const uint32_t c, const uint32_t d,
-                              const uint32_t x, const uint32_t sh,
-                              const uint32_t ac) noexcept
+        constexpr std::uint32_t ii(const std::uint32_t a, const std::uint32_t b,
+                              const std::uint32_t c, const std::uint32_t d,
+                              const std::uint32_t x, const std::uint32_t sh,
+                              const std::uint32_t ac) noexcept
         {
             return rotateLeft(a + i(b, c, d) + x + ac, sh) + b;
         }
 
-        constexpr size_t digestIntCount = 4; // number of 32bit integers per MD5 digest
-        constexpr size_t digestByteCount = digestIntCount * 4;
-        constexpr size_t blockIntCount = 16; // number of 32bit integers per MD5 block
-        constexpr size_t blockByteCount = blockIntCount * 4;
-        using Block = uint8_t[blockByteCount];
-        using State = uint32_t[digestIntCount];
+        constexpr std::size_t digestIntCount = 4; // number of 32bit integers per MD5 digest
+        constexpr std::size_t digestByteCount = digestIntCount * 4;
+        constexpr std::size_t blockIntCount = 16; // number of 32bit integers per MD5 block
+        constexpr std::size_t blockByteCount = blockIntCount * 4;
+        using Block = std::uint8_t[blockByteCount];
+        using State = std::uint32_t[digestIntCount];
 
         inline void transform(const Block& block,
                               State& state) noexcept
         {
-            uint32_t w[16];
+            std::uint32_t w[16];
 
-            for (uint32_t i = 0; i < 16; ++i)
-                w[i] = static_cast<uint32_t>(block[i * 4]) |
-                    (static_cast<uint32_t>(block[i * 4 + 1]) << 8) |
-                    (static_cast<uint32_t>(block[i * 4 + 2]) << 16) |
-                    (static_cast<uint32_t>(block[i * 4 + 3]) << 24);
+            for (std::uint32_t i = 0; i < 16; ++i)
+                w[i] = static_cast<std::uint32_t>(block[i * 4]) |
+                    (static_cast<std::uint32_t>(block[i * 4 + 1]) << 8) |
+                    (static_cast<std::uint32_t>(block[i * 4 + 2]) << 16) |
+                    (static_cast<std::uint32_t>(block[i * 4 + 3]) << 24);
 
-            uint32_t a = state[0];
-            uint32_t b = state[1];
-            uint32_t c = state[2];
-            uint32_t d = state[3];
+            std::uint32_t a = state[0];
+            std::uint32_t b = state[1];
+            std::uint32_t c = state[2];
+            std::uint32_t d = state[3];
 
             a = ff(a, b, c, d, w[0], s[0], k[0]);
             d = ff(d, a, b, c, w[1], s[1], k[1]);
@@ -203,7 +203,7 @@ namespace md5
     }
 
     template <class Iterator>
-    inline std::array<uint8_t, digestByteCount> generate(const Iterator begin,
+    inline std::array<std::uint8_t, digestByteCount> generate(const Iterator begin,
                                                          const Iterator end) noexcept
     {
         State state = {
@@ -214,7 +214,7 @@ namespace md5
         };
 
         Block block;
-        uint32_t dataSize = 0;
+        std::uint32_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {
             block[dataSize % blockByteCount] = *i;
@@ -223,7 +223,7 @@ namespace md5
         }
 
         // pad data left in the buffer
-        uint32_t n = dataSize % blockByteCount;
+        std::uint32_t n = dataSize % blockByteCount;
         if (n < blockByteCount - 8)
         {
             block[n++] = 0x80;
@@ -238,31 +238,31 @@ namespace md5
         }
 
         // append the size in bits
-        const uint64_t totalBits = dataSize * 8;
-        block[56] = static_cast<uint8_t>(totalBits);
-        block[57] = static_cast<uint8_t>(totalBits >> 8);
-        block[58] = static_cast<uint8_t>(totalBits >> 16);
-        block[59] = static_cast<uint8_t>(totalBits >> 24);
-        block[60] = static_cast<uint8_t>(totalBits >> 32);
-        block[61] = static_cast<uint8_t>(totalBits >> 40);
-        block[62] = static_cast<uint8_t>(totalBits >> 48);
-        block[63] = static_cast<uint8_t>(totalBits >> 56);
+        const std::uint64_t totalBits = dataSize * 8;
+        block[56] = static_cast<std::uint8_t>(totalBits);
+        block[57] = static_cast<std::uint8_t>(totalBits >> 8);
+        block[58] = static_cast<std::uint8_t>(totalBits >> 16);
+        block[59] = static_cast<std::uint8_t>(totalBits >> 24);
+        block[60] = static_cast<std::uint8_t>(totalBits >> 32);
+        block[61] = static_cast<std::uint8_t>(totalBits >> 40);
+        block[62] = static_cast<std::uint8_t>(totalBits >> 48);
+        block[63] = static_cast<std::uint8_t>(totalBits >> 56);
         transform(block, state);
 
-        std::array<uint8_t, digestByteCount> result;
-        for (uint32_t i = 0; i < digestIntCount; i++)
+        std::array<std::uint8_t, digestByteCount> result;
+        for (std::uint32_t i = 0; i < digestIntCount; i++)
         {
-            result[i * 4 + 0] = static_cast<uint8_t>(state[i]);
-            result[i * 4 + 1] = static_cast<uint8_t>(state[i] >> 8);
-            result[i * 4 + 2] = static_cast<uint8_t>(state[i] >> 16);
-            result[i * 4 + 3] = static_cast<uint8_t>(state[i] >> 24);
+            result[i * 4 + 0] = static_cast<std::uint8_t>(state[i]);
+            result[i * 4 + 1] = static_cast<std::uint8_t>(state[i] >> 8);
+            result[i * 4 + 2] = static_cast<std::uint8_t>(state[i] >> 16);
+            result[i * 4 + 3] = static_cast<std::uint8_t>(state[i] >> 24);
         }
 
         return result;
     }
 
     template <class T>
-    inline std::array<uint8_t, digestByteCount> generate(const T& v) noexcept
+    inline std::array<std::uint8_t, digestByteCount> generate(const T& v) noexcept
     {
         return generate(std::begin(v), std::end(v));
     }

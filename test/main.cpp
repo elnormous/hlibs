@@ -50,7 +50,7 @@ namespace
         constexpr char digits[] = "0123456789abcdef";
 
         std::string result;
-        for (uint8_t b : v)
+        for (const auto b : v)
         {
             result += digits[(b >> 4) & 0x0F];
             result += digits[b & 0x0F];
@@ -59,24 +59,24 @@ namespace
         return result;
     }
 
-    constexpr uint8_t hexToInt(const char hex)
+    constexpr std::uint8_t hexToInt(const char hex)
     {
-        return (hex >= '0' && hex <= '9') ? static_cast<uint8_t>(hex - '0') :
-            (hex >= 'a' && hex <='f') ? static_cast<uint8_t>(hex - 'a' + 10) :
-            (hex >= 'A' && hex <='F') ? static_cast<uint8_t>(hex - 'A' + 10) :
+        return (hex >= '0' && hex <= '9') ? static_cast<std::uint8_t>(hex - '0') :
+            (hex >= 'a' && hex <='f') ? static_cast<std::uint8_t>(hex - 'a' + 10) :
+            (hex >= 'A' && hex <='F') ? static_cast<std::uint8_t>(hex - 'A' + 10) :
             throw std::out_of_range("Invalid hex digit");
     }
 
     void testAes()
     {
-        constexpr uint8_t key[] = {
+        constexpr std::uint8_t key[] = {
             0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07,
             0x08, 0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F,
             0x10, 0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17,
             0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F
         };
 
-        const std::pair<std::vector<uint8_t>, std::vector<uint8_t>> testCasesEcb[] = {
+        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesEcb[] = {
             {}, {},
             {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, {0xF2, 0x90, 0x0, 0xB6, 0x2A, 0x49, 0x9F, 0xD0, 0xA9, 0xF3, 0x9A, 0x6A, 0xDD, 0x2E, 0x77, 0x80}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x14, 0x8C, 0x38, 0x74, 0x56, 0xF9, 0x88, 0xAE, 0x89, 0xE6, 0x36, 0x48, 0xC2, 0xC1, 0xD2, 0x3B}},
@@ -96,12 +96,12 @@ namespace
                 throw TestError("Invalid AES");
         }
 
-        constexpr uint8_t initVector[] = {
+        constexpr std::uint8_t initVector[] = {
             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,0xFF,
             0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
         };
 
-        const std::pair<std::vector<uint8_t>, std::vector<uint8_t>> testCasesCbc[] = {
+        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesCbc[] = {
             {{}, {}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x9A, 0x10, 0x85, 0x12, 0x4D, 0x37, 0xA9, 0xF6, 0xDB, 0xA6, 0x2E, 0x5E, 0x97, 0x79, 0x41, 0x90}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0x1, 0x3, 0x3E, 0xC1, 0xC3, 0x49, 0x9F, 0x87, 0x78, 0xE3, 0x8F, 0xB0, 0xC8, 0x46, 0xB2, 0x18, 0xDA, 0x47, 0xEB, 0xE9, 0xDF, 0x12, 0x95, 0x5, 0xEE, 0x87, 0x18, 0x81, 0xD3, 0xF4, 0xFF, 0xEA}}
@@ -120,7 +120,7 @@ namespace
                 throw TestError("Invalid AES");
         }
 
-        const std::pair<std::vector<uint8_t>, std::vector<uint8_t>> testCasesCfb[] = {
+        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesCfb[] = {
             {{}, {}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x53, 0x87, 0x11, 0x7B, 0x5D, 0x8F, 0x57, 0xEE}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x62, 0xB5, 0x22, 0x4F, 0x68, 0xB9, 0x60, 0xD6, 0xD0, 0x7C, 0xB4, 0x4B, 0xF5, 0xD5, 0xD5, 0xF3, 0x7D, 0x0B, 0xFC, 0xB3, 0xCB, 0xF3, 0x49, 0x94}}
@@ -142,7 +142,7 @@ namespace
 
     void testBase64()
     {
-        const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
             {{}, ""},
             {{'0'}, "MA=="},
             {{'0', '0'}, "MDA="},
@@ -166,7 +166,7 @@ namespace
 
     void testCrc8()
     {
-        const std::pair<std::vector<uint8_t>, uint8_t> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::uint8_t> testCases[] = {
             {{}, 0x00},
             {{'0'}, 0x90},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -178,7 +178,7 @@ namespace
 
         for (const auto& testCase : testCases)
         {
-            const auto c8 = crc::generate<uint8_t>(testCase.first);
+            const auto c8 = crc::generate<std::uint8_t>(testCase.first);
 
             if (c8 != testCase.second)
                 throw TestError("Invalid CRC8!");
@@ -187,7 +187,7 @@ namespace
 
     void testCrc16()
     {
-        const std::pair<std::vector<uint8_t>, uint16_t> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::uint16_t> testCases[] = {
             {{}, 0x00},
             {{'0'}, 0x3183},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -199,7 +199,7 @@ namespace
 
         for (const auto& testCase : testCases)
         {
-            const auto c16 = crc::generate<uint16_t>(testCase.first);
+            const auto c16 = crc::generate<std::uint16_t>(testCase.first);
 
             if (c16 != testCase.second)
                 throw TestError("Invalid CRC16!");
@@ -208,7 +208,7 @@ namespace
 
     void testCrc32()
     {
-        const std::pair<std::vector<uint8_t>, uint32_t> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
             {{}, 0x00000000},
             {{'0'}, 0xF4DBDF21},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -220,7 +220,7 @@ namespace
 
         for (const auto& testCase : testCases)
         {
-            const auto c32 = crc::generate<uint32_t>(testCase.first);
+            const auto c32 = crc::generate<std::uint32_t>(testCase.first);
 
             if (c32 != testCase.second)
                 throw TestError("Invalid CRC32");
@@ -229,7 +229,7 @@ namespace
 
     void testFnv132()
     {
-        const std::pair<std::vector<uint8_t>, uint32_t> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
             {{}, 0x811c9dc5},
             {{'0'}, 0x050c5d2f},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -241,7 +241,7 @@ namespace
 
         for (const auto& testCase : testCases)
         {
-            const auto f32 = fnv1::hash<uint32_t>(testCase.first);
+            const auto f32 = fnv1::hash<std::uint32_t>(testCase.first);
 
             if (f32 != testCase.second)
                 throw TestError("Invalid FNV1 32-bit");
@@ -250,7 +250,7 @@ namespace
 
     void testFnv164()
     {
-        const std::pair<std::vector<uint8_t>, uint64_t> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::uint64_t> testCases[] = {
             {{}, 0xcbf29ce484222325},
             {{'0'}, 0xaf63bd4c8601b7ef},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -262,7 +262,7 @@ namespace
 
         for (const auto& testCase : testCases)
         {
-            const auto f64 = fnv1::hash<uint64_t>(testCase.first);
+            const auto f64 = fnv1::hash<std::uint64_t>(testCase.first);
 
             if (f64 != testCase.second)
                 throw TestError("Invalid FNV1 64-bit");
@@ -271,7 +271,7 @@ namespace
 
     void testMd5()
     {
-        const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
             {{}, "d41d8cd98f00b204e9800998ecf8427e"},
             {{'0'}, "cfcd208495d565ef66e7dff9f98764da"},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -302,7 +302,7 @@ namespace
 
     void testSha1()
     {
-        const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
             {{}, "da39a3ee5e6b4b0d3255bfef95601890afd80709"},
             {{'0'}, "b6589fc6ab0dc82cf12099d1c2d40ab994e8410c"},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -333,7 +333,7 @@ namespace
 
     void testSha256()
     {
-        const std::pair<std::vector<uint8_t>, std::string> testCases[] = {
+        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
             {{}, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
             {{'0'}, "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -377,7 +377,7 @@ namespace
             if (utf32String.length() != testCase.second.size())
                 throw TestError("Invalid UTF-32 length");
 
-            for (size_t i = 0; i < testCase.second.size(); ++i)
+            for (std::size_t i = 0; i < testCase.second.size(); ++i)
                 if (utf32String[i] != testCase.second[i])
                     throw TestError("Invalid UTF-32 character");
 
@@ -390,7 +390,7 @@ namespace
 
     void testUuid()
     {
-        const auto a = uuid::generate<std::array<uint8_t, 16>>();
+        const auto a = uuid::generate<std::array<std::uint8_t, 16>>();
 
         if (a[6] >> 4 != 4)
             throw TestError("Wrong UUID version");

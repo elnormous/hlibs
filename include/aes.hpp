@@ -13,7 +13,7 @@ namespace aes
     inline namespace detail
     {
         // substitution-box 16x16 matrix
-        constexpr uint8_t sbox[256] = {
+        constexpr std::uint8_t sbox[256] = {
             0X63, 0X7C, 0X77, 0X7B, 0XF2, 0X6B, 0X6F, 0XC5,
             0X30, 0X01, 0X67, 0X2B, 0XFE, 0XD7, 0XAB, 0X76,
             0XCA, 0X82, 0XC9, 0X7D, 0XFA, 0X59, 0X47, 0XF0,
@@ -49,7 +49,7 @@ namespace aes
         };
 
         // inverse substitution-box 16x16 matrix
-        constexpr uint8_t inverseSbox[256] = {
+        constexpr std::uint8_t inverseSbox[256] = {
             0X52, 0X09, 0X6A, 0XD5, 0X30, 0X36, 0XA5, 0X38,
             0XBF, 0X40, 0XA3, 0X9E, 0X81, 0XF3, 0XD7, 0XFB,
             0X7C, 0XE3, 0X39, 0X82, 0X9B, 0X2F, 0XFF, 0X87,
@@ -85,20 +85,20 @@ namespace aes
         };
 
         // number of rounds (Nr)
-        constexpr size_t getRoundCount(size_t keyLength) noexcept
+        constexpr std::size_t getRoundCount(std::size_t keyLength) noexcept
         {
             return keyLength / 32 + 6;
         }
 
         // number of 32-bit words in cipher key (Nk)
-        constexpr size_t getKeyWordCount(size_t keyLength) noexcept
+        constexpr std::size_t getKeyWordCount(std::size_t keyLength) noexcept
         {
             return keyLength / 32;
         }
 
-        constexpr size_t blockWordCount = 4; // number of words in an AES block (Nb)
-        constexpr size_t blockByteCount = 4 * blockWordCount;
-        constexpr size_t wordByteCount = 4;
+        constexpr std::size_t blockWordCount = 4; // number of words in an AES block (Nb)
+        constexpr std::size_t blockByteCount = 4 * blockWordCount;
+        constexpr std::size_t wordByteCount = 4;
 
         class Word final
         {
@@ -106,7 +106,7 @@ namespace aes
             Word operator^(const Word& other) const noexcept
             {
                 Word result = *this;
-                for (size_t i = 0; i < wordByteCount; ++i)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
                     result.b[i] ^= other.b[i];
 
                 return result;
@@ -114,7 +114,7 @@ namespace aes
 
             Word& operator^=(const Word& other) noexcept
             {
-                for (size_t i = 0; i < wordByteCount; ++i)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
                     b[i] ^= other.b[i];
 
                 return *this;
@@ -122,36 +122,36 @@ namespace aes
 
             void sub() noexcept
             {
-                for (size_t i = 0; i < wordByteCount; ++i)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
                     b[i] = sbox[b[i]];
             }
 
             void rot() noexcept
             {
-                const uint8_t c = b[0];
+                const std::uint8_t c = b[0];
                 b[0] = b[1];
                 b[1] = b[2];
                 b[2] = b[3];
                 b[3] = c;
             }
 
-            uint8_t b[wordByteCount];
+            std::uint8_t b[wordByteCount];
         };
 
         using RoundKey = Word[4];
-        template <size_t keyLength>
+        template <std::size_t keyLength>
         using RoundKeys = RoundKey[getRoundCount(keyLength) + 1];
 
-        inline uint8_t mulBytes(uint8_t a, uint8_t b) noexcept
+        inline std::uint8_t mulBytes(std::uint8_t a, std::uint8_t b) noexcept
         {
-            uint8_t c = 0;
-            for (size_t i = 0; i < 8; ++i)
+            std::uint8_t c = 0;
+            for (std::size_t i = 0; i < 8; ++i)
             {
                 if (b & 0x01)
                 {
-                    uint8_t d = a;
-                    for (size_t j = 0; j < i; ++j)
-                        d = static_cast<uint8_t>((d << 1) ^ (d & 0x80 ? 0x1B : 0));
+                    std::uint8_t d = a;
+                    for (std::size_t j = 0; j < i; ++j)
+                        d = static_cast<std::uint8_t>((d << 1) ^ (d & 0x80 ? 0x1B : 0));
 
                     c = c ^ d;
                 }
@@ -161,15 +161,15 @@ namespace aes
             return c;
         }
 
-        constexpr uint8_t getRoundConstant(size_t i) noexcept
+        constexpr std::uint8_t getRoundConstant(std::size_t i) noexcept
         {
-            return (i == 1) ? 0x01 : static_cast<uint8_t>(0x02 * getRoundConstant(i - 1)) ^ (getRoundConstant(i - 1) >= 0x80 ? 0x1B : 0x00);
+            return (i == 1) ? 0x01 : static_cast<std::uint8_t>(0x02 * getRoundConstant(i - 1)) ^ (getRoundConstant(i - 1) >= 0x80 ? 0x1B : 0x00);
         }
 
-        template <size_t keyLength, class Key>
+        template <std::size_t keyLength, class Key>
         void expandKey(const Key& key, RoundKeys<keyLength>& roundKeys) noexcept
         {
-            for (size_t i = 0; i < blockWordCount * (getRoundCount(keyLength) + 1); ++i)
+            for (std::size_t i = 0; i < blockWordCount * (getRoundCount(keyLength) + 1); ++i)
             {
                 if (i < getKeyWordCount(keyLength))
                 {
@@ -180,7 +180,7 @@ namespace aes
                 }
                 else
                 {
-                    const size_t previousWordIndex = i - 1;
+                    const std::size_t previousWordIndex = i - 1;
                     Word temp = roundKeys[previousWordIndex / 4][previousWordIndex % 4];
 
                     if (i % getKeyWordCount(keyLength) == 0)
@@ -193,7 +193,7 @@ namespace aes
                     else if (getKeyWordCount(keyLength) > 6 && i % getKeyWordCount(keyLength) == 4)
                         temp.sub();
 
-                    const size_t beforeKeyIndex = i - getKeyWordCount(keyLength);
+                    const std::size_t beforeKeyIndex = i - getKeyWordCount(keyLength);
                     roundKeys[i / 4][i % 4] = roundKeys[beforeKeyIndex / 4][beforeKeyIndex % 4] ^ temp;
                 }
             }
@@ -205,7 +205,7 @@ namespace aes
             Block operator^(const Block& other) const noexcept
             {
                 Block result = *this;
-                for (size_t i = 0; i < blockWordCount; ++i)
+                for (std::size_t i = 0; i < blockWordCount; ++i)
                     result.w[i] ^= other.w[i];
 
                 return result;
@@ -213,7 +213,7 @@ namespace aes
 
             Block& operator^=(const Block& other) noexcept
             {
-                for (size_t i = 0; i < blockWordCount; ++i)
+                for (std::size_t i = 0; i < blockWordCount; ++i)
                     w[i] ^= other.w[i];
 
                 return *this;
@@ -221,23 +221,23 @@ namespace aes
 
             void subBytes() noexcept
             {
-                for (size_t i = 0; i < wordByteCount; ++i)
-                    for (size_t j = 0; j < blockWordCount; ++j)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
+                    for (std::size_t j = 0; j < blockWordCount; ++j)
                         w[i].b[j] = sbox[w[i].b[j]];
             }
 
             void invSubBytes() noexcept
             {
-                for (size_t i = 0; i < wordByteCount; ++i)
-                    for (size_t j = 0; j < blockWordCount; ++j)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
+                    for (std::size_t j = 0; j < blockWordCount; ++j)
                         w[i].b[j] = inverseSbox[w[i].b[j]];
             }
 
-            void shiftRow(const size_t i, const size_t n) noexcept
+            void shiftRow(const std::size_t i, const std::size_t n) noexcept
             {
-                for (size_t k = 0; k < n; k++)
+                for (std::size_t k = 0; k < n; k++)
                 {
-                    uint8_t t = w[i].b[0];
+                    std::uint8_t t = w[i].b[0];
                     w[i].b[0] = w[i].b[1];
                     w[i].b[1] = w[i].b[2];
                     w[i].b[2] = w[i].b[3];
@@ -261,7 +261,7 @@ namespace aes
 
             void mixColumns() noexcept
             {
-                for (size_t j = 0; j < blockWordCount; ++j)
+                for (std::size_t j = 0; j < blockWordCount; ++j)
                 {
                     const Word s = {
                         w[0].b[j],
@@ -271,20 +271,20 @@ namespace aes
                     };
 
                     const Word s1 = {
-                        static_cast<uint8_t>(mulBytes(0x02, s.b[0]) ^ mulBytes(0x03, s.b[1]) ^ s.b[2] ^ s.b[3]),
-                        static_cast<uint8_t>(s.b[0] ^ mulBytes(0x02, s.b[1]) ^ mulBytes(0x03, s.b[2]) ^ s.b[3]),
-                        static_cast<uint8_t>(s.b[0] ^ s.b[1] ^ mulBytes(0x02, s.b[2]) ^ mulBytes(0x03, s.b[3])),
-                        static_cast<uint8_t>(mulBytes(0x03, s.b[0]) ^ s.b[1] ^ s.b[2] ^ mulBytes(0x02, s.b[3]))
+                        static_cast<std::uint8_t>(mulBytes(0x02, s.b[0]) ^ mulBytes(0x03, s.b[1]) ^ s.b[2] ^ s.b[3]),
+                        static_cast<std::uint8_t>(s.b[0] ^ mulBytes(0x02, s.b[1]) ^ mulBytes(0x03, s.b[2]) ^ s.b[3]),
+                        static_cast<std::uint8_t>(s.b[0] ^ s.b[1] ^ mulBytes(0x02, s.b[2]) ^ mulBytes(0x03, s.b[3])),
+                        static_cast<std::uint8_t>(mulBytes(0x03, s.b[0]) ^ s.b[1] ^ s.b[2] ^ mulBytes(0x02, s.b[3]))
                     };
 
-                    for (size_t i = 0; i < wordByteCount; ++i)
+                    for (std::size_t i = 0; i < wordByteCount; ++i)
                         w[i].b[j] = s1.b[i];
               }
             }
 
             void invMixColumns() noexcept
             {
-                for (size_t j = 0; j < blockWordCount; ++j)
+                for (std::size_t j = 0; j < blockWordCount; ++j)
                 {
                     const Word s = {
                         w[0].b[j],
@@ -299,32 +299,32 @@ namespace aes
                     s1.b[2] = mulBytes(0x0D, s.b[0]) ^ mulBytes(0x09, s.b[1]) ^ mulBytes(0x0E, s.b[2]) ^ mulBytes(0x0B, s.b[3]);
                     s1.b[3] = mulBytes(0x0B, s.b[0]) ^ mulBytes(0x0D, s.b[1]) ^ mulBytes(0x09, s.b[2]) ^ mulBytes(0x0E, s.b[3]);
 
-                    for (size_t i = 0; i < wordByteCount; ++i)
+                    for (std::size_t i = 0; i < wordByteCount; ++i)
                         w[i].b[j] = s1.b[i];
                 }
             }
 
             void addRoundKey(const RoundKey& roundKey) noexcept
             {
-                for (size_t i = 0; i < blockWordCount; ++i)
-                    for (size_t j = 0; j < wordByteCount; ++j)
+                for (std::size_t i = 0; i < blockWordCount; ++i)
+                    for (std::size_t j = 0; j < wordByteCount; ++j)
                         w[i].b[j] ^= roundKey[j].b[i];
             }
 
-            template <size_t keyLength, class Key>
+            template <std::size_t keyLength, class Key>
             void encrypt(const Key& key) noexcept
             {
                 RoundKeys<keyLength> roundKeys;
                 expandKey<keyLength>(key, roundKeys);
 
                 Block state;
-                for (size_t i = 0; i < wordByteCount; ++i)
-                    for (size_t j = 0; j < blockWordCount; ++j)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
+                    for (std::size_t j = 0; j < blockWordCount; ++j)
                         state.w[i].b[j] = w[j].b[i];
 
                 state.addRoundKey(roundKeys[0]);
 
-                for (size_t round = 1; round <= getRoundCount(keyLength) - 1; ++round)
+                for (std::size_t round = 1; round <= getRoundCount(keyLength) - 1; ++round)
                 {
                     state.subBytes();
                     state.shiftRows();
@@ -336,25 +336,25 @@ namespace aes
                 state.shiftRows();
                 state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
 
-                for (size_t i = 0; i < wordByteCount; ++i)
-                    for (size_t j = 0; j < blockWordCount; ++j)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
+                    for (std::size_t j = 0; j < blockWordCount; ++j)
                         w[j].b[i] = state.w[i].b[j];
             }
 
-            template <size_t keyLength, class Key>
+            template <std::size_t keyLength, class Key>
             void decrypt(const Key& key) noexcept
             {
                 RoundKeys<keyLength> roundKeys;
                 expandKey<keyLength>(key, roundKeys);
 
                 Block state;
-                for (size_t i = 0; i < wordByteCount; ++i)
-                    for (size_t j = 0; j < blockWordCount; ++j)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
+                    for (std::size_t j = 0; j < blockWordCount; ++j)
                         state.w[i].b[j] = w[j].b[i];
 
                 state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
 
-                for (size_t round = getRoundCount(keyLength) - 1; round >= 1; --round)
+                for (std::size_t round = getRoundCount(keyLength) - 1; round >= 1; --round)
                 {
                     state.invSubBytes();
                     state.invShiftRows();
@@ -366,8 +366,8 @@ namespace aes
                 state.invShiftRows();
                 state.addRoundKey(roundKeys[0]);
 
-                for (size_t i = 0; i < wordByteCount; ++i)
-                    for (size_t j = 0; j < blockWordCount; ++j)
+                for (std::size_t i = 0; i < wordByteCount; ++i)
+                    for (std::size_t j = 0; j < blockWordCount; ++j)
                         w[j].b[i] = state.w[i].b[j];
             }
 
@@ -379,7 +379,7 @@ namespace aes
         {
             std::vector<Block> result;
 
-            size_t b = 0;
+            std::size_t b = 0;
             for (auto i = begin; i != end; ++i, ++b)
             {
                 if (result.size() < b / blockByteCount + 1)
@@ -394,201 +394,201 @@ namespace aes
         }
     }
 
-    template <size_t keyLength, class Iterator, class Key>
-    std::vector<uint8_t> encryptEcb(Iterator begin, Iterator end, const Key& key)
+    template <std::size_t keyLength, class Iterator, class Key>
+    std::vector<std::uint8_t> encryptEcb(Iterator begin, Iterator end, const Key& key)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
-        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+        std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         auto resultIterator = result.begin();
 
-        for (Block& block : blocks)
+        for (auto& block : blocks)
         {
             block.encrypt<keyLength>(key);
 
             // copy the block to output
-            for (const Word w : block.w)
-                for (const uint8_t b : w.b)
+            for (const auto w : block.w)
+                for (const auto b : w.b)
                     *resultIterator++ = b;
         }
 
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key>
-    std::vector<uint8_t> encryptEcb(const Data& data, const Key& key)
+    template <std::size_t keyLength, class Data, class Key>
+    std::vector<std::uint8_t> encryptEcb(const Data& data, const Key& key)
     {
         return encryptEcb<keyLength>(std::begin(data), std::end(data), key);
     }
 
-    template <size_t keyLength, class Iterator, class Key>
-    std::vector<uint8_t> decryptEcb(Iterator begin, Iterator end, const Key& key)
+    template <std::size_t keyLength, class Iterator, class Key>
+    std::vector<std::uint8_t> decryptEcb(Iterator begin, Iterator end, const Key& key)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
-        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+        std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         auto resultIterator = result.begin();
 
-        for (Block& block : blocks)
+        for (auto& block : blocks)
         {
             block.decrypt<keyLength, Key>(key);
 
             // copy the block to output
-            for (const Word w : block.w)
-                for (const uint8_t b : w.b)
+            for (const auto w : block.w)
+                for (const auto b : w.b)
                     *resultIterator++ = b;
         }
 
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key>
-    std::vector<uint8_t> decryptEcb(const Data& data, const Key& key)
+    template <std::size_t keyLength, class Data, class Key>
+    std::vector<std::uint8_t> decryptEcb(const Data& data, const Key& key)
     {
         return decryptEcb<keyLength>(std::begin(data), std::end(data), key);
     }
 
-    template <size_t keyLength, class Iterator, class Key, class InitVector>
-    std::vector<uint8_t> encryptCbc(Iterator begin, Iterator end, const Key& key,
+    template <std::size_t keyLength, class Iterator, class Key, class InitVector>
+    std::vector<std::uint8_t> encryptCbc(Iterator begin, Iterator end, const Key& key,
                                     const InitVector& initVector)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
-        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+        std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         Block dataBlock;
 
         auto initVectorIterator = std::begin(initVector);
-        for (Word& w : dataBlock.w)
-            for (uint8_t& b : w.b)
+        for (auto& w : dataBlock.w)
+            for (auto& b : w.b)
                 b = *initVectorIterator++;
 
         auto resultIterator = result.begin();
 
-        for (const Block& block : blocks)
+        for (const auto& block : blocks)
         {
             dataBlock ^= block;
             dataBlock.encrypt<keyLength>(key);
 
             // copy the block to output
-            for (const Word w : dataBlock.w)
-                for (const uint8_t b : w.b)
+            for (const auto w : dataBlock.w)
+                for (const auto b : w.b)
                     *resultIterator++ = b;
         }
 
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InitVector>
-    std::vector<uint8_t> encryptCbc(const Data& data, const Key& key,
+    template <std::size_t keyLength, class Data, class Key, class InitVector>
+    std::vector<std::uint8_t> encryptCbc(const Data& data, const Key& key,
                                     const InitVector& initVector)
     {
         return encryptCbc<keyLength>(std::begin(data), std::end(data), key, initVector);
     }
 
-    template <size_t keyLength, class Iterator, class Key, class InitVector>
-    std::vector<uint8_t> decryptCbc(Iterator begin, Iterator end, const Key& key,
+    template <std::size_t keyLength, class Iterator, class Key, class InitVector>
+    std::vector<std::uint8_t> decryptCbc(Iterator begin, Iterator end, const Key& key,
                                     const InitVector& initVector)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
-        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+        std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         Block dataBlock;
 
         auto initVectorIterator = std::begin(initVector);
-        for (Word& w : dataBlock.w)
-            for (uint8_t& b : w.b)
+        for (auto& w : dataBlock.w)
+            for (auto& b : w.b)
                 b = *initVectorIterator++;
 
         auto dataIterator = begin;
         auto resultIterator = result.begin();
 
-        for (Block& block : blocks)
+        for (auto& block : blocks)
         {
             block.decrypt<keyLength>(key);
             block ^= dataBlock;
 
             // copy the block to output
-            for (const Word w : block.w)
-                for (const uint8_t b : w.b)
+            for (const auto w : block.w)
+                for (const auto b : w.b)
                     *resultIterator++ = b;
 
             // copy the data to data block
-            for (Word& w : dataBlock.w)
-                for (uint8_t& b : w.b)
+            for (auto& w : dataBlock.w)
+                for (auto& b : w.b)
                     b = *dataIterator++;
         }
 
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InitVector>
-    std::vector<uint8_t> decryptCbc(const Data& data, const Key& key,
+    template <std::size_t keyLength, class Data, class Key, class InitVector>
+    std::vector<std::uint8_t> decryptCbc(const Data& data, const Key& key,
                                     const InitVector& initVector)
     {
         return decryptCbc<keyLength>(std::begin(data), std::end(data), key, initVector);
     }
 
-    template <size_t keyLength, class Iterator, class Key, class InitVector>
-    std::vector<uint8_t> encryptCfb(Iterator begin, Iterator end, const Key& key,
+    template <std::size_t keyLength, class Iterator, class Key, class InitVector>
+    std::vector<std::uint8_t> encryptCfb(Iterator begin, Iterator end, const Key& key,
                                     const InitVector& initVector)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
-        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+        std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         Block encryptedBlock;
 
         auto initVectorIterator = std::begin(initVector);
-        for (Word& w : encryptedBlock.w)
-            for (uint8_t& b : w.b)
+        for (auto& w : encryptedBlock.w)
+            for (auto& b : w.b)
                 b = *initVectorIterator++;
 
         auto resultIterator = result.begin();
 
-        for (const Block& block : blocks)
+        for (const auto& block : blocks)
         {
             encryptedBlock.encrypt<keyLength>(key);
             encryptedBlock ^= block;
 
             // copy the block to output
-            for (const Word w : encryptedBlock.w)
-                for (const uint8_t b : w.b)
+            for (const auto w : encryptedBlock.w)
+                for (const auto b : w.b)
                     *resultIterator++ = b;
         }
 
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InitVector>
-    std::vector<uint8_t> encryptCfb(const Data& data, const Key& key,
+    template <std::size_t keyLength, class Data, class Key, class InitVector>
+    std::vector<std::uint8_t> encryptCfb(const Data& data, const Key& key,
                                     const InitVector& initVector)
     {
         return encryptCfb<keyLength>(std::begin(data), std::end(data), key, initVector);
     }
 
-    template <size_t keyLength, class Iterator, class Key, class InitVector>
-    std::vector<uint8_t> decryptCfb(Iterator begin, Iterator end, const Key& key,
+    template <std::size_t keyLength, class Iterator, class Key, class InitVector>
+    std::vector<std::uint8_t> decryptCfb(Iterator begin, Iterator end, const Key& key,
                                     const InitVector& initVector)
     {
         std::vector<Block> blocks = convertToBlocks(begin, end);
-        std::vector<uint8_t> result(blocks.size() * blockByteCount);
+        std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         Block decryptedBlock;
 
         auto initVectorIterator = std::begin(initVector);
-        for (Word& w : decryptedBlock.w)
-            for (uint8_t& b : w.b)
+        for (auto& w : decryptedBlock.w)
+            for (auto& b : w.b)
                 b = *initVectorIterator++;
 
         auto resultIterator = result.begin();
 
-        for (const Block& block : blocks)
+        for (const auto& block : blocks)
         {
             decryptedBlock.encrypt<keyLength>(key);
             decryptedBlock ^= block;
 
             // copy the block to output
-            for (const Word w : decryptedBlock.w)
-                for (const uint8_t b : w.b)
+            for (const auto w : decryptedBlock.w)
+                for (const auto b : w.b)
                     *resultIterator++ = b;
 
             decryptedBlock = block;
@@ -597,8 +597,8 @@ namespace aes
         return result;
     }
 
-    template <size_t keyLength, class Data, class Key, class InitVector>
-    std::vector<uint8_t> decryptCfb(const Data& data, const Key& key,
+    template <std::size_t keyLength, class Data, class Key, class InitVector>
+    std::vector<std::uint8_t> decryptCfb(const Data& data, const Key& key,
                                     const InitVector& initVector)
     {
         return decryptCfb<keyLength>(std::begin(data), std::end(data), key, initVector);

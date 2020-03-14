@@ -13,12 +13,12 @@ namespace uuid
 {
     struct Uuid final
     {
-        uint32_t  timeLow;
-        uint16_t  timeMid;
-        uint16_t  timeHiAndVersion;
-        uint8_t   clockSeqHiAndReserved;
-        uint8_t   clockSeqLow;
-        uint8_t   node[6];
+        std::uint32_t  timeLow;
+        std::uint16_t  timeMid;
+        std::uint16_t  timeHiAndVersion;
+        std::uint8_t   clockSeqHiAndReserved;
+        std::uint8_t   clockSeqLow;
+        std::uint8_t   node[6];
     };
 
     inline Uuid generate()
@@ -26,27 +26,27 @@ namespace uuid
         static std::random_device rd;
         static std::mt19937_64 mt(rd());
 
-        const uint64_t randomTime = mt();
+        const std::uint64_t randomTime = mt();
 
-        const uint32_t timeLow = ((randomTime >> 24) & 0x000000FF) |
+        const std::uint32_t timeLow = ((randomTime >> 24) & 0x000000FF) |
             ((randomTime >> 8) & 0x0000FF00) |
             ((randomTime << 8) & 0x00FF0000) |
             ((randomTime << 24) & 0xFF000000);
 
-        const uint16_t timeMid = static_cast<uint16_t>(((randomTime >> 40) & 0x00FF) |
+        const std::uint16_t timeMid = static_cast<std::uint16_t>(((randomTime >> 40) & 0x00FF) |
                                                        ((randomTime >> 24) & 0xFF00));
 
-        const uint16_t timeHiAndVersion = static_cast<uint16_t>(((0x04 << 12) & 0xF000) |
+        const std::uint16_t timeHiAndVersion = static_cast<std::uint16_t>(((0x04 << 12) & 0xF000) |
                                                                 ((randomTime >> 56) & 0x00FF) |
                                                                 ((randomTime >> 40) & 0x0F00));
 
-        const uint16_t clockSequence = static_cast<uint16_t>(mt() & 0x3FFF); // 14-bit random
+        const std::uint16_t clockSequence = static_cast<std::uint16_t>(mt() & 0x3FFF); // 14-bit random
 
-        const uint8_t clockSeqHiAndReserved = static_cast<uint8_t>(0x80 | // bit 6 and 7
+        const std::uint8_t clockSeqHiAndReserved = static_cast<std::uint8_t>(0x80 | // bit 6 and 7
                                                                    ((clockSequence >> 8) & 0x3F));
-        const uint8_t clockSeqLow = static_cast<uint8_t>(clockSequence & 0xFF);
+        const std::uint8_t clockSeqLow = static_cast<std::uint8_t>(clockSequence & 0xFF);
 
-        const uint64_t random = mt();
+        const std::uint64_t random = mt();
 
         return {
             timeLow,
@@ -55,12 +55,12 @@ namespace uuid
             clockSeqHiAndReserved,
             clockSeqLow,
             {
-                static_cast<uint8_t>(random >> 48),
-                static_cast<uint8_t>(random >> 40),
-                static_cast<uint8_t>(random >> 32),
-                static_cast<uint8_t>(random >> 24),
-                static_cast<uint8_t>(random >> 16),
-                static_cast<uint8_t>(random >> 0)
+                static_cast<std::uint8_t>(random >> 48),
+                static_cast<std::uint8_t>(random >> 40),
+                static_cast<std::uint8_t>(random >> 32),
+                static_cast<std::uint8_t>(random >> 24),
+                static_cast<std::uint8_t>(random >> 16),
+                static_cast<std::uint8_t>(random >> 0)
             }
         };
     }
@@ -68,21 +68,21 @@ namespace uuid
     template <class T> T generate();
 
     template <>
-    inline std::array<uint8_t, 16> generate<std::array<uint8_t, 16>>()
+    inline std::array<std::uint8_t, 16> generate<std::array<std::uint8_t, 16>>()
     {
         const Uuid u = generate();
 
-        return std::array<uint8_t, 16>{
-            static_cast<uint8_t>(u.timeLow >> 24),
-            static_cast<uint8_t>(u.timeLow >> 16),
-            static_cast<uint8_t>(u.timeLow >> 8),
-            static_cast<uint8_t>(u.timeLow),
+        return std::array<std::uint8_t, 16>{
+            static_cast<std::uint8_t>(u.timeLow >> 24),
+            static_cast<std::uint8_t>(u.timeLow >> 16),
+            static_cast<std::uint8_t>(u.timeLow >> 8),
+            static_cast<std::uint8_t>(u.timeLow),
 
-            static_cast<uint8_t>(u.timeMid >> 8),
-            static_cast<uint8_t>(u.timeMid),
+            static_cast<std::uint8_t>(u.timeMid >> 8),
+            static_cast<std::uint8_t>(u.timeMid),
 
-            static_cast<uint8_t>(u.timeHiAndVersion >> 8),
-            static_cast<uint8_t>(u.timeHiAndVersion),
+            static_cast<std::uint8_t>(u.timeHiAndVersion >> 8),
+            static_cast<std::uint8_t>(u.timeHiAndVersion),
 
             u.clockSeqHiAndReserved,
             u.clockSeqLow,
