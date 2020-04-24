@@ -1,4 +1,5 @@
-test/test.xcodeproj/project.xcworkspace
+test/test.xcodeproj/project.xcworkspace/xcshareddata
+test/test.xcodeproj/project.xcworkspace/xcuserdata
 test/test.xcodeproj/xcshareddata
 test/test.xcodeproj/xcuserdata
 *.o
