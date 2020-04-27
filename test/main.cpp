@@ -38,14 +38,14 @@ namespace
             }
         }
 
-        inline bool getResult() const noexcept { return result; }
+        bool getResult() const noexcept { return result; }
 
     private:
         bool result = true;
     };
 
     template <class T>
-    inline std::string toString(const T& v)
+    std::string toString(const T& v)
     {
         constexpr char digits[] = "0123456789abcdef";
 

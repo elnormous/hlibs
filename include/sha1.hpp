@@ -89,8 +89,8 @@ namespace sha1
     }
 
     template <class Iterator>
-    inline std::array<std::uint8_t, digestByteCount> hash(const Iterator begin,
-                                                     const Iterator end) noexcept
+    std::array<std::uint8_t, digestByteCount> hash(const Iterator begin,
+                                                   const Iterator end) noexcept
     {
         State state = {
             0x67452301,
@@ -151,7 +151,7 @@ namespace sha1
     }
 
     template <class T>
-    inline std::array<std::uint8_t, digestByteCount> hash(const T& v)
+    std::array<std::uint8_t, digestByteCount> hash(const T& v)
     {
         return hash(std::begin(v), std::end(v));
     }

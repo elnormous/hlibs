@@ -40,7 +40,7 @@ namespace base64
     }
 
     template <class Iterator>
-    inline std::string encode(const Iterator begin, const Iterator end)
+    std::string encode(const Iterator begin, const Iterator end)
     {
         std::string result;
         std::size_t c = 0;
@@ -82,13 +82,13 @@ namespace base64
     }
 
     template <class T>
-    inline std::string encode(const T& v)
+    std::string encode(const T& v)
     {
         return encode(std::begin(v), std::end(v));
     }
 
     template <class Iterator>
-    inline std::vector<std::uint8_t> decode(const Iterator begin, const Iterator end)
+    std::vector<std::uint8_t> decode(const Iterator begin, const Iterator end)
     {
         std::uint32_t c = 0;
         std::uint8_t charArray[4];
@@ -124,7 +124,7 @@ namespace base64
     }
 
     template <class T>
-    inline std::vector<std::uint8_t> decode(const T& s)
+    std::vector<std::uint8_t> decode(const T& s)
     {
         return decode(std::begin(s), std::end(s));
     }
