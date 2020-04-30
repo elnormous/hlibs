@@ -70,29 +70,29 @@ namespace uuid
     template <>
     std::array<std::uint8_t, 16> generate<std::array<std::uint8_t, 16>>()
     {
-        const Uuid u = generate();
+        const Uuid uuid = generate();
 
         return std::array<std::uint8_t, 16>{
-            static_cast<std::uint8_t>(u.timeLow >> 24),
-            static_cast<std::uint8_t>(u.timeLow >> 16),
-            static_cast<std::uint8_t>(u.timeLow >> 8),
-            static_cast<std::uint8_t>(u.timeLow),
+            static_cast<std::uint8_t>(uuid.timeLow >> 24),
+            static_cast<std::uint8_t>(uuid.timeLow >> 16),
+            static_cast<std::uint8_t>(uuid.timeLow >> 8),
+            static_cast<std::uint8_t>(uuid.timeLow),
 
-            static_cast<std::uint8_t>(u.timeMid >> 8),
-            static_cast<std::uint8_t>(u.timeMid),
+            static_cast<std::uint8_t>(uuid.timeMid >> 8),
+            static_cast<std::uint8_t>(uuid.timeMid),
 
-            static_cast<std::uint8_t>(u.timeHiAndVersion >> 8),
-            static_cast<std::uint8_t>(u.timeHiAndVersion),
+            static_cast<std::uint8_t>(uuid.timeHiAndVersion >> 8),
+            static_cast<std::uint8_t>(uuid.timeHiAndVersion),
 
-            u.clockSeqHiAndReserved,
-            u.clockSeqLow,
+            uuid.clockSeqHiAndReserved,
+            uuid.clockSeqLow,
 
-            u.node[0],
-            u.node[1],
-            u.node[2],
-            u.node[3],
-            u.node[4],
-            u.node[5]
+            uuid.node[0],
+            uuid.node[1],
+            uuid.node[2],
+            uuid.node[3],
+            uuid.node[4],
+            uuid.node[5]
         };
     }
 
@@ -101,45 +101,45 @@ namespace uuid
     {
         constexpr char digits[] = "0123456789abcdef";
 
-        const Uuid u = generate();
+        const Uuid uuid = generate();
 
         return {
-            digits[(u.timeLow >> 28) & 0x0F],
-            digits[(u.timeLow >> 24) & 0x0F],
-            digits[(u.timeLow >> 20) & 0x0F],
-            digits[(u.timeLow >> 16) & 0x0F],
-            digits[(u.timeLow >> 12) & 0x0F],
-            digits[(u.timeLow >> 8) & 0x0F],
-            digits[(u.timeLow >> 4) & 0x0F],
-            digits[(u.timeLow >> 0) & 0x0F],
+            digits[(uuid.timeLow >> 28) & 0x0F],
+            digits[(uuid.timeLow >> 24) & 0x0F],
+            digits[(uuid.timeLow >> 20) & 0x0F],
+            digits[(uuid.timeLow >> 16) & 0x0F],
+            digits[(uuid.timeLow >> 12) & 0x0F],
+            digits[(uuid.timeLow >> 8) & 0x0F],
+            digits[(uuid.timeLow >> 4) & 0x0F],
+            digits[(uuid.timeLow >> 0) & 0x0F],
             '-',
-            digits[(u.timeMid >> 12) & 0x0F],
-            digits[(u.timeMid >> 8) & 0x0F],
-            digits[(u.timeMid >> 4) & 0x0F],
-            digits[(u.timeMid >> 0) & 0x0F],
+            digits[(uuid.timeMid >> 12) & 0x0F],
+            digits[(uuid.timeMid >> 8) & 0x0F],
+            digits[(uuid.timeMid >> 4) & 0x0F],
+            digits[(uuid.timeMid >> 0) & 0x0F],
             '-',
-            digits[(u.timeHiAndVersion >> 12) & 0x0F],
-            digits[(u.timeHiAndVersion >> 8) & 0x0F],
-            digits[(u.timeHiAndVersion >> 4) & 0x0F],
-            digits[(u.timeHiAndVersion >> 0) & 0x0F],
+            digits[(uuid.timeHiAndVersion >> 12) & 0x0F],
+            digits[(uuid.timeHiAndVersion >> 8) & 0x0F],
+            digits[(uuid.timeHiAndVersion >> 4) & 0x0F],
+            digits[(uuid.timeHiAndVersion >> 0) & 0x0F],
             '-',
-            digits[(u.clockSeqHiAndReserved >> 4) & 0x0F],
-            digits[(u.clockSeqHiAndReserved >> 0) & 0x0F],
-            digits[(u.clockSeqLow >> 4) & 0x0F],
-            digits[(u.clockSeqLow >> 0) & 0x0F],
+            digits[(uuid.clockSeqHiAndReserved >> 4) & 0x0F],
+            digits[(uuid.clockSeqHiAndReserved >> 0) & 0x0F],
+            digits[(uuid.clockSeqLow >> 4) & 0x0F],
+            digits[(uuid.clockSeqLow >> 0) & 0x0F],
             '-',
-            digits[(u.node[0] >> 4) & 0x0F],
-            digits[(u.node[0] >> 0) & 0x0F],
-            digits[(u.node[1] >> 4) & 0x0F],
-            digits[(u.node[1] >> 0) & 0x0F],
-            digits[(u.node[2] >> 4) & 0x0F],
-            digits[(u.node[2] >> 0) & 0x0F],
-            digits[(u.node[3] >> 4) & 0x0F],
-            digits[(u.node[3] >> 0) & 0x0F],
-            digits[(u.node[4] >> 4) & 0x0F],
-            digits[(u.node[4] >> 0) & 0x0F],
-            digits[(u.node[5] >> 4) & 0x0F],
-            digits[(u.node[5] >> 0) & 0x0F]
+            digits[(uuid.node[0] >> 4) & 0x0F],
+            digits[(uuid.node[0] >> 0) & 0x0F],
+            digits[(uuid.node[1] >> 4) & 0x0F],
+            digits[(uuid.node[1] >> 0) & 0x0F],
+            digits[(uuid.node[2] >> 4) & 0x0F],
+            digits[(uuid.node[2] >> 0) & 0x0F],
+            digits[(uuid.node[3] >> 4) & 0x0F],
+            digits[(uuid.node[3] >> 0) & 0x0F],
+            digits[(uuid.node[4] >> 4) & 0x0F],
+            digits[(uuid.node[4] >> 0) & 0x0F],
+            digits[(uuid.node[5] >> 4) & 0x0F],
+            digits[(uuid.node[5] >> 0) & 0x0F]
         };
     }
 }
