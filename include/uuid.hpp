@@ -13,12 +13,12 @@ namespace uuid
 {
     struct Uuid final
     {
-        std::uint32_t  timeLow;
-        std::uint16_t  timeMid;
-        std::uint16_t  timeHiAndVersion;
-        std::uint8_t   clockSeqHiAndReserved;
-        std::uint8_t   clockSeqLow;
-        std::uint8_t   node[6];
+        std::uint32_t timeLow;
+        std::uint16_t timeMid;
+        std::uint16_t timeHiAndVersion;
+        std::uint8_t clockSeqHiAndReserved;
+        std::uint8_t clockSeqLow;
+        std::uint8_t node[6];
     };
 
     inline Uuid generate()
