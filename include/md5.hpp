@@ -39,67 +39,67 @@ namespace md5
         };
 
         constexpr std::uint32_t rotateLeft(const std::uint32_t value,
-                                      const std::uint32_t bits) noexcept
+                                           const std::uint32_t bits) noexcept
         {
             return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
         }
 
         constexpr std::uint32_t f(const std::uint32_t x,
-                             const std::uint32_t y,
-                             const std::uint32_t z) noexcept
+                                  const std::uint32_t y,
+                                  const std::uint32_t z) noexcept
         {
             return (x & y) | (~x & z);
         }
 
         constexpr std::uint32_t g(const std::uint32_t x,
-                             const std::uint32_t y,
-                             const std::uint32_t z) noexcept
+                                  const std::uint32_t y,
+                                  const std::uint32_t z) noexcept
         {
             return (x & z) | (y & ~z);
         }
 
         constexpr std::uint32_t h(const std::uint32_t x,
-                             const std::uint32_t y,
-                             const std::uint32_t z) noexcept
+                                  const std::uint32_t y,
+                                  const std::uint32_t z) noexcept
         {
             return x ^ y ^ z;
         }
 
         constexpr std::uint32_t i(const std::uint32_t x,
-                             const std::uint32_t y,
-                             const std::uint32_t z) noexcept
+                                  const std::uint32_t y,
+                                  const std::uint32_t z) noexcept
         {
             return y ^ (x | ~z);
         }
 
         constexpr std::uint32_t ff(const std::uint32_t a, const std::uint32_t b,
-                              const std::uint32_t c, const std::uint32_t d,
-                              const std::uint32_t x, const std::uint32_t sh,
-                              const std::uint32_t ac) noexcept
+                                   const std::uint32_t c, const std::uint32_t d,
+                                   const std::uint32_t x, const std::uint32_t sh,
+                                   const std::uint32_t ac) noexcept
         {
             return rotateLeft(a + f(b, c, d) + x + ac, sh) + b;
         }
 
         constexpr std::uint32_t gg(const std::uint32_t a, const std::uint32_t b,
-                              const std::uint32_t c, const std::uint32_t d,
-                              const std::uint32_t x, const std::uint32_t sh,
-                              const std::uint32_t ac) noexcept
+                                   const std::uint32_t c, const std::uint32_t d,
+                                   const std::uint32_t x, const std::uint32_t sh,
+                                   const std::uint32_t ac) noexcept
         {
             return rotateLeft(a + g(b, c, d) + x + ac, sh) + b;
         }
 
         constexpr std::uint32_t hh(const std::uint32_t a, const std::uint32_t b,
-                              const std::uint32_t c, const std::uint32_t d,
-                              const std::uint32_t x, const std::uint32_t sh,
-                              const std::uint32_t ac) noexcept
+                                   const std::uint32_t c, const std::uint32_t d,
+                                   const std::uint32_t x, const std::uint32_t sh,
+                                   const std::uint32_t ac) noexcept
         {
             return rotateLeft(a + h(b, c, d) + x + ac, sh) + b;
         }
 
         constexpr std::uint32_t ii(const std::uint32_t a, const std::uint32_t b,
-                              const std::uint32_t c, const std::uint32_t d,
-                              const std::uint32_t x, const std::uint32_t sh,
-                              const std::uint32_t ac) noexcept
+                                   const std::uint32_t c, const std::uint32_t d,
+                                   const std::uint32_t x, const std::uint32_t sh,
+                                   const std::uint32_t ac) noexcept
         {
             return rotateLeft(a + i(b, c, d) + x + ac, sh) + b;
         }
