@@ -19,7 +19,8 @@ namespace base64
         explicit ParseError(const char* str): std::logic_error(str) {}
     };
 
-    inline namespace detail
+    template <class Iterator>
+    std::string encode(const Iterator begin, const Iterator end)
     {
         constexpr char chars[] = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -29,19 +30,6 @@ namespace base64
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
         };
 
-        constexpr std::uint8_t getIndex(const std::uint8_t c)
-        {
-            return (c >= 'A' && c <= 'Z') ? c - 'A' :
-                (c >= 'a' && c <= 'z') ? 26 + (c - 'a') :
-                (c >= '0' && c <= '9') ? 52 + (c - '0') :
-                (c == '+') ? 62 : (c == '/') ? 63 :
-                throw ParseError("Invalid Base64 digit");
-        }
-    }
-
-    template <class Iterator>
-    std::string encode(const Iterator begin, const Iterator end)
-    {
         std::string result;
         std::size_t c = 0;
         std::uint8_t charArray[3];
@@ -96,13 +84,19 @@ namespace base64
 
         for (Iterator i = begin; i != end && *i != '='; ++i)
         {
-            charArray[c++] = getIndex(static_cast<std::uint8_t>(*i));
+            auto b = static_cast<std::uint8_t>(*i);
+
+            charArray[c++] = (b >= 'A' && b <= 'Z') ? b - 'A' :
+                (b >= 'a' && b <= 'z') ? 26 + (b - 'a') :
+                (b >= '0' && b <= '9') ? 52 + (b - '0') :
+                (b == '+') ? 62 : (b == '/') ? 63 :
+                throw ParseError("Invalid Base64 digit");
+
             if (c == 4)
             {
                 result.push_back(static_cast<std::uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
                 result.push_back(static_cast<std::uint8_t>(((charArray[1] & 0x0F) << 4) + ((charArray[2] & 0x3C) >> 2)));
                 result.push_back(static_cast<std::uint8_t>(((charArray[2] & 0x3) << 6) + charArray[3]));
-
                 c = 0;
             }
         }
