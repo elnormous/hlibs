@@ -11,9 +11,9 @@ namespace crc
 {
     inline namespace detail
     {
-        template <typename T> constexpr T getEntry(std::uint8_t i);
-        template <typename T> constexpr T getInit();
-        template <typename T> constexpr T getXorOut();
+        template <typename T> constexpr T getEntry(std::uint8_t i) noexcept;
+        template <typename T> constexpr T getInit() noexcept;
+        template <typename T> constexpr T getXorOut() noexcept;
 
         constexpr std::uint8_t table8[256] = {
             0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31,
@@ -40,17 +40,17 @@ namespace crc
             0xFA, 0xFD, 0xF4, 0xF3
         };
 
-        template <> constexpr std::uint8_t getEntry<std::uint8_t>(std::uint8_t i)
+        template <> constexpr std::uint8_t getEntry<std::uint8_t>(std::uint8_t i) noexcept
         {
             return table8[i];
         }
 
-        template <> constexpr std::uint8_t getInit()
+        template <> constexpr std::uint8_t getInit() noexcept
         {
             return 0x00;
         }
 
-        template <> constexpr std::uint8_t getXorOut()
+        template <> constexpr std::uint8_t getXorOut() noexcept
         {
             return 0x00;
         }
@@ -90,17 +90,17 @@ namespace crc
             0x7BC7, 0x6A4E, 0x58D5, 0x495C, 0x3DE3, 0x2C6A, 0x1EF1, 0x0F78
         };
 
-        template <> constexpr std::uint16_t getEntry<std::uint16_t>(std::uint8_t i)
+        template <> constexpr std::uint16_t getEntry<std::uint16_t>(std::uint8_t i) noexcept
         {
             return table16[i];
         }
 
-        template <> constexpr std::uint16_t getInit()
+        template <> constexpr std::uint16_t getInit() noexcept
         {
             return 0x0000;
         }
 
-        template <> constexpr std::uint16_t getXorOut()
+        template <> constexpr std::uint16_t getXorOut() noexcept
         {
             return 0x0000;
         }
@@ -140,17 +140,17 @@ namespace crc
             0xB3667A2E, 0xC4614AB8, 0x5D681B02, 0x2A6F2B94, 0xB40BBE37, 0xC30C8EA1, 0x5A05DF1B, 0x2D02EF8D
         };
 
-        template <> constexpr std::uint32_t getEntry<std::uint32_t>(std::uint8_t i)
+        template <> constexpr std::uint32_t getEntry<std::uint32_t>(std::uint8_t i) noexcept
         {
             return table32[i];
         }
 
-        template <> constexpr std::uint32_t getInit()
+        template <> constexpr std::uint32_t getInit() noexcept
         {
             return 0xFFFFFFFF;
         }
 
-        template <> constexpr std::uint32_t getXorOut()
+        template <> constexpr std::uint32_t getXorOut() noexcept
         {
             return 0xFFFFFFFF;
         }

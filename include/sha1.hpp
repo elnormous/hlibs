@@ -22,7 +22,7 @@ namespace sha1
         using State = std::uint32_t[digestIntCount];
 
         constexpr std::uint32_t rotateLeft(const std::uint32_t value,
-                                      const std::uint32_t bits) noexcept
+                                           const std::uint32_t bits) noexcept
         {
             return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
         }
