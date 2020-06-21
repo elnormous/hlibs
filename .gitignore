@@ -7,3 +7,4 @@ test/test
 test/.vs
 test/Win32
 test/x64
+*.user
