@@ -379,15 +379,16 @@ namespace aes
         {
             std::vector<Block> result;
 
-            std::size_t b = 0;
-            for (auto i = begin; i != end; ++i, ++b)
+            std::size_t byte = 0;
+            for (auto i = begin; i != end; ++i)
             {
-                if (result.size() < b / blockByteCount + 1)
-                    result.resize(b / blockByteCount + 1);
+                if (result.size() < byte / blockByteCount + 1)
+                    result.resize(byte / blockByteCount + 1);
 
-                Block& block = result[b / blockByteCount];
-                Word& word = block.w[(b / wordByteCount) % blockWordCount];
-                word.b[b % wordByteCount] = *i;
+                Block& block = result[byte / blockByteCount];
+                Word& word = block.w[(byte / wordByteCount) % blockWordCount];
+                word.b[byte % wordByteCount] = *i;
+                ++byte;
             }
 
             return result;
