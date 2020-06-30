@@ -25,15 +25,16 @@ namespace
     {
     public:
         template <class T, class ...Args>
-        void run(T test, Args ...args) noexcept
+        void run(const std::string& name, T test, Args ...args) noexcept
         {
             try
             {
                 test(args...);
+                std::cerr << name << " succeeded\n";
             }
             catch (const TestError& e)
             {
-                std::cerr << e.what() << '\n';
+                std::cerr << name << " failed: " << e.what() << '\n';
                 result = false;
             }
         }
@@ -410,18 +411,18 @@ namespace
 int main()
 {
     TestRunner testRunner;
-    testRunner.run(testAes);
-    testRunner.run(testBase64);
-    testRunner.run(testCrc8);
-    testRunner.run(testCrc16);
-    testRunner.run(testCrc32);
-    testRunner.run(testFnv132);
-    testRunner.run(testFnv164);
-    testRunner.run(testMd5);
-    testRunner.run(testSha1);
-    testRunner.run(testSha256);
-    testRunner.run(testUtf8);
-    testRunner.run(testUuid);
+    testRunner.run("testAes", testAes);
+    testRunner.run("testBase64", testBase64);
+    testRunner.run("testCrc8", testCrc8);
+    testRunner.run("testCrc16", testCrc16);
+    testRunner.run("testCrc32", testCrc32);
+    testRunner.run("testFnv132", testFnv132);
+    testRunner.run("testFnv164", testFnv164);
+    testRunner.run("testMd5", testMd5);
+    testRunner.run("testSha1", testSha1);
+    testRunner.run("testSha256", testSha256);
+    testRunner.run("testUtf8", testUtf8);
+    testRunner.run("testUuid", testUuid);
 
     if (testRunner.getResult())
         std::cout << "Success\n";
