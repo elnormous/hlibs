@@ -17,8 +17,8 @@ namespace fnv1
         template <> constexpr std::uint32_t prime<std::uint32_t> = 16777619U;
         template <> constexpr std::uint32_t offsetBasis<std::uint32_t> = 2166136261U;
 
-        template <> constexpr std::uint64_t prime<std::uint64_t> = 1099511628211U;
-        template <> constexpr std::uint64_t offsetBasis<std::uint64_t> = 14695981039346656037U;
+        template <> constexpr std::uint64_t prime<std::uint64_t> = 1099511628211ULL;
+        template <> constexpr std::uint64_t offsetBasis<std::uint64_t> = 14695981039346656037ULL;
     }
 
     template <typename Result, typename Iterator>
