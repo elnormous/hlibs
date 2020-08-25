@@ -3,6 +3,11 @@ compiler: gcc
 os: linux
 
 addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-7
   sonarcloud:
     organization: "elnormous-github"
     token:
