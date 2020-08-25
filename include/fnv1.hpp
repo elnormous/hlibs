@@ -11,8 +11,8 @@ namespace fnv1
 {
     inline namespace detail
     {
-        template <typename T> constexpr T prime;
-        template <typename T> constexpr T offsetBasis;
+        template <typename T> constexpr T prime = 0;
+        template <typename T> constexpr T offsetBasis = 0;
 
         template <> constexpr std::uint32_t prime<std::uint32_t> = 16777619U;
         template <> constexpr std::uint32_t offsetBasis<std::uint32_t> = 2166136261U;
