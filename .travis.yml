@@ -13,6 +13,8 @@ addons:
     token:
       secure: "a4mCThTZpRx5tuS6VP5AybKvkcwrduNDeu2gSFply7+cEnO8mvkjT86IUoINRgITHacJZcEOdDWY4jnfWYXEWUlRejuasxJU90kBPHwUCnusqylSvlPc2cRn8ANE1/sSlxeB3Cg7fTIYQFv0ksHhf+MwC08BP06fAI6ODbL9ml2jSUDkhcRD0dvCGcLc+RxZpyd071xz82kjv7nU8fp9c3wFP39F5IvWwH3hy/qEy+LjmjjnwDu/6d6BslfmsAJT9mmor70daN72dmMrWyD9spVVLIm8Agp+wHMignBLPLn4tRHHH8CrsTq3gXz6Qw5/eWYEeobuGKCC5j2d/bVfGc+/Svk8X3jJw13MN+Okdm0tN4tXEMuzNcEqOtcxPtn8owymLDrCCnjhvY80EI4bNj4XIgE7YpOW3Zl/zGSxtHColmHD6+oz7vio4L4KwLultV0sZoYMAgXJuNYsz75w3w9wlbmPv7l1oebI7s0u86uXpiIR6ekrUB92wWLHHTccEQTwRGoisF84KbqEtnskZssllV4saUL7WDRkPDP+gNvDitF6uqp26/aG24PSCZ0P0MzEpUHeeSJICpLYcl4Lhf7azGbg5ak7/ZxoATZ1INXXRtpR/p8C3KZ5Zgz7jEPCCDg5dKCj5sOMPkCs+3kgC9GVDy+qYoV3XVpiUxnqG+U="
 
+before_script:
+  - export CXX=g++-7
 script:
   - build-wrapper-linux-x86-64 --out-dir bw-output make -C test
   - test/test
