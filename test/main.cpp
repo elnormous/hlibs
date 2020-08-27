@@ -394,7 +394,7 @@ namespace
         const std::pair<std::string, std::vector<char32_t>> testCases[] = {
             {{}, {}},
             {"\u0001", {0x01}},
-            {u8"aÀÁ\u2020\U00010102", {0x61, 0xC0, 0xC1, 0x2020, 0x10102}}
+            {utf8::fromUtf32(std::vector<char32_t>{0x61, 0xC3, 0x2020, 0x10102}), {0x61, 0xC3, 0x2020, 0x10102}}
         };
 
         for (const auto& testCase : testCases)
