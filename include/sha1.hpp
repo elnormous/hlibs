@@ -24,7 +24,7 @@ namespace sha1
         constexpr std::uint32_t rotateLeft(const std::uint32_t value,
                                            const std::uint32_t bits) noexcept
         {
-            return (value << bits) | ((value & 0xFFFFFFFF) >> (32 - bits));
+            return (value << bits) | ((value & 0xFFFFFFFFU) >> (32 - bits));
         }
 
         inline void transform(const Block& block,
@@ -54,22 +54,22 @@ namespace sha1
                 if (i < 20)
                 {
                     f = (b & c) | (~b & d);
-                    k = 0x5A827999;
+                    k = 0x5A827999U;
                 }
                 else if (i < 40)
                 {
                     f = b ^ c ^ d;
-                    k = 0x6ED9EBA1;
+                    k = 0x6ED9EBA1U;
                 }
                 else if (i < 60)
                 {
                     f = (b & c) | (b & d) | (c & d);
-                    k = 0x8F1BBCDC;
+                    k = 0x8F1BBCDCU;
                 }
                 else if (i < 80)
                 {
                     f = b ^ c ^ d;
-                    k = 0xCA62C1D6;
+                    k = 0xCA62C1D6U;
                 }
 
                 const std::uint32_t temp = rotateLeft(a, 5) + f + e + k + w[i];
@@ -93,11 +93,11 @@ namespace sha1
                                                    const Iterator end) noexcept
     {
         State state = {
-            0x67452301,
-            0xEFCDAB89,
-            0x98BADCFE,
-            0x10325476,
-            0xC3D2E1F0
+            0x67452301U,
+            0xEFCDAB89U,
+            0x98BADCFEU,
+            0x10325476U,
+            0xC3D2E1F0U
         };
 
         std::vector<std::uint8_t> buffer;

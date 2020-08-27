@@ -236,12 +236,12 @@ namespace
     void testCrc32()
     {
         const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
-            {{}, 0x00000000},
-            {{'0'}, 0xF4DBDF21},
+            {{}, 0x00000000U},
+            {{'0'}, 0xF4DBDF21U},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x963FBB8E},
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x963FBB8EU},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0xc8a61cc1}
         };
 
@@ -422,14 +422,14 @@ namespace
         if (a[6] >> 4 != 4)
             throw TestError("Wrong UUID version");
 
-        if ((a[8] & 0xC0) != 0x80)
+        if ((a[8] & 0xC0U) != 0x80U)
             throw TestError("Wrong UUID variant");
 
         const auto s = uuid::generate<std::string>();
         if (s[14] != '4')
             throw TestError("Wrong UUID version");
 
-        if ((hexToInt(s[19]) & 0x0C) != 0x8)
+        if ((hexToInt(s[19]) & 0x0CU) != 0x08U)
             throw TestError("Wrong UUID variant");
     }
 }

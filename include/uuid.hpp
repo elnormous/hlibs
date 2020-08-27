@@ -28,23 +28,23 @@ namespace uuid
 
         const std::uint64_t randomTime = mt();
 
-        const std::uint32_t timeLow = ((randomTime >> 24) & 0x000000FF) |
-            ((randomTime >> 8) & 0x0000FF00) |
-            ((randomTime << 8) & 0x00FF0000) |
-            ((randomTime << 24) & 0xFF000000);
+        const std::uint32_t timeLow = ((randomTime >> 24) & 0x000000FFU) |
+            ((randomTime >> 8) & 0x0000FF00U) |
+            ((randomTime << 8) & 0x00FF0000U) |
+            ((randomTime << 24) & 0xFF000000U);
 
-        const auto timeMid = static_cast<std::uint16_t>(((randomTime >> 40) & 0x00FF) |
-                                                        ((randomTime >> 24) & 0xFF00));
+        const auto timeMid = static_cast<std::uint16_t>(((randomTime >> 40) & 0x00FFU) |
+                                                        ((randomTime >> 24) & 0xFF00U));
 
-        const auto timeHiAndVersion = static_cast<std::uint16_t>(((0x04 << 12) & 0xF000) |
-                                                                 ((randomTime >> 56) & 0x00FF) |
-                                                                 ((randomTime >> 40) & 0x0F00));
+        const auto timeHiAndVersion = static_cast<std::uint16_t>(((0x04 << 12) & 0xF000U) |
+                                                                 ((randomTime >> 56) & 0x00FFU) |
+                                                                 ((randomTime >> 40) & 0x0F00U));
 
-        const auto clockSequence = static_cast<std::uint16_t>(mt() & 0x3FFF); // 14-bit random
+        const auto clockSequence = static_cast<std::uint16_t>(mt() & 0x3FFFU); // 14-bit random
 
-        const auto clockSeqHiAndReserved = static_cast<std::uint8_t>(0x80 | // bit 6 and 7
-                                                                     ((clockSequence >> 8) & 0x3F));
-        const auto clockSeqLow = static_cast<std::uint8_t>(clockSequence & 0xFF);
+        const auto clockSeqHiAndReserved = static_cast<std::uint8_t>(0x80U | // bit 6 and 7
+                                                                     ((clockSequence >> 8) & 0x3FU));
+        const auto clockSeqLow = static_cast<std::uint8_t>(clockSequence & 0xFFU);
 
         const auto random = mt();
 
@@ -104,42 +104,42 @@ namespace uuid
         const Uuid uuid = generate();
 
         return {
-            digits[(uuid.timeLow >> 28) & 0x0F],
-            digits[(uuid.timeLow >> 24) & 0x0F],
-            digits[(uuid.timeLow >> 20) & 0x0F],
-            digits[(uuid.timeLow >> 16) & 0x0F],
-            digits[(uuid.timeLow >> 12) & 0x0F],
-            digits[(uuid.timeLow >> 8) & 0x0F],
-            digits[(uuid.timeLow >> 4) & 0x0F],
-            digits[(uuid.timeLow >> 0) & 0x0F],
+            digits[(uuid.timeLow >> 28) & 0x0FU],
+            digits[(uuid.timeLow >> 24) & 0x0FU],
+            digits[(uuid.timeLow >> 20) & 0x0FU],
+            digits[(uuid.timeLow >> 16) & 0x0FU],
+            digits[(uuid.timeLow >> 12) & 0x0FU],
+            digits[(uuid.timeLow >> 8) & 0x0FU],
+            digits[(uuid.timeLow >> 4) & 0x0FU],
+            digits[(uuid.timeLow >> 0) & 0x0FU],
             '-',
-            digits[(uuid.timeMid >> 12) & 0x0F],
-            digits[(uuid.timeMid >> 8) & 0x0F],
-            digits[(uuid.timeMid >> 4) & 0x0F],
-            digits[(uuid.timeMid >> 0) & 0x0F],
+            digits[(uuid.timeMid >> 12) & 0x0FU],
+            digits[(uuid.timeMid >> 8) & 0x0FU],
+            digits[(uuid.timeMid >> 4) & 0x0FU],
+            digits[(uuid.timeMid >> 0) & 0x0FU],
             '-',
-            digits[(uuid.timeHiAndVersion >> 12) & 0x0F],
-            digits[(uuid.timeHiAndVersion >> 8) & 0x0F],
-            digits[(uuid.timeHiAndVersion >> 4) & 0x0F],
-            digits[(uuid.timeHiAndVersion >> 0) & 0x0F],
+            digits[(uuid.timeHiAndVersion >> 12) & 0x0FU],
+            digits[(uuid.timeHiAndVersion >> 8) & 0x0FU],
+            digits[(uuid.timeHiAndVersion >> 4) & 0x0FU],
+            digits[(uuid.timeHiAndVersion >> 0) & 0x0FU],
             '-',
-            digits[(uuid.clockSeqHiAndReserved >> 4) & 0x0F],
-            digits[(uuid.clockSeqHiAndReserved >> 0) & 0x0F],
-            digits[(uuid.clockSeqLow >> 4) & 0x0F],
-            digits[(uuid.clockSeqLow >> 0) & 0x0F],
+            digits[(uuid.clockSeqHiAndReserved >> 4) & 0x0FU],
+            digits[(uuid.clockSeqHiAndReserved >> 0) & 0x0FU],
+            digits[(uuid.clockSeqLow >> 4) & 0x0FU],
+            digits[(uuid.clockSeqLow >> 0) & 0x0FU],
             '-',
-            digits[(uuid.node[0] >> 4) & 0x0F],
-            digits[(uuid.node[0] >> 0) & 0x0F],
-            digits[(uuid.node[1] >> 4) & 0x0F],
-            digits[(uuid.node[1] >> 0) & 0x0F],
-            digits[(uuid.node[2] >> 4) & 0x0F],
-            digits[(uuid.node[2] >> 0) & 0x0F],
-            digits[(uuid.node[3] >> 4) & 0x0F],
-            digits[(uuid.node[3] >> 0) & 0x0F],
-            digits[(uuid.node[4] >> 4) & 0x0F],
-            digits[(uuid.node[4] >> 0) & 0x0F],
-            digits[(uuid.node[5] >> 4) & 0x0F],
-            digits[(uuid.node[5] >> 0) & 0x0F]
+            digits[(uuid.node[0] >> 4) & 0x0FU],
+            digits[(uuid.node[0] >> 0) & 0x0FU],
+            digits[(uuid.node[1] >> 4) & 0x0FU],
+            digits[(uuid.node[1] >> 0) & 0x0FU],
+            digits[(uuid.node[2] >> 4) & 0x0FU],
+            digits[(uuid.node[2] >> 0) & 0x0FU],
+            digits[(uuid.node[3] >> 4) & 0x0FU],
+            digits[(uuid.node[3] >> 0) & 0x0FU],
+            digits[(uuid.node[4] >> 4) & 0x0FU],
+            digits[(uuid.node[4] >> 0) & 0x0FU],
+            digits[(uuid.node[5] >> 4) & 0x0FU],
+            digits[(uuid.node[5] >> 0) & 0x0FU]
         };
     }
 }

@@ -15,22 +15,22 @@ namespace sha256
     inline namespace detail
     {
         constexpr std::uint32_t k[64] = {
-            0x428A2F98, 0x71374491, 0xB5C0FBCF, 0xE9B5DBA5,
-            0x3956C25B, 0x59F111F1, 0x923F82A4, 0xAB1C5ED5,
-            0xD807AA98, 0x12835B01, 0x243185BE, 0x550C7DC3,
-            0x72BE5D74, 0x80DEB1FE, 0x9BDC06A7, 0xC19BF174,
-            0xE49B69C1, 0xEFBE4786, 0x0FC19DC6, 0x240CA1CC,
-            0x2DE92C6F, 0x4A7484AA, 0x5CB0A9DC, 0x76F988DA,
-            0x983E5152, 0xA831C66D, 0xB00327C8, 0xBF597FC7,
-            0xC6E00BF3, 0xD5A79147, 0x06CA6351, 0x14292967,
-            0x27B70A85, 0x2E1B2138, 0x4D2C6DFC, 0x53380D13,
-            0x650A7354, 0x766A0ABB, 0x81C2C92E, 0x92722C85,
-            0xA2BFE8A1, 0xA81A664B, 0xC24B8B70, 0xC76C51A3,
-            0xD192E819, 0xD6990624, 0xF40E3585, 0x106AA070,
-            0x19A4C116, 0x1E376C08, 0x2748774C, 0x34B0BCB5,
-            0x391C0CB3, 0x4ED8AA4A, 0x5B9CCA4F, 0x682E6FF3,
-            0x748F82EE, 0x78A5636F, 0x84C87814, 0x8CC70208,
-            0x90BEFFFA, 0xA4506CEB, 0xBEF9A3F7, 0xC67178F2
+            0x428A2F98U, 0x71374491U, 0xB5C0FBCFU, 0xE9B5DBA5U,
+            0x3956C25BU, 0x59F111F1U, 0x923F82A4U, 0xAB1C5ED5U,
+            0xD807AA98U, 0x12835B01U, 0x243185BEU, 0x550C7DC3U,
+            0x72BE5D74U, 0x80DEB1FEU, 0x9BDC06A7U, 0xC19BF174U,
+            0xE49B69C1U, 0xEFBE4786U, 0x0FC19DC6U, 0x240CA1CCU,
+            0x2DE92C6FU, 0x4A7484AAU, 0x5CB0A9DCU, 0x76F988DAU,
+            0x983E5152U, 0xA831C66DU, 0xB00327C8U, 0xBF597FC7U,
+            0xC6E00BF3U, 0xD5A79147U, 0x06CA6351U, 0x14292967U,
+            0x27B70A85U, 0x2E1B2138U, 0x4D2C6DFCU, 0x53380D13U,
+            0x650A7354U, 0x766A0ABBU, 0x81C2C92EU, 0x92722C85U,
+            0xA2BFE8A1U, 0xA81A664BU, 0xC24B8B70U, 0xC76C51A3U,
+            0xD192E819U, 0xD6990624U, 0xF40E3585U, 0x106AA070U,
+            0x19A4C116U, 0x1E376C08U, 0x2748774CU, 0x34B0BCB5U,
+            0x391C0CB3U, 0x4ED8AA4AU, 0x5B9CCA4FU, 0x682E6FF3U,
+            0x748F82EEU, 0x78A5636FU, 0x84C87814U, 0x8CC70208U,
+            0x90BEFFFAU, 0xA4506CEBU, 0xBEF9A3F7U, 0xC67178F2U
         };
 
         constexpr std::size_t digestIntCount = 8; // number of 32bit integers per SHA256 digest
@@ -43,7 +43,7 @@ namespace sha256
         constexpr std::uint32_t rotateRight(const std::uint32_t value,
                                             const std::uint32_t bits) noexcept
         {
-            return (value >> bits) | ((value & 0xFFFFFFFF) << (32 - bits));
+            return (value >> bits) | ((value & 0xFFFFFFFFU) << (32 - bits));
         }
 
         inline void transform(const Block& block,
@@ -108,14 +108,14 @@ namespace sha256
                                                    const Iterator end) noexcept
     {
         State state = {
-            0x6A09E667,
-            0xBB67AE85,
-            0x3C6EF372,
-            0xA54FF53A,
-            0x510E527F,
-            0x9B05688C,
-            0x1F83D9AB,
-            0x5BE0CD19
+            0x6A09E667U,
+            0xBB67AE85U,
+            0x3C6EF372U,
+            0xA54FF53AU,
+            0x510E527FU,
+            0x9B05688CU,
+            0x1F83D9ABU,
+            0x5BE0CD19U
         };
 
         Block block;
