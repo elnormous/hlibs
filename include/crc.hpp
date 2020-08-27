@@ -160,7 +160,7 @@ namespace crc
     constexpr T generate(const Iterator i, const Iterator end,
                          const T init = getInit<T>()) noexcept
     {
-        return ((i != end) ? generate<T, T(0)>(i + 1, end, (init >> 8) ^ getEntry<T>(static_cast<std::uint8_t>(init ^ *i))) : init) ^ xorOut;
+        return ((i != end) ? generate<T, T(0)>(i + 1, end, (static_cast<std::uint32_t>(init) >> 8) ^ getEntry<T>(static_cast<std::uint8_t>(init ^ *i))) : init) ^ xorOut;
     }
 
     template <class T, class Data>
