@@ -188,6 +188,19 @@ namespace
 
             if (b2 != testCase.first)
                 throw TestError("Invalid decoded base64");
+
+            bool gotException = false;
+            try
+            {
+                base64::decode("@");
+            }
+            catch (const base64::ParseError&)
+            {
+                gotException = true;
+            }
+
+            if (!gotException)
+                throw TestError("Expected an exception");
         }
     }
 
