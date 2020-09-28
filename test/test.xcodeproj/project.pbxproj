@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		303E87A825223DDF008B7E24 /* tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 303E87A725223DDF008B7E24 /* tests.cpp */; };
 		C6C90FD721A5A24D00B5FCB7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6C90FD621A5A24D00B5FCB7 /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +24,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		303E87A725223DDF008B7E24 /* tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tests.cpp; sourceTree = "<group>"; };
 		30E08685232B183700F90FAF /* sha1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sha1.hpp; sourceTree = "<group>"; };
 		30E08686232B183700F90FAF /* utf8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utf8.hpp; sourceTree = "<group>"; };
 		30E08687232B183700F90FAF /* uuid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = uuid.hpp; sourceTree = "<group>"; };
@@ -70,6 +72,7 @@
 				30E08684232B168C00F90FAF /* include */,
 				C6C90FD621A5A24D00B5FCB7 /* main.cpp */,
 				C6C90FD421A5A24D00B5FCB7 /* Products */,
+				303E87A725223DDF008B7E24 /* tests.cpp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -138,6 +141,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C6C90FD721A5A24D00B5FCB7 /* main.cpp in Sources */,
+				303E87A825223DDF008B7E24 /* tests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -211,7 +215,6 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../include;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -282,7 +285,6 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = ../include;
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -293,6 +295,10 @@
 		C6C90FDB21A5A24D00B5FCB7 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					../external/Catch2/single_include,
+					../include,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -300,6 +306,10 @@
 		C6C90FDC21A5A24D00B5FCB7 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				HEADER_SEARCH_PATHS = (
+					../external/Catch2/single_include,
+					../include,
+				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
