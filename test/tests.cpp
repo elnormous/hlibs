@@ -44,55 +44,64 @@ TEST_CASE("AES", "[aes]")
         0x18, 0x19, 0x1A, 0x1B, 0x1C, 0x1D, 0x1E, 0x1F
     };
 
-    const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesEcb[] = {
-        {}, {},
-        {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, {0xF2, 0x90, 0x0, 0xB6, 0x2A, 0x49, 0x9F, 0xD0, 0xA9, 0xF3, 0x9A, 0x6A, 0xDD, 0x2E, 0x77, 0x80}},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x14, 0x8C, 0x38, 0x74, 0x56, 0xF9, 0x88, 0xAE, 0x89, 0xE6, 0x36, 0x48, 0xC2, 0xC1, 0xD2, 0x3B}},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0xA, 0x47, 0x3A, 0xA5, 0xAC, 0x90, 0x6E, 0xA, 0xB4, 0x4E, 0xB8, 0xEE, 0x32, 0x53, 0x18, 0xA2, 0xC2, 0x51, 0x96, 0xD2, 0x7C, 0xA7, 0x9D, 0xB7, 0x73, 0xA1, 0x9, 0x94, 0x7D, 0x7A, 0x4F, 0x45}}
-    };
-
-    for (const auto& testCase : testCasesEcb)
-    {
-        const auto e = aes::encryptEcb<256>(testCase.first, key);
-        REQUIRE(e == testCase.second);
-
-        const auto d = aes::decryptEcb<256>(e, key);
-        REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
-    }
-
     constexpr std::uint8_t initVector[] = {
         0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,0xFF,
         0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
     };
 
-    const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesCbc[] = {
-        {{}, {}},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x9A, 0x10, 0x85, 0x12, 0x4D, 0x37, 0xA9, 0xF6, 0xDB, 0xA6, 0x2E, 0x5E, 0x97, 0x79, 0x41, 0x90}},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0x1, 0x3, 0x3E, 0xC1, 0xC3, 0x49, 0x9F, 0x87, 0x78, 0xE3, 0x8F, 0xB0, 0xC8, 0x46, 0xB2, 0x18, 0xDA, 0x47, 0xEB, 0xE9, 0xDF, 0x12, 0x95, 0x5, 0xEE, 0x87, 0x18, 0x81, 0xD3, 0xF4, 0xFF, 0xEA}}
-    };
-
-    for (const auto& testCase : testCasesCbc)
+    SECTION("ECB")
     {
-        const auto e = aes::encryptCbc<256>(testCase.first, key, initVector);
-        REQUIRE(e == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesEcb[] = {
+            {}, {},
+            {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, {0xF2, 0x90, 0x0, 0xB6, 0x2A, 0x49, 0x9F, 0xD0, 0xA9, 0xF3, 0x9A, 0x6A, 0xDD, 0x2E, 0x77, 0x80}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x14, 0x8C, 0x38, 0x74, 0x56, 0xF9, 0x88, 0xAE, 0x89, 0xE6, 0x36, 0x48, 0xC2, 0xC1, 0xD2, 0x3B}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0xA, 0x47, 0x3A, 0xA5, 0xAC, 0x90, 0x6E, 0xA, 0xB4, 0x4E, 0xB8, 0xEE, 0x32, 0x53, 0x18, 0xA2, 0xC2, 0x51, 0x96, 0xD2, 0x7C, 0xA7, 0x9D, 0xB7, 0x73, 0xA1, 0x9, 0x94, 0x7D, 0x7A, 0x4F, 0x45}}
+        };
 
-        const auto d = aes::decryptCbc<256>(e, key, initVector);
-        REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
+        for (const auto& testCase : testCasesEcb)
+        {
+            const auto e = aes::encryptEcb<256>(testCase.first, key);
+            REQUIRE(e == testCase.second);
+
+            const auto d = aes::decryptEcb<256>(e, key);
+            REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
+        }
     }
 
-    const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesCfb[] = {
-        {{}, {}},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x53, 0x87, 0x11, 0x7B, 0x5D, 0x8F, 0x57, 0xEE}},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x62, 0xB5, 0x22, 0x4F, 0x68, 0xB9, 0x60, 0xD6, 0xD0, 0x7C, 0xB4, 0x4B, 0xF5, 0xD5, 0xD5, 0xF3, 0x7D, 0x0B, 0xFC, 0xB3, 0xCB, 0xF3, 0x49, 0x94}}
-    };
-
-    for (const auto& testCase : testCasesCfb)
+    SECTION("CBC")
     {
-        const auto e = aes::encryptCfb<256>(testCase.first, key, initVector);
-        REQUIRE(e == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesCbc[] = {
+            {{}, {}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x9A, 0x10, 0x85, 0x12, 0x4D, 0x37, 0xA9, 0xF6, 0xDB, 0xA6, 0x2E, 0x5E, 0x97, 0x79, 0x41, 0x90}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0x1, 0x3, 0x3E, 0xC1, 0xC3, 0x49, 0x9F, 0x87, 0x78, 0xE3, 0x8F, 0xB0, 0xC8, 0x46, 0xB2, 0x18, 0xDA, 0x47, 0xEB, 0xE9, 0xDF, 0x12, 0x95, 0x5, 0xEE, 0x87, 0x18, 0x81, 0xD3, 0xF4, 0xFF, 0xEA}}
+        };
 
-        const auto d = aes::decryptCfb<256>(e, key, initVector);
-        REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
+        for (const auto& testCase : testCasesCbc)
+        {
+            const auto e = aes::encryptCbc<256>(testCase.first, key, initVector);
+            REQUIRE(e == testCase.second);
+
+            const auto d = aes::decryptCbc<256>(e, key, initVector);
+            REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
+        }
+    }
+
+    SECTION("CFB")
+    {
+        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesCfb[] = {
+            {{}, {}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x53, 0x87, 0x11, 0x7B, 0x5D, 0x8F, 0x57, 0xEE}},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x62, 0xB5, 0x22, 0x4F, 0x68, 0xB9, 0x60, 0xD6, 0xD0, 0x7C, 0xB4, 0x4B, 0xF5, 0xD5, 0xD5, 0xF3, 0x7D, 0x0B, 0xFC, 0xB3, 0xCB, 0xF3, 0x49, 0x94}}
+        };
+
+        for (const auto& testCase : testCasesCfb)
+        {
+            const auto e = aes::encryptCfb<256>(testCase.first, key, initVector);
+            REQUIRE(e == testCase.second);
+
+            const auto d = aes::decryptCfb<256>(e, key, initVector);
+            REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
+        }
     }
 }
 
@@ -106,16 +115,28 @@ TEST_CASE("Base64", "[base64]")
         {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "VGVzdCAxMiE="}
     };
 
-    for (const auto& testCase : testCases)
+    SECTION("Encoding")
     {
-        const auto b = base64::encode(testCase.first);
-        REQUIRE(b == testCase.second);
-
-        const auto b2 = base64::decode(b);
-        REQUIRE(b2 == testCase.first);
+        for (const auto& testCase : testCases)
+        {
+            const auto b = base64::encode(testCase.first);
+            REQUIRE(b == testCase.second);
+        }
     }
 
-    REQUIRE_THROWS_AS(base64::decode("@"), base64::ParseError);
+    SECTION("Decoding")
+    {
+        for (const auto& testCase : testCases)
+        {
+            const auto b = base64::decode(testCase.second);
+            REQUIRE(b == testCase.first);
+        }
+    }
+
+    SECTION("Error")
+    {
+        REQUIRE_THROWS_AS(base64::decode("@"), base64::ParseError);
+    }
 }
 
 TEST_CASE("CRC8", "[crc8]")
@@ -302,23 +323,32 @@ TEST_CASE("SHA256", "[sha256]")
 
 TEST_CASE("UTF8", "[utf8]")
 {
-    const std::pair<std::string, std::vector<char32_t>> testCases[] = {
+    const std::pair<std::vector<char32_t>, std::string> testCases[] = {
         {{}, {}},
-        {"\u0001", {0x01}},
-        {utf8::fromUtf32(std::vector<char32_t>{0x61, 0xC3, 0x2020, 0x10102}), {0x61, 0xC3, 0x2020, 0x10102}}
+        {{0x01}, "\u0001"},
+        {{0x61, 0xC3, 0x2020, 0x10102}, utf8::fromUtf32(std::vector<char32_t>{0x61, 0xC3, 0x2020, 0x10102})}
     };
 
-    for (const auto& testCase : testCases)
+    SECTION("Encoding")
     {
-        const auto utf32String = utf8::toUtf32(testCase.first);
+        for (const auto& testCase : testCases)
+        {
+            const auto utf8String = utf8::fromUtf32(testCase.first);
+            REQUIRE(utf8String == testCase.second);
+        }
+    }
 
-        REQUIRE(utf32String.length() == testCase.second.size());
+    SECTION("Decoding")
+    {
+        for (const auto& testCase : testCases)
+        {
+            const auto utf32String = utf8::toUtf32(testCase.second);
 
-        for (std::size_t i = 0; i < testCase.second.size(); ++i)
-            REQUIRE(utf32String[i] == testCase.second[i]);
+            REQUIRE(utf32String.length() == testCase.first.size());
 
-        const auto utf8String = utf8::fromUtf32(utf32String);
-        REQUIRE(utf8String == testCase.first);
+            for (std::size_t i = 0; i < testCase.first.size(); ++i)
+                REQUIRE(utf32String[i] == testCase.first[i]);
+        }
     }
 }
 
