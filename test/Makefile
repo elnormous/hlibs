@@ -1,5 +1,5 @@
 debug=0
-CXXFLAGS=-c -std=c++14 -Wall -O2 -I../external/Catch2/single_include -I../include
+CXXFLAGS=-c -std=c++17 -Wall -O2 -I../external/Catch2/single_include -I../include
 LDFLAGS=-O2
 SOURCES=main.cpp tests.cpp
 BASE_NAMES=$(basename $(SOURCES))

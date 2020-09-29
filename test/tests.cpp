@@ -12,13 +12,6 @@
 #include "utf8.hpp"
 #include "uuid.hpp"
 
-class TestError final: public std::logic_error
-{
-public:
-    explicit TestError(const std::string& str): std::logic_error(str) {}
-    explicit TestError(const char* str): std::logic_error(str) {}
-};
-
 template <class T>
 std::string toString(const T& v)
 {
