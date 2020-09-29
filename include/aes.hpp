@@ -173,10 +173,10 @@ namespace aes
             {
                 if (i < getKeyWordCount(keyLength))
                 {
-                    roundKeys[i / 4][i % 4].bytes[0] = key[i * 4 + 0];
-                    roundKeys[i / 4][i % 4].bytes[1] = key[i * 4 + 1];
-                    roundKeys[i / 4][i % 4].bytes[2] = key[i * 4 + 2];
-                    roundKeys[i / 4][i % 4].bytes[3] = key[i * 4 + 3];
+                    roundKeys[i / 4][i % 4].bytes[0] = static_cast<std::uint8_t>(key[i * 4 + 0]);
+                    roundKeys[i / 4][i % 4].bytes[1] = static_cast<std::uint8_t>(key[i * 4 + 1]);
+                    roundKeys[i / 4][i % 4].bytes[2] = static_cast<std::uint8_t>(key[i * 4 + 2]);
+                    roundKeys[i / 4][i % 4].bytes[3] = static_cast<std::uint8_t>(key[i * 4 + 3]);
                 }
                 else
                 {
@@ -387,7 +387,7 @@ namespace aes
 
                 Block& block = result[byte / blockByteCount];
                 Word& word = block.words[(byte / wordByteCount) % blockWordCount];
-                word.bytes[byte % wordByteCount] = *i;
+                word.bytes[byte % wordByteCount] = static_cast<std::uint8_t>(*i);
                 ++byte;
             }
 
@@ -541,7 +541,7 @@ namespace aes
         auto initVectorIterator = std::begin(initVector);
         for (auto& w : encryptedBlock.words)
             for (auto& b : w.bytes)
-                b = *initVectorIterator++;
+                b = static_cast<std::uint8_t>(*initVectorIterator++);
 
         auto resultIterator = result.begin();
 

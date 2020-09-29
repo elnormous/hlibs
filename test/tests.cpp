@@ -45,7 +45,7 @@ TEST_CASE("AES", "[aes]")
     };
 
     constexpr std::uint8_t initVector[] = {
-        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,0xFF,
+        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
         0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
     };
 
@@ -102,6 +102,28 @@ TEST_CASE("AES", "[aes]")
             const auto d = aes::decryptCfb<256>(e, key, initVector);
             REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
         }
+    }
+
+    SECTION("Byte")
+    {
+        constexpr std::byte keyByte[] = {
+            std::byte(0x00), std::byte(0x01), std::byte(0x02), std::byte(0x03), std::byte(0x04), std::byte(0x05), std::byte(0x06), std::byte(0x07),
+            std::byte(0x08), std::byte(0x09), std::byte(0x0A), std::byte(0x0B), std::byte(0x0C), std::byte(0x0D), std::byte(0x0E), std::byte(0x0F),
+            std::byte(0x10), std::byte(0x11), std::byte(0x12), std::byte(0x13), std::byte(0x14), std::byte(0x15), std::byte(0x16), std::byte(0x17),
+            std::byte(0x18), std::byte(0x19), std::byte(0x1A), std::byte(0x1B), std::byte(0x1C), std::byte(0x1D), std::byte(0x1E), std::byte(0x1F)
+        };
+
+        constexpr std::byte initVectorByte[] = {
+            std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF),
+            std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF)
+        };
+
+        const std::pair<std::vector<std::byte>, std::vector<std::uint8_t>> testCasesByte = {
+            {}, {}
+        };
+
+        const auto e = aes::encryptCfb<256>(testCasesByte.first, keyByte, initVectorByte);
+        REQUIRE(e == testCasesByte.second);
     }
 }
 
