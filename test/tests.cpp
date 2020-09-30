@@ -237,20 +237,33 @@ TEST_CASE("CRC16", "[crc16]")
 
 TEST_CASE("CRC32", "[crc32]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
-        {{}, 0x00000000U},
-        {{'0'}, 0xF4DBDF21U},
-        {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x963FBB8EU},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0xc8a61cc1}
-    };
-
-    for (const auto& testCase : testCases)
+    SECTION("Check")
     {
-        const auto c32 = crc::generate<std::uint32_t>(testCase.first);
-        REQUIRE(c32 == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
+            {{}, 0x00000000U},
+            {{'0'}, 0xF4DBDF21U},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x963FBB8EU},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0xc8a61cc1}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto c = crc::generate<std::uint32_t>(testCase.first);
+            REQUIRE(c == testCase.second);
+        }
+    }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::uint32_t> testCase = {
+            {}, 0x00000000U
+        };
+
+        const auto c = crc::generate<std::uint32_t>(testCase.first);
+        REQUIRE(c == testCase.second);
     }
 }
 
@@ -268,8 +281,8 @@ TEST_CASE("FNV1 32", "[fnv132]")
 
     for (const auto& testCase : testCases)
     {
-        const auto f32 = fnv1::hash<std::uint32_t>(testCase.first);
-        REQUIRE(f32 == testCase.second);
+        const auto h = fnv1::hash<std::uint32_t>(testCase.first);
+        REQUIRE(h == testCase.second);
     }
 }
 
@@ -287,8 +300,8 @@ TEST_CASE("FNV1 64", "[fnv164]")
 
     for (const auto& testCase : testCases)
     {
-        const auto f64 = fnv1::hash<std::uint64_t>(testCase.first);
-        REQUIRE(f64 == testCase.second);
+        const auto h = fnv1::hash<std::uint64_t>(testCase.first);
+        REQUIRE(h == testCase.second);
     }
 }
 
