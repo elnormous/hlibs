@@ -173,39 +173,65 @@ TEST_CASE("Base64", "[base64]")
 
 TEST_CASE("CRC8", "[crc8]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::uint8_t> testCases[] = {
-        {{}, 0x00},
-        {{'0'}, 0x90},
-        {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x35},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x20}
-    };
-
-    for (const auto& testCase : testCases)
+    SECTION("Check")
     {
-        const auto c8 = crc::generate<std::uint8_t>(testCase.first);
-        REQUIRE(c8 == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::uint8_t> testCases[] = {
+            {{}, 0x00},
+            {{'0'}, 0x90},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x35},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x20}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto c = crc::generate<std::uint8_t>(testCase.first);
+            REQUIRE(c == testCase.second);
+        }
+    }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::uint8_t> testCase = {
+            {}, 0x00
+        };
+
+        const auto c = crc::generate<std::uint8_t>(testCase.first);
+        REQUIRE(c == testCase.second);
     }
 }
 
 TEST_CASE("CRC16", "[crc16]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::uint16_t> testCases[] = {
-        {{}, 0x00},
-        {{'0'}, 0x3183},
-        {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x681A},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x6B56}
-    };
-
-    for (const auto& testCase : testCases)
+    SECTION("Check")
     {
-        const auto c16 = crc::generate<std::uint16_t>(testCase.first);
-        REQUIRE(c16 == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::uint16_t> testCases[] = {
+            {{}, 0x00},
+            {{'0'}, 0x3183},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x681A},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x6B56}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto c = crc::generate<std::uint16_t>(testCase.first);
+            REQUIRE(c == testCase.second);
+        }
+    }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::uint16_t> testCase = {
+            {}, 0x00
+        };
+
+        const auto c = crc::generate<std::uint16_t>(testCase.first);
+        REQUIRE(c == testCase.second);
     }
 }
 
