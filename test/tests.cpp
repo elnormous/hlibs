@@ -159,6 +159,16 @@ TEST_CASE("Base64", "[base64]")
     {
         REQUIRE_THROWS_AS(base64::decode("@"), base64::ParseError);
     }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::string> testCaseByte = {
+            {}, ""
+        };
+
+        const auto b = base64::encode(testCaseByte.first);
+        REQUIRE(b == testCaseByte.second);
+    }
 }
 
 TEST_CASE("CRC8", "[crc8]")

@@ -36,7 +36,7 @@ namespace base64
 
         for (Iterator i = begin; i != end; ++i)
         {
-            charArray[c++] = *i;
+            charArray[c++] = static_cast<std::uint8_t>(*i);
             if (c == 3)
             {
                 result += chars[static_cast<std::uint8_t>((charArray[0] & 0xFC) >> 2)];
