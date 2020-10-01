@@ -12,29 +12,6 @@
 #include "utf8.hpp"
 #include "uuid.hpp"
 
-template <class T>
-std::string toString(const T& v)
-{
-    constexpr char digits[] = "0123456789abcdef";
-
-    std::string result;
-    for (const auto b : v)
-    {
-        result += digits[(b >> 4) & 0x0F];
-        result += digits[b & 0x0F];
-    }
-
-    return result;
-}
-
-constexpr std::uint8_t hexToInt(const char hex)
-{
-    return (hex >= '0' && hex <= '9') ? static_cast<std::uint8_t>(hex - '0') :
-        (hex >= 'a' && hex <='f') ? static_cast<std::uint8_t>(hex - 'a' + 10) :
-        (hex >= 'A' && hex <='F') ? static_cast<std::uint8_t>(hex - 'A' + 10) :
-        throw std::out_of_range("Invalid hex digit");
-}
-
 TEST_CASE("AES", "[aes]")
 {
     constexpr std::uint8_t key[] = {
@@ -331,6 +308,24 @@ TEST_CASE("FNV1 64", "[fnv164]")
     }
 }
 
+namespace
+{
+    template <class T>
+    std::string toString(const T& v)
+    {
+        constexpr char digits[] = "0123456789abcdef";
+
+        std::string result;
+        for (const auto b : v)
+        {
+            result += digits[(b >> 4) & 0x0F];
+            result += digits[b & 0x0F];
+        }
+
+        return result;
+    }
+}
+
 TEST_CASE("MD5", "[md5]")
 {
     SECTION("Hash")
@@ -356,10 +351,21 @@ TEST_CASE("MD5", "[md5]")
 
         for (const auto& testCase : testCases)
         {
-            const auto d = md5::generate(testCase.first);
-            const auto str = toString(d);
+            const auto h = md5::generate(testCase.first);
+            const auto str = toString(h);
             REQUIRE(str == testCase.second);
         }
+    }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::string> testCase = {
+            {}, "d41d8cd98f00b204e9800998ecf8427e"
+        };
+
+        const auto h = md5::generate(testCase.first);
+        const auto str = toString(h);
+        REQUIRE(str == testCase.second);
     }
 }
 
@@ -455,6 +461,17 @@ TEST_CASE("UTF8", "[utf8]")
             for (std::size_t i = 0; i < testCase.first.size(); ++i)
                 REQUIRE(utf32String[i] == testCase.first[i]);
         }
+    }
+}
+
+namespace
+{
+    constexpr std::uint8_t hexToInt(const char hex)
+    {
+        return (hex >= '0' && hex <= '9') ? static_cast<std::uint8_t>(hex - '0') :
+            (hex >= 'a' && hex <='f') ? static_cast<std::uint8_t>(hex - 'a' + 10) :
+            (hex >= 'A' && hex <='F') ? static_cast<std::uint8_t>(hex - 'A' + 10) :
+            throw std::out_of_range("Invalid hex digit");
     }
 }
 
