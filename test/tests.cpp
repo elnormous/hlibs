@@ -246,7 +246,7 @@ TEST_CASE("CRC32", "[crc32]")
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x963FBB8EU},
-            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0xc8a61cc1}
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0xC8A61CC1}
         };
 
         for (const auto& testCase : testCases)
@@ -272,13 +272,13 @@ TEST_CASE("FNV1 32", "[fnv132]")
     SECTION("Hash")
     {
         const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
-            {{}, 0x811c9dc5},
-            {{'0'}, 0x050c5d2f},
+            {{}, 0x811C9DC5},
+            {{'0'}, 0x050C5D2F},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x84f03a25},
-            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x296a37b7}
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x84F03A25},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x296A37B7}
         };
 
         for (const auto& testCase : testCases)
@@ -287,6 +287,16 @@ TEST_CASE("FNV1 32", "[fnv132]")
             REQUIRE(h == testCase.second);
         }
     }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::uint32_t> testCase = {
+            {}, 0x811C9DC5
+        };
+
+        const auto h = fnv1::hash<std::uint32_t>(testCase.first);
+        REQUIRE(h == testCase.second);
+    }
 }
 
 TEST_CASE("FNV1 64", "[fnv164]")
@@ -294,13 +304,13 @@ TEST_CASE("FNV1 64", "[fnv164]")
     SECTION("Hash")
     {
         const std::pair<std::vector<std::uint8_t>, std::uint64_t> testCases[] = {
-            {{}, 0xcbf29ce484222325},
-            {{'0'}, 0xaf63bd4c8601b7ef},
+            {{}, 0xCBF29CE484222325},
+            {{'0'}, 0xAF63BD4C8601B7EF},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
               '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0xe30d93b97b04fe05},
-            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x98645a51cb3becf7}
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0xE30D93B97B04FE05},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x98645A51CB3BECF7}
         };
 
         for (const auto& testCase : testCases)
@@ -308,6 +318,16 @@ TEST_CASE("FNV1 64", "[fnv164]")
             const auto h = fnv1::hash<std::uint64_t>(testCase.first);
             REQUIRE(h == testCase.second);
         }
+    }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::uint64_t> testCase = {
+            {}, 0xCBF29CE484222325
+        };
+
+        const auto h = fnv1::hash<std::uint64_t>(testCase.first);
+        REQUIRE(h == testCase.second);
     }
 }
 

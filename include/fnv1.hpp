@@ -25,7 +25,7 @@ namespace fnv1
     constexpr Result hash(const Iterator i, const Iterator end,
                           const Result result = offsetBasis<Result>()) noexcept
     {
-        return (i != end) ? hash(i + 1, end, (result * prime<Result>()) ^ *i) : result;
+        return (i != end) ? hash(i + 1, end, (result * prime<Result>()) ^ static_cast<std::uint8_t>(*i)) : result;
     }
 
     template <typename Result, typename T>
