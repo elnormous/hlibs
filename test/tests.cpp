@@ -351,7 +351,7 @@ TEST_CASE("MD5", "[md5]")
 
         for (const auto& testCase : testCases)
         {
-            const auto h = md5::generate(testCase.first);
+            const auto h = md5::hash(testCase.first);
             const auto str = toString(h);
             REQUIRE(str == testCase.second);
         }
@@ -363,7 +363,7 @@ TEST_CASE("MD5", "[md5]")
             {}, "d41d8cd98f00b204e9800998ecf8427e"
         };
 
-        const auto h = md5::generate(testCase.first);
+        const auto h = md5::hash(testCase.first);
         const auto str = toString(h);
         REQUIRE(str == testCase.second);
     }

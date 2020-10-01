@@ -203,8 +203,8 @@ namespace md5
     }
 
     template <class Iterator>
-    std::array<std::uint8_t, digestByteCount> generate(const Iterator begin,
-                                                       const Iterator end) noexcept
+    std::array<std::uint8_t, digestByteCount> hash(const Iterator begin,
+                                                   const Iterator end) noexcept
     {
         State state = {
             0x67452301U,
@@ -262,9 +262,9 @@ namespace md5
     }
 
     template <class T>
-    std::array<std::uint8_t, digestByteCount> generate(const T& v) noexcept
+    std::array<std::uint8_t, digestByteCount> hash(const T& v) noexcept
     {
-        return generate(std::begin(v), std::end(v));
+        return hash(std::begin(v), std::end(v));
     }
 }
 
