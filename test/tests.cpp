@@ -269,126 +269,141 @@ TEST_CASE("CRC32", "[crc32]")
 
 TEST_CASE("FNV1 32", "[fnv132]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
-        {{}, 0x811c9dc5},
-        {{'0'}, 0x050c5d2f},
-        {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x84f03a25},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x296a37b7}
-    };
-
-    for (const auto& testCase : testCases)
+    SECTION("Hash")
     {
-        const auto h = fnv1::hash<std::uint32_t>(testCase.first);
-        REQUIRE(h == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
+            {{}, 0x811c9dc5},
+            {{'0'}, 0x050c5d2f},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0x84f03a25},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x296a37b7}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto h = fnv1::hash<std::uint32_t>(testCase.first);
+            REQUIRE(h == testCase.second);
+        }
     }
 }
 
 TEST_CASE("FNV1 64", "[fnv164]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::uint64_t> testCases[] = {
-        {{}, 0xcbf29ce484222325},
-        {{'0'}, 0xaf63bd4c8601b7ef},
-        {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0xe30d93b97b04fe05},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x98645a51cb3becf7}
-    };
-
-    for (const auto& testCase : testCases)
+    SECTION("Hash")
     {
-        const auto h = fnv1::hash<std::uint64_t>(testCase.first);
-        REQUIRE(h == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::uint64_t> testCases[] = {
+            {{}, 0xcbf29ce484222325},
+            {{'0'}, 0xaf63bd4c8601b7ef},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, 0xe30d93b97b04fe05},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, 0x98645a51cb3becf7}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto h = fnv1::hash<std::uint64_t>(testCase.first);
+            REQUIRE(h == testCase.second);
+        }
     }
 }
 
 TEST_CASE("MD5", "[md5]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
-        {{}, "d41d8cd98f00b204e9800998ecf8427e"},
-        {{'0'}, "cfcd208495d565ef66e7dff9f98764da"},
-        {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, "b373e3ddc3438d7c10c76f3ad9d4c401"},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "9575b2604f8fd72edb743e95bd88b36d"},
-        {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
-        }, "aabd2b2a451504e119a243d8e775fdad"}
-    };
-
-    for (const auto& testCase : testCases)
+    SECTION("Hash")
     {
-        const auto d = md5::generate(testCase.first);
-        const auto str = toString(d);
-        REQUIRE(str == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
+            {{}, "d41d8cd98f00b204e9800998ecf8427e"},
+            {{'0'}, "cfcd208495d565ef66e7dff9f98764da"},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, "b373e3ddc3438d7c10c76f3ad9d4c401"},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "9575b2604f8fd72edb743e95bd88b36d"},
+            {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+            }, "aabd2b2a451504e119a243d8e775fdad"}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto d = md5::generate(testCase.first);
+            const auto str = toString(d);
+            REQUIRE(str == testCase.second);
+        }
     }
 }
 
 TEST_CASE("SHA1", "[sha1]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
-        {{}, "da39a3ee5e6b4b0d3255bfef95601890afd80709"},
-        {{'0'}, "b6589fc6ab0dc82cf12099d1c2d40ab994e8410c"},
-        {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, "9514e18b679622b8d59991a6298559cb03099d64"},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "ca593e38a74c94d97c9e0ead291340ae6a824060"},
-        {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
-        }, "ffc6261e487efa8c7442069f71acfc4aa826993d"}
-    };
-
-    for (const auto& testCase : testCases)
+    SECTION("Hash")
     {
-        const auto h = sha1::hash(testCase.first);
-        const auto str = toString(h);
-        REQUIRE(str == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
+            {{}, "da39a3ee5e6b4b0d3255bfef95601890afd80709"},
+            {{'0'}, "b6589fc6ab0dc82cf12099d1c2d40ab994e8410c"},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, "9514e18b679622b8d59991a6298559cb03099d64"},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "ca593e38a74c94d97c9e0ead291340ae6a824060"},
+            {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+            }, "ffc6261e487efa8c7442069f71acfc4aa826993d"}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto h = sha1::hash(testCase.first);
+            const auto str = toString(h);
+            REQUIRE(str == testCase.second);
+        }
     }
 }
 
 TEST_CASE("SHA256", "[sha256]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
-        {{}, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
-        {{'0'}, "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"},
-        {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
-          '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, "9692e67b8378a6f6753f97782d458aa757e947eab2fbdf6b5c187b74561eb78f"},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "2d8f37e9c67a0bab28d6cfc4c5d92055c5c69bb131948e198fc62c85d9016008"},
-        {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
-          0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
-        }, "8667e718294e9e0df1d30600ba3eeb201f764aad2dad72748643e4a285e1d1f7"}
-    };
-
-    for (const auto& testCase : testCases)
+    SECTION("Hash")
     {
-        const auto h = sha256::hash(testCase.first);
-        const auto str = toString(h);
-        REQUIRE(str == testCase.second);
+        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
+            {{}, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
+            {{'0'}, "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"},
+            {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
+              '0', '0', '0', '0', '0', '0', '0', '0', '0', '0'}, "9692e67b8378a6f6753f97782d458aa757e947eab2fbdf6b5c187b74561eb78f"},
+            {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "2d8f37e9c67a0bab28d6cfc4c5d92055c5c69bb131948e198fc62c85d9016008"},
+            {{0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+              0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF
+            }, "8667e718294e9e0df1d30600ba3eeb201f764aad2dad72748643e4a285e1d1f7"}
+        };
+
+        for (const auto& testCase : testCases)
+        {
+            const auto h = sha256::hash(testCase.first);
+            const auto str = toString(h);
+            REQUIRE(str == testCase.second);
+        }
     }
 }
 
