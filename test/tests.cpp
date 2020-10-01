@@ -399,6 +399,17 @@ TEST_CASE("SHA1", "[sha1]")
             REQUIRE(str == testCase.second);
         }
     }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::string> testCase = {
+            {}, "da39a3ee5e6b4b0d3255bfef95601890afd80709"
+        };
+
+        const auto h = sha1::hash(testCase.first);
+        const auto str = toString(h);
+        REQUIRE(str == testCase.second);
+    }
 }
 
 TEST_CASE("SHA256", "[sha256]")
@@ -430,6 +441,17 @@ TEST_CASE("SHA256", "[sha256]")
             const auto str = toString(h);
             REQUIRE(str == testCase.second);
         }
+    }
+
+    SECTION("Byte")
+    {
+        const std::pair<std::vector<std::byte>, std::string> testCase = {
+            {}, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        };
+
+        const auto h = sha256::hash(testCase.first);
+        const auto str = toString(h);
+        REQUIRE(str == testCase.second);
     }
 }
 

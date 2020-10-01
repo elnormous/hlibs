@@ -105,7 +105,7 @@ namespace sha1
         std::uint32_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {
-            block[dataSize % blockByteCount] = *i;
+            block[dataSize % blockByteCount] = static_cast<std::uint8_t>(*i);
             if (++dataSize % blockByteCount == 0)
                 transform(block, state);
         }
