@@ -14,7 +14,7 @@ namespace sha256
 {
     inline namespace detail
     {
-        constexpr std::uint32_t k[64] = {
+        constexpr std::array<std::uint32_t, 64> k = {
             0x428A2F98U, 0x71374491U, 0xB5C0FBCFU, 0xE9B5DBA5U,
             0x3956C25BU, 0x59F111F1U, 0x923F82A4U, 0xAB1C5ED5U,
             0xD807AA98U, 0x12835B01U, 0x243185BEU, 0x550C7DC3U,

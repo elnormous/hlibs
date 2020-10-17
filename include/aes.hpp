@@ -5,6 +5,7 @@
 #ifndef AES_HPP
 #define AES_HPP
 
+#include <array>
 #include <cstddef>
 #include <vector>
 
@@ -13,7 +14,7 @@ namespace aes
     inline namespace detail
     {
         // substitution-box 16x16 matrix
-        constexpr std::uint8_t sbox[256] = {
+        constexpr std::array<std::uint8_t, 256> sbox = {
             0X63, 0X7C, 0X77, 0X7B, 0XF2, 0X6B, 0X6F, 0XC5,
             0X30, 0X01, 0X67, 0X2B, 0XFE, 0XD7, 0XAB, 0X76,
             0XCA, 0X82, 0XC9, 0X7D, 0XFA, 0X59, 0X47, 0XF0,
@@ -49,7 +50,7 @@ namespace aes
         };
 
         // inverse substitution-box 16x16 matrix
-        constexpr std::uint8_t inverseSbox[256] = {
+        constexpr std::array<std::uint8_t, 256> inverseSbox = {
             0X52, 0X09, 0X6A, 0XD5, 0X30, 0X36, 0XA5, 0X38,
             0XBF, 0X40, 0XA3, 0X9E, 0X81, 0XF3, 0XD7, 0XFB,
             0X7C, 0XE3, 0X39, 0X82, 0X9B, 0X2F, 0XFF, 0X87,
