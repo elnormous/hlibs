@@ -18,5 +18,5 @@ before_script:
 script:
   - build-wrapper-linux-x86-64 --out-dir bw-output make -C test
   - test/test
-  - gcov test/main.cpp test/tests.cpp
+  - (cd test && gcov main.cpp tests.cpp)
   - sonar-scanner
