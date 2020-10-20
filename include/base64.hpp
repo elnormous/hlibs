@@ -5,6 +5,7 @@
 #ifndef BASE64_HPP
 #define BASE64_HPP
 
+#include <array>
 #include <cstdint>
 #include <stdexcept>
 #include <string>
@@ -22,7 +23,7 @@ namespace base64
     template <class Iterator>
     std::string encode(const Iterator begin, const Iterator end)
     {
-        constexpr char chars[] = {
+        constexpr std::array<char, 64> chars = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
@@ -32,7 +33,7 @@ namespace base64
 
         std::string result;
         std::size_t c = 0;
-        std::uint8_t charArray[3];
+        std::array<std::uint8_t, 3> charArray;
 
         for (Iterator i = begin; i != end; ++i)
         {
