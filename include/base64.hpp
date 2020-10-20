@@ -76,12 +76,12 @@ namespace base64
     std::vector<std::uint8_t> decode(const Iterator begin, const Iterator end)
     {
         std::uint32_t c = 0;
-        std::uint8_t charArray[4];
+        std::array<std::uint8_t, 4> charArray;
         std::vector<std::uint8_t> result;
 
         for (Iterator i = begin; i != end && *i != '='; ++i)
         {
-            auto b = static_cast<std::uint8_t>(*i);
+            const auto b = static_cast<std::uint8_t>(*i);
 
             charArray[c++] = (b >= 'A' && b <= 'Z') ? b - 'A' :
                 (b >= 'a' && b <= 'z') ? 26 + (b - 'a') :
