@@ -108,8 +108,8 @@ namespace md5
         constexpr std::size_t digestByteCount = digestIntCount * 4;
         constexpr std::size_t blockIntCount = 16; // number of 32bit integers per MD5 block
         constexpr std::size_t blockByteCount = blockIntCount * 4;
-        using Block = std::uint8_t[blockByteCount];
-        using State = std::uint32_t[digestIntCount];
+        using Block = std::array<std::uint8_t, blockByteCount>;
+        using State = std::array<std::uint32_t, digestIntCount>;
 
         inline void transform(const Block& block,
                               State& state) noexcept
@@ -234,7 +234,7 @@ namespace md5
             block[n++] = 0x80;
             while (n < blockByteCount) block[n++] = 0x00;
             transform(block, state);
-            std::fill(block, block + blockByteCount - 8, 0);
+            std::fill(block.begin(), block.begin() + blockByteCount - 8, 0);
         }
 
         // append the size in bits

@@ -37,8 +37,8 @@ namespace sha256
         constexpr std::size_t digestByteCount = digestIntCount * 4;
         constexpr std::size_t blockIntCount = 16; // number of 32bit integers per SHA256 block
         constexpr std::size_t blockByteCount = blockIntCount * 4;
-        using Block = std::uint8_t[blockByteCount];
-        using State = std::uint32_t[digestIntCount];
+        using Block = std::array<std::uint8_t, blockByteCount>;
+        using State = std::array<std::uint32_t, digestIntCount>;
 
         constexpr std::uint32_t rotateRight(const std::uint32_t value,
                                             const std::uint32_t bits) noexcept
@@ -139,7 +139,7 @@ namespace sha256
             block[n++] = 0x80;
             while (n < blockByteCount) block[n++] = 0x00;
             transform(block, state);
-            std::fill(block, block + blockByteCount - 8, 0);
+            std::fill(block.begin(), block.begin() + blockByteCount - 8, 0);
         }
 
         // append the size in bits
