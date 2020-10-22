@@ -111,18 +111,17 @@ namespace sha1
         }
 
         // pad data left in the buffer
-        std::uint32_t n = dataSize % blockByteCount;
+        const std::uint32_t n = dataSize % blockByteCount;
+        block[n] = 0x80;
         if (n < blockByteCount - 8)
         {
-            block[n++] = 0x80;
-            while (n < blockByteCount - 8) block[n++] = 0x00;
+            std::fill(block.begin() + n + 1, block.end() - 8, 0);
         }
         else
         {
-            block[n++] = 0x80;
-            while (n < blockByteCount) block[n++] = 0x00;
+            std::fill(block.begin() + n + 1, block.end(), 0);
             transform(block, state);
-            std::fill(block.begin(), block.begin() + blockByteCount - 8, 0);
+            std::fill(block.begin(), block.end() - 8, 0);
         }
 
         // append the size in bits
