@@ -114,7 +114,7 @@ namespace md5
         inline void transform(const Block& block,
                               State& state) noexcept
         {
-            std::uint32_t w[16];
+            std::array<std::uint32_t, 16> w;
 
             for (std::uint32_t i = 0; i < 16; ++i)
                 w[i] = static_cast<std::uint32_t>(block[i * 4]) |

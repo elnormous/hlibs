@@ -49,7 +49,7 @@ namespace sha256
         inline void transform(const Block& block,
                               State& state) noexcept
         {
-            std::uint32_t w[64];
+            std::array<std::uint32_t, 64> w;
             for (std::uint32_t i = 0; i < 16; ++i)
                 w[i] = (static_cast<std::uint32_t>(block[i * 4]) << 24) |
                     (static_cast<std::uint32_t>(block[i * 4 + 1]) << 16) |
