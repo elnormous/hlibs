@@ -155,7 +155,7 @@ namespace sha256
 
         std::array<std::uint8_t, digestByteCount> result;
         // reverse all the bytes to big endian
-        for (std::uint32_t i = 0; i < digestIntCount; i++)
+        for (std::uint32_t i = 0; i < digestIntCount; ++i)
         {
             result[i * 4 + 0] = static_cast<std::uint8_t>(state[i] >> 24);
             result[i * 4 + 1] = static_cast<std::uint8_t>(state[i] >> 16);

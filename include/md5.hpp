@@ -44,66 +44,6 @@ namespace md5
             return (value << bits) | ((value & 0xFFFFFFFFU) >> (32 - bits));
         }
 
-        constexpr std::uint32_t f(const std::uint32_t x,
-                                  const std::uint32_t y,
-                                  const std::uint32_t z) noexcept
-        {
-            return (x & y) | (~x & z);
-        }
-
-        constexpr std::uint32_t g(const std::uint32_t x,
-                                  const std::uint32_t y,
-                                  const std::uint32_t z) noexcept
-        {
-            return (x & z) | (y & ~z);
-        }
-
-        constexpr std::uint32_t h(const std::uint32_t x,
-                                  const std::uint32_t y,
-                                  const std::uint32_t z) noexcept
-        {
-            return x ^ y ^ z;
-        }
-
-        constexpr std::uint32_t i(const std::uint32_t x,
-                                  const std::uint32_t y,
-                                  const std::uint32_t z) noexcept
-        {
-            return y ^ (x | ~z);
-        }
-
-        constexpr std::uint32_t ff(const std::uint32_t a, const std::uint32_t b,
-                                   const std::uint32_t c, const std::uint32_t d,
-                                   const std::uint32_t x, const std::uint32_t sh,
-                                   const std::uint32_t ac) noexcept
-        {
-            return rotateLeft(a + f(b, c, d) + x + ac, sh) + b;
-        }
-
-        constexpr std::uint32_t gg(const std::uint32_t a, const std::uint32_t b,
-                                   const std::uint32_t c, const std::uint32_t d,
-                                   const std::uint32_t x, const std::uint32_t sh,
-                                   const std::uint32_t ac) noexcept
-        {
-            return rotateLeft(a + g(b, c, d) + x + ac, sh) + b;
-        }
-
-        constexpr std::uint32_t hh(const std::uint32_t a, const std::uint32_t b,
-                                   const std::uint32_t c, const std::uint32_t d,
-                                   const std::uint32_t x, const std::uint32_t sh,
-                                   const std::uint32_t ac) noexcept
-        {
-            return rotateLeft(a + h(b, c, d) + x + ac, sh) + b;
-        }
-
-        constexpr std::uint32_t ii(const std::uint32_t a, const std::uint32_t b,
-                                   const std::uint32_t c, const std::uint32_t d,
-                                   const std::uint32_t x, const std::uint32_t sh,
-                                   const std::uint32_t ac) noexcept
-        {
-            return rotateLeft(a + i(b, c, d) + x + ac, sh) + b;
-        }
-
         constexpr std::size_t digestIntCount = 4; // number of 32bit integers per MD5 digest
         constexpr std::size_t digestByteCount = digestIntCount * 4;
         constexpr std::size_t blockIntCount = 16; // number of 32bit integers per MD5 block
@@ -127,73 +67,38 @@ namespace md5
             std::uint32_t c = state[2];
             std::uint32_t d = state[3];
 
-            a = ff(a, b, c, d, w[0], s[0], k[0]);
-            d = ff(d, a, b, c, w[1], s[1], k[1]);
-            c = ff(c, d, a, b, w[2], s[2], k[2]);
-            b = ff(b, c, d, a, w[3], s[3], k[3]);
-            a = ff(a, b, c, d, w[4], s[0], k[4]);
-            d = ff(d, a, b, c, w[5], s[1], k[5]);
-            c = ff(c, d, a, b, w[6], s[2], k[6]);
-            b = ff(b, c, d, a, w[7], s[3], k[7]);
-            a = ff(a, b, c, d, w[8], s[0], k[8]);
-            d = ff(d, a, b, c, w[9], s[1], k[9]);
-            c = ff(c, d, a, b, w[10], s[2], k[10]);
-            b = ff(b, c, d, a, w[11], s[3], k[11]);
-            a = ff(a, b, c, d, w[12], s[0], k[12]);
-            d = ff(d, a, b, c, w[13], s[1], k[13]);
-            c = ff(c, d, a, b, w[14], s[2], k[14]);
-            b = ff(b, c, d, a, w[15], s[3], k[15]);
+            for (std::uint32_t i = 0; i < 64; ++i)
+            {
+                std::uint32_t f = 0;
+                std::uint32_t g = 0;
 
-            a = gg(a, b, c, d, w[1], s[4], k[16]);
-            d = gg(d, a, b, c, w[6], s[5], k[17]);
-            c = gg(c, d, a, b, w[11], s[6], k[18]);
-            b = gg(b, c, d, a, w[0], s[7], k[19]);
-            a = gg(a, b, c, d, w[5], s[4], k[20]);
-            d = gg(d, a, b, c, w[10], s[5],  k[21]);
-            c = gg(c, d, a, b, w[15], s[6], k[22]);
-            b = gg(b, c, d, a, w[4], s[7], k[23]);
-            a = gg(a, b, c, d, w[9], s[4], k[24]);
-            d = gg(d, a, b, c, w[14], s[5], k[25]);
-            c = gg(c, d, a, b, w[3], s[6], k[26]);
-            b = gg(b, c, d, a, w[8], s[7], k[27]);
-            a = gg(a, b, c, d, w[13], s[4], k[28]);
-            d = gg(d, a, b, c, w[2], s[5], k[29]);
-            c = gg(c, d, a, b, w[7], s[6], k[30]);
-            b = gg(b, c, d, a, w[12], s[7], k[31]);
+                if (i < 16)
+                {
+                    f = (b & c) | (~b & d);
+                    g = i;
+                }
+                else if (i < 32)
+                {
+                    f = (d & b) | (~d & c);
+                    g = (5 * i + 1) % 16;
+                }
+                else if (i < 48)
+                {
+                    f = b ^ c ^ d;
+                    g = (3 * i + 5) % 16;
+                }
+                else if (i < 64)
+                {
+                    f = c ^ (b | ~d);
+                    g = (7 * i) % 16;
+                }
 
-            a = hh(a, b, c, d, w[5], s[8], k[32]);
-            d = hh(d, a, b, c, w[8], s[9], k[33]);
-            c = hh(c, d, a, b, w[11], s[10], k[34]);
-            b = hh(b, c, d, a, w[14], s[11], k[35]);
-            a = hh(a, b, c, d, w[1], s[8], k[36]);
-            d = hh(d, a, b, c, w[4], s[9], k[37]);
-            c = hh(c, d, a, b, w[7], s[10], k[38]);
-            b = hh(b, c, d, a, w[10], s[11], k[39]);
-            a = hh(a, b, c, d, w[13], s[8], k[40]);
-            d = hh(d, a, b, c, w[0], s[9], k[41]);
-            c = hh(c, d, a, b, w[3], s[10], k[42]);
-            b = hh(b, c, d, a, w[6], s[11],  k[43]);
-            a = hh(a, b, c, d, w[9], s[8], k[44]);
-            d = hh(d, a, b, c, w[12], s[9], k[45]);
-            c = hh(c, d, a, b, w[15], s[10], k[46]);
-            b = hh(b, c, d, a, w[2], s[11], k[47]);
-
-            a = ii(a, b, c, d, w[0], s[12], k[48]);
-            d = ii(d, a, b, c, w[7], s[13], k[49]);
-            c = ii(c, d, a, b, w[14], s[14], k[50]);
-            b = ii(b, c, d, a, w[5], s[15], k[51]);
-            a = ii(a, b, c, d, w[12], s[12], k[52]);
-            d = ii(d, a, b, c, w[3], s[13], k[53]);
-            c = ii(c, d, a, b, w[10], s[14], k[54]);
-            b = ii(b, c, d, a, w[1], s[15], k[55]);
-            a = ii(a, b, c, d, w[8], s[12], k[56]);
-            d = ii(d, a, b, c, w[15], s[13], k[57]);
-            c = ii(c, d, a, b, w[6], s[14], k[58]);
-            b = ii(b, c, d, a, w[13], s[15], k[59]);
-            a = ii(a, b, c, d, w[4], s[12], k[60]);
-            d = ii(d, a, b, c, w[11], s[13], k[61]);
-            c = ii(c, d, a, b, w[2], s[14], k[62]);
-            b = ii(b, c, d, a, w[9], s[15], k[63]);
+                f = f + a + k[i] + w[g];
+                a = d;
+                d = c;
+                c = b;
+                b = b + rotateLeft(f, s[i / 16 * 4 + i % 4]);
+            }
 
             state[0] += a;
             state[1] += b;
@@ -249,7 +154,7 @@ namespace md5
         transform(block, state);
 
         std::array<std::uint8_t, digestByteCount> result;
-        for (std::uint32_t i = 0; i < digestIntCount; i++)
+        for (std::uint32_t i = 0; i < digestIntCount; ++i)
         {
             result[i * 4 + 0] = static_cast<std::uint8_t>(state[i]);
             result[i * 4 + 1] = static_cast<std::uint8_t>(state[i] >> 8);
