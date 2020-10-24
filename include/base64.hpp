@@ -119,6 +119,11 @@ namespace base64
     {
         return decode(std::begin(s), std::end(s));
     }
+
+    inline std::vector<std::uint8_t> decode(const char* s)
+    {
+        return decode(s, s + strlen(s));
+    }
 }
 
 #endif // BASE64_HPP

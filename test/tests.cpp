@@ -132,9 +132,15 @@ TEST_CASE("Base64", "[base64]")
         }
     }
 
-    SECTION("Error")
+    SECTION("Invalid Symbol Error")
     {
-        REQUIRE_THROWS_AS(base64::decode("@"), base64::ParseError);
+        std::string data = {'@'};
+        REQUIRE_THROWS_AS(base64::decode(data), base64::ParseError);
+    }
+
+    SECTION("Not Enough Data Error")
+    {
+        REQUIRE_THROWS_AS(base64::decode("M"), base64::ParseError);
     }
 
     SECTION("Byte")
