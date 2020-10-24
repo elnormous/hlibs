@@ -122,7 +122,9 @@ namespace base64
 
     inline std::vector<std::uint8_t> decode(const char* s)
     {
-        return decode(s, s + strlen(s));
+        auto end = s;
+        while (*end) ++end;
+        return decode(s, end);
     }
 }
 
