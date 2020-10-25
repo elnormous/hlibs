@@ -1,5 +1,5 @@
 debug=0
-CXXFLAGS=-c -std=c++17 -Wall -O2 -I../external/Catch2/single_include -I../include
+CXXFLAGS=-std=c++17 -Wall -O2 -I../external/Catch2/single_include -I../include
 LDFLAGS=-O2
 SOURCES=main.cpp tests.cpp
 BASE_NAMES=$(basename $(SOURCES))
@@ -18,7 +18,7 @@ $(EXECUTABLE): $(OBJECTS)
 -include $(DEPENDENCIES)
 
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -MMD -MP $< -o $@ -fprofile-arcs -ftest-coverage
+	$(CXX) -c $(CXXFLAGS) -MMD -MP $< -o $@ -fprofile-arcs -ftest-coverage
 
 .PHONY: clean
 clean:
