@@ -1,4 +1,4 @@
-debug=0
+DEBUG=0
 CXXFLAGS=-std=c++17 -Wall -O2 -I../external/Catch2/single_include -I../include
 LDFLAGS=-O2
 SOURCES=main.cpp tests.cpp
@@ -8,7 +8,7 @@ DEPENDENCIES=$(OBJECTS:.o=.d)
 EXECUTABLE=test
 
 all: $(EXECUTABLE)
-ifeq ($(debug),1)
+ifeq ($(DEBUG),1)
 all: CXXFLAGS+=-DDEBUG -g
 endif
 
