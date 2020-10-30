@@ -10,6 +10,9 @@ EXECUTABLE=test
 all: $(EXECUTABLE)
 ifeq ($(DEBUG),1)
 all: CXXFLAGS+=-DDEBUG -g
+else
+all: CXXFLAGS+=-O3
+all: LDFLAGS+=-O3
 endif
 
 $(EXECUTABLE): $(OBJECTS)
