@@ -23,7 +23,7 @@ namespace base64
     template <class Iterator>
     std::string encode(const Iterator begin, const Iterator end)
     {
-        constexpr std::array<char, 64> chars = {
+        constexpr std::array chars = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
             'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
