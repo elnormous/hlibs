@@ -529,6 +529,7 @@ TEST_CASE("UUID", "[uuid]")
     REQUIRE((a[8] & 0xC0U) == 0x80U);
 
     const auto s = uuid::generate<std::string>();
+    REQUIRE(s.length() == 36);
     REQUIRE(s[14] == '4');
     REQUIRE((hexToInt(s[19]) & 0x0CU) == 0x08U);
 }
