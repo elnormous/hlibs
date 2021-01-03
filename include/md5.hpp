@@ -5,8 +5,10 @@
 #ifndef MD5_HPP
 #define MD5_HPP
 
+#include <algorithm>
 #include <array>
 #include <cstdint>
+#include <cstdlib>
 
 namespace md5
 {
