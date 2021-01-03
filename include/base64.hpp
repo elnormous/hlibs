@@ -35,7 +35,7 @@ namespace base64
         std::size_t c = 0;
         std::array<std::uint8_t, 3> charArray;
 
-        for (Iterator i = begin; i != end; ++i)
+        for (auto i = begin; i != end; ++i)
         {
             charArray[c++] = static_cast<std::uint8_t>(*i);
             if (c == 3)
@@ -79,7 +79,7 @@ namespace base64
         std::array<std::uint8_t, 4> charArray;
         std::vector<std::uint8_t> result;
 
-        for (Iterator i = begin; i != end && *i != '='; ++i)
+        for (auto i = begin; i != end && *i != '='; ++i)
         {
             const auto b = static_cast<std::uint8_t>(*i);
 
