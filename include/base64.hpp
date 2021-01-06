@@ -21,7 +21,7 @@ namespace base64
     };
 
     template <class Iterator>
-    std::string encode(const Iterator begin, const Iterator end)
+    std::string encode(const Iterator begin, const Iterator end, const bool padding = true)
     {
         constexpr std::array chars = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -60,16 +60,16 @@ namespace base64
                 result += chars[static_cast<std::uint8_t>((charArray[1] & 0x0F) << 2)];
             }
 
-            while (++c < 4) result += '=';
+            if (padding) while (++c < 4) result += '=';
         }
 
         return result;
     }
 
     template <class T>
-    std::string encode(const T& v)
+    std::string encode(const T& v, const bool padding = true)
     {
-        return encode(std::begin(v), std::end(v));
+        return encode(std::begin(v), std::end(v), padding);
     }
 
     template <class Iterator>
@@ -128,7 +128,7 @@ namespace base64
     }
 
     template <class Iterator>
-    std::string urlEncode(const Iterator begin, const Iterator end)
+    std::string urlEncode(const Iterator begin, const Iterator end, const bool padding = true)
     {
         constexpr std::array chars = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -167,16 +167,16 @@ namespace base64
                 result += chars[static_cast<std::uint8_t>((charArray[1] & 0x0F) << 2)];
             }
 
-            while (++c < 4) result += '=';
+            if (padding) while (++c < 4) result += '=';
         }
 
         return result;
     }
 
     template <class T>
-    std::string urlEncode(const T& v)
+    std::string urlEncode(const T& v, const bool padding = true)
     {
-        return urlEncode(std::begin(v), std::end(v));
+        return urlEncode(std::begin(v), std::end(v), padding);
     }
 
     template <class Iterator>
