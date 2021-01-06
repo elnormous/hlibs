@@ -129,6 +129,8 @@ TEST_CASE("Base64", "[base64]")
         std::string result;
     } testCases[] = {
         {{}, true, ""},
+        {{0xF8}, false, "+A"},
+        {{0xFC}, false, "/A"},
         {{'0'}, false, "MA"},
         {{'0'}, true, "MA=="},
         {{'0', '0'}, false, "MDA"},
