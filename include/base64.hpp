@@ -126,9 +126,19 @@ namespace base64
         while (*end) ++end;
         return decode(s, end);
     }
+}
+
+namespace base64url
+{
+    class ParseError final: public std::logic_error
+    {
+    public:
+        explicit ParseError(const std::string& str): std::logic_error(str) {}
+        explicit ParseError(const char* str): std::logic_error(str) {}
+    };
 
     template <class Iterator>
-    std::string urlEncode(const Iterator begin, const Iterator end, const bool padding = true)
+    std::string encode(const Iterator begin, const Iterator end, const bool padding = true)
     {
         constexpr std::array chars = {
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -174,13 +184,13 @@ namespace base64
     }
 
     template <class T>
-    std::string urlEncode(const T& v, const bool padding = true)
+    std::string encode(const T& v, const bool padding = true)
     {
-        return urlEncode(std::begin(v), std::end(v), padding);
+        return encode(std::begin(v), std::end(v), padding);
     }
 
     template <class Iterator>
-    std::vector<std::uint8_t> urlDecode(const Iterator begin, const Iterator end)
+    std::vector<std::uint8_t> decode(const Iterator begin, const Iterator end)
     {
         std::uint32_t c = 0;
         std::array<std::uint8_t, 4> charArray;
@@ -222,16 +232,16 @@ namespace base64
     }
 
     template <class T>
-    std::vector<std::uint8_t> urlDecode(const T& s)
+    std::vector<std::uint8_t> decode(const T& s)
     {
-        return urlDecode(std::begin(s), std::end(s));
+        return decode(std::begin(s), std::end(s));
     }
 
-    inline std::vector<std::uint8_t> urlDecode(const char* s)
+    inline std::vector<std::uint8_t> decode(const char* s)
     {
         auto end = s;
         while (*end) ++end;
-        return urlDecode(s, end);
+        return decode(s, end);
     }
 }
 
