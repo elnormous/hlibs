@@ -28,8 +28,12 @@ TEST_CASE("AES", "[aes]")
 
     SECTION("ECB")
     {
-        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesEcb[] = {
-            {}, {},
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::vector<std::uint8_t> result;
+        } testCasesEcb[] = {
+            {{}, {}},
             {{0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}, {0xF2, 0x90, 0x0, 0xB6, 0x2A, 0x49, 0x9F, 0xD0, 0xA9, 0xF3, 0x9A, 0x6A, 0xDD, 0x2E, 0x77, 0x80}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x14, 0x8C, 0x38, 0x74, 0x56, 0xF9, 0x88, 0xAE, 0x89, 0xE6, 0x36, 0x48, 0xC2, 0xC1, 0xD2, 0x3B}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0xA, 0x47, 0x3A, 0xA5, 0xAC, 0x90, 0x6E, 0xA, 0xB4, 0x4E, 0xB8, 0xEE, 0x32, 0x53, 0x18, 0xA2, 0xC2, 0x51, 0x96, 0xD2, 0x7C, 0xA7, 0x9D, 0xB7, 0x73, 0xA1, 0x9, 0x94, 0x7D, 0x7A, 0x4F, 0x45}}
@@ -37,17 +41,21 @@ TEST_CASE("AES", "[aes]")
 
         for (const auto& testCase : testCasesEcb)
         {
-            const auto e = aes::encryptEcb<256>(testCase.first, key);
-            REQUIRE(e == testCase.second);
+            const auto e = aes::encryptEcb<256>(testCase.data, key);
+            REQUIRE(e == testCase.result);
 
             const auto d = aes::decryptEcb<256>(e, key);
-            REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
+            REQUIRE(std::equal(testCase.data.begin(), testCase.data.end(), d.begin()));
         }
     }
 
     SECTION("CBC")
     {
-        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesCbc[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::vector<std::uint8_t> result;
+        } testCasesCbc[] = {
             {{}, {}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0x9A, 0x10, 0x85, 0x12, 0x4D, 0x37, 0xA9, 0xF6, 0xDB, 0xA6, 0x2E, 0x5E, 0x97, 0x79, 0x41, 0x90}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0x1, 0x3, 0x3E, 0xC1, 0xC3, 0x49, 0x9F, 0x87, 0x78, 0xE3, 0x8F, 0xB0, 0xC8, 0x46, 0xB2, 0x18, 0xDA, 0x47, 0xEB, 0xE9, 0xDF, 0x12, 0x95, 0x5, 0xEE, 0x87, 0x18, 0x81, 0xD3, 0xF4, 0xFF, 0xEA}}
@@ -55,17 +63,21 @@ TEST_CASE("AES", "[aes]")
 
         for (const auto& testCase : testCasesCbc)
         {
-            const auto e = aes::encryptCbc<256>(testCase.first, key, initVector);
-            REQUIRE(e == testCase.second);
+            const auto e = aes::encryptCbc<256>(testCase.data, key, initVector);
+            REQUIRE(e == testCase.result);
 
             const auto d = aes::decryptCbc<256>(e, key, initVector);
-            REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
+            REQUIRE(std::equal(testCase.data.begin(), testCase.data.end(), d.begin()));
         }
     }
 
     SECTION("CFB")
     {
-        const std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> testCasesCfb[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::vector<std::uint8_t> result;
+        } testCasesCfb[] = {
             {{}, {}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x53, 0x87, 0x11, 0x7B, 0x5D, 0x8F, 0x57, 0xEE}},
             {{'T', 'e', 's', 't', ' ', '1', '2', '!', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.', '.'}, {0xBD, 0xFC, 0x97, 0x69, 0x6C, 0x96, 0x42, 0xFB, 0x62, 0xB5, 0x22, 0x4F, 0x68, 0xB9, 0x60, 0xD6, 0xD0, 0x7C, 0xB4, 0x4B, 0xF5, 0xD5, 0xD5, 0xF3, 0x7D, 0x0B, 0xFC, 0xB3, 0xCB, 0xF3, 0x49, 0x94}}
@@ -73,11 +85,11 @@ TEST_CASE("AES", "[aes]")
 
         for (const auto& testCase : testCasesCfb)
         {
-            const auto e = aes::encryptCfb<256>(testCase.first, key, initVector);
-            REQUIRE(e == testCase.second);
+            const auto e = aes::encryptCfb<256>(testCase.data, key, initVector);
+            REQUIRE(e == testCase.result);
 
             const auto d = aes::decryptCfb<256>(e, key, initVector);
-            REQUIRE(std::equal(testCase.first.begin(), testCase.first.end(), d.begin()));
+            REQUIRE(std::equal(testCase.data.begin(), testCase.data.end(), d.begin()));
         }
     }
 
@@ -95,31 +107,43 @@ TEST_CASE("AES", "[aes]")
             std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF), std::byte(0xFF)
         };
 
-        const std::pair<std::vector<std::byte>, std::vector<std::uint8_t>> testCasesByte = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::vector<std::uint8_t> result;
+        } testCasesByte = {
             {}, {}
         };
 
-        const auto e = aes::encryptCfb<256>(testCasesByte.first, keyByte, initVectorByte);
-        REQUIRE(e == testCasesByte.second);
+        const auto e = aes::encryptCfb<256>(testCasesByte.data, keyByte, initVectorByte);
+        REQUIRE(e == testCasesByte.result);
     }
 }
 
 TEST_CASE("Base64", "[base64]")
 {
-    const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
-        {{}, ""},
-        {{'0'}, "MA=="},
-        {{'0', '0'}, "MDA="},
-        {{'0', '0', '0'}, "MDAw"},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "VGVzdCAxMiE="}
+    const struct final
+    {
+        std::vector<std::uint8_t> data;
+        bool padding;
+        std::string result;
+    } testCases[] = {
+        {{}, true, ""},
+        {{'0'}, false, "MA"},
+        {{'0'}, true, "MA=="},
+        {{'0', '0'}, false, "MDA"},
+        {{'0', '0'}, true, "MDA="},
+        {{'0', '0', '0'}, true, "MDAw"},
+        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, false, "VGVzdCAxMiE"},
+        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, true, "VGVzdCAxMiE="}
     };
 
     SECTION("Encoding")
     {
         for (const auto& testCase : testCases)
         {
-            const auto b = base64::encode(testCase.first);
-            REQUIRE(b == testCase.second);
+            const auto b = base64::encode(testCase.data, testCase.padding);
+            REQUIRE(b == testCase.result);
         }
     }
 
@@ -127,8 +151,8 @@ TEST_CASE("Base64", "[base64]")
     {
         for (const auto& testCase : testCases)
         {
-            const auto b = base64::decode(testCase.second);
-            REQUIRE(b == testCase.first);
+            const auto b = base64::decode(testCase.result);
+            REQUIRE(b == testCase.data);
         }
     }
 
@@ -145,12 +169,16 @@ TEST_CASE("Base64", "[base64]")
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::string> testCaseByte = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::string result;
+        } testCaseByte = {
             {}, ""
         };
 
-        const auto b = base64::encode(testCaseByte.first);
-        REQUIRE(b == testCaseByte.second);
+        const auto b = base64::encode(testCaseByte.data);
+        REQUIRE(b == testCaseByte.result);
     }
 }
 
@@ -158,7 +186,11 @@ TEST_CASE("CRC8", "[crc8]")
 {
     SECTION("Check")
     {
-        const std::pair<std::vector<std::uint8_t>, std::uint8_t> testCases[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::uint8_t result;
+        } testCases[] = {
             {{}, 0x00},
             {{'0'}, 0x90},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -170,19 +202,23 @@ TEST_CASE("CRC8", "[crc8]")
 
         for (const auto& testCase : testCases)
         {
-            const auto c = crc::generate<std::uint8_t>(testCase.first);
-            REQUIRE(c == testCase.second);
+            const auto c = crc::generate<std::uint8_t>(testCase.data);
+            REQUIRE(c == testCase.result);
         }
     }
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::uint8_t> testCase = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::uint8_t result;
+        } testCase = {
             {}, 0x00
         };
 
-        const auto c = crc::generate<std::uint8_t>(testCase.first);
-        REQUIRE(c == testCase.second);
+        const auto c = crc::generate<std::uint8_t>(testCase.data);
+        REQUIRE(c == testCase.result);
     }
 }
 
@@ -190,7 +226,11 @@ TEST_CASE("CRC16", "[crc16]")
 {
     SECTION("Check")
     {
-        const std::pair<std::vector<std::uint8_t>, std::uint16_t> testCases[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::uint16_t result;
+        } testCases[] = {
             {{}, 0x00},
             {{'0'}, 0x3183},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -202,19 +242,23 @@ TEST_CASE("CRC16", "[crc16]")
 
         for (const auto& testCase : testCases)
         {
-            const auto c = crc::generate<std::uint16_t>(testCase.first);
-            REQUIRE(c == testCase.second);
+            const auto c = crc::generate<std::uint16_t>(testCase.data);
+            REQUIRE(c == testCase.result);
         }
     }
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::uint16_t> testCase = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::uint16_t result;
+        } testCase = {
             {}, 0x00
         };
 
-        const auto c = crc::generate<std::uint16_t>(testCase.first);
-        REQUIRE(c == testCase.second);
+        const auto c = crc::generate<std::uint16_t>(testCase.data);
+        REQUIRE(c == testCase.result);
     }
 }
 
@@ -222,7 +266,11 @@ TEST_CASE("CRC32", "[crc32]")
 {
     SECTION("Check")
     {
-        const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::uint32_t result;
+        } testCases[] = {
             {{}, 0x00000000U},
             {{'0'}, 0xF4DBDF21U},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -234,19 +282,23 @@ TEST_CASE("CRC32", "[crc32]")
 
         for (const auto& testCase : testCases)
         {
-            const auto c = crc::generate<std::uint32_t>(testCase.first);
-            REQUIRE(c == testCase.second);
+            const auto c = crc::generate<std::uint32_t>(testCase.data);
+            REQUIRE(c == testCase.result);
         }
     }
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::uint32_t> testCase = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::uint32_t result;
+        } testCase = {
             {}, 0x00000000U
         };
 
-        const auto c = crc::generate<std::uint32_t>(testCase.first);
-        REQUIRE(c == testCase.second);
+        const auto c = crc::generate<std::uint32_t>(testCase.data);
+        REQUIRE(c == testCase.result);
     }
 }
 
@@ -254,7 +306,11 @@ TEST_CASE("FNV1 32", "[fnv132]")
 {
     SECTION("Hash")
     {
-        const std::pair<std::vector<std::uint8_t>, std::uint32_t> testCases[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::uint32_t result;
+        } testCases[] = {
             {{}, 0x811C9DC5},
             {{'0'}, 0x050C5D2F},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -266,19 +322,23 @@ TEST_CASE("FNV1 32", "[fnv132]")
 
         for (const auto& testCase : testCases)
         {
-            const auto h = fnv1::hash<std::uint32_t>(testCase.first);
-            REQUIRE(h == testCase.second);
+            const auto h = fnv1::hash<std::uint32_t>(testCase.data);
+            REQUIRE(h == testCase.result);
         }
     }
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::uint32_t> testCase = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::uint32_t result;
+        } testCase = {
             {}, 0x811C9DC5
         };
 
-        const auto h = fnv1::hash<std::uint32_t>(testCase.first);
-        REQUIRE(h == testCase.second);
+        const auto h = fnv1::hash<std::uint32_t>(testCase.data);
+        REQUIRE(h == testCase.result);
     }
 }
 
@@ -286,7 +346,11 @@ TEST_CASE("FNV1 64", "[fnv164]")
 {
     SECTION("Hash")
     {
-        const std::pair<std::vector<std::uint8_t>, std::uint64_t> testCases[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            uint64_t result;
+        } testCases[] = {
             {{}, 0xCBF29CE484222325},
             {{'0'}, 0xAF63BD4C8601B7EF},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -298,19 +362,23 @@ TEST_CASE("FNV1 64", "[fnv164]")
 
         for (const auto& testCase : testCases)
         {
-            const auto h = fnv1::hash<std::uint64_t>(testCase.first);
-            REQUIRE(h == testCase.second);
+            const auto h = fnv1::hash<std::uint64_t>(testCase.data);
+            REQUIRE(h == testCase.result);
         }
     }
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::uint64_t> testCase = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            uint64_t result;
+        } testCase = {
             {}, 0xCBF29CE484222325
         };
 
-        const auto h = fnv1::hash<std::uint64_t>(testCase.first);
-        REQUIRE(h == testCase.second);
+        const auto h = fnv1::hash<std::uint64_t>(testCase.data);
+        REQUIRE(h == testCase.result);
     }
 }
 
@@ -336,7 +404,11 @@ TEST_CASE("MD5", "[md5]")
 {
     SECTION("Hash")
     {
-        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::string result;
+        } testCases[] = {
             {{}, "d41d8cd98f00b204e9800998ecf8427e"},
             {{'0'}, "cfcd208495d565ef66e7dff9f98764da"},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -363,21 +435,25 @@ TEST_CASE("MD5", "[md5]")
 
         for (const auto& testCase : testCases)
         {
-            const auto h = md5::hash(testCase.first);
+            const auto h = md5::hash(testCase.data);
             const auto str = toString(h);
-            REQUIRE(str == testCase.second);
+            REQUIRE(str == testCase.result);
         }
     }
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::string> testCase = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::string result;
+        } testCase = {
             {}, "d41d8cd98f00b204e9800998ecf8427e"
         };
 
-        const auto h = md5::hash(testCase.first);
+        const auto h = md5::hash(testCase.data);
         const auto str = toString(h);
-        REQUIRE(str == testCase.second);
+        REQUIRE(str == testCase.result);
     }
 }
 
@@ -385,7 +461,11 @@ TEST_CASE("SHA1", "[sha1]")
 {
     SECTION("Hash")
     {
-        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::string result;
+        } testCases[] = {
             {{}, "da39a3ee5e6b4b0d3255bfef95601890afd80709"},
             {{'0'}, "b6589fc6ab0dc82cf12099d1c2d40ab994e8410c"},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -412,21 +492,25 @@ TEST_CASE("SHA1", "[sha1]")
 
         for (const auto& testCase : testCases)
         {
-            const auto h = sha1::hash(testCase.first);
+            const auto h = sha1::hash(testCase.data);
             const auto str = toString(h);
-            REQUIRE(str == testCase.second);
+            REQUIRE(str == testCase.result);
         }
     }
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::string> testCase = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::string result;
+        } testCase = {
             {}, "da39a3ee5e6b4b0d3255bfef95601890afd80709"
         };
 
-        const auto h = sha1::hash(testCase.first);
+        const auto h = sha1::hash(testCase.data);
         const auto str = toString(h);
-        REQUIRE(str == testCase.second);
+        REQUIRE(str == testCase.result);
     }
 }
 
@@ -434,7 +518,11 @@ TEST_CASE("SHA256", "[sha256]")
 {
     SECTION("Hash")
     {
-        const std::pair<std::vector<std::uint8_t>, std::string> testCases[] = {
+        const struct final
+        {
+            std::vector<std::uint8_t> data;
+            std::string result;
+        } testCases[] = {
             {{}, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"},
             {{'0'}, "5feceb66ffc86f38d952786c6d696c79c2dbc239dd4e91b46729d73a27fb57e9"},
             {{'0', '0', '0', '0', '0', '0', '0', '0', '0', '0',
@@ -461,27 +549,35 @@ TEST_CASE("SHA256", "[sha256]")
 
         for (const auto& testCase : testCases)
         {
-            const auto h = sha256::hash(testCase.first);
+            const auto h = sha256::hash(testCase.data);
             const auto str = toString(h);
-            REQUIRE(str == testCase.second);
+            REQUIRE(str == testCase.result);
         }
     }
 
     SECTION("Byte")
     {
-        const std::pair<std::vector<std::byte>, std::string> testCase = {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::string result;
+        } testCase = {
             {}, "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
         };
 
-        const auto h = sha256::hash(testCase.first);
+        const auto h = sha256::hash(testCase.data);
         const auto str = toString(h);
-        REQUIRE(str == testCase.second);
+        REQUIRE(str == testCase.result);
     }
 }
 
 TEST_CASE("UTF8", "[utf8]")
 {
-    const std::pair<std::vector<char32_t>, std::string> testCases[] = {
+    const struct final
+    {
+        std::vector<char32_t> data;
+        std::string result;
+    } testCases[] = {
         {{}, {}},
         {{0x01}, "\u0001"},
         {{0x61, 0xC3, 0x2020, 0x10102}, utf8::fromUtf32(std::vector<char32_t>{0x61, 0xC3, 0x2020, 0x10102})}
@@ -491,8 +587,8 @@ TEST_CASE("UTF8", "[utf8]")
     {
         for (const auto& testCase : testCases)
         {
-            const auto utf8String = utf8::fromUtf32(testCase.first);
-            REQUIRE(utf8String == testCase.second);
+            const auto utf8String = utf8::fromUtf32(testCase.data);
+            REQUIRE(utf8String == testCase.result);
         }
     }
 
@@ -500,12 +596,12 @@ TEST_CASE("UTF8", "[utf8]")
     {
         for (const auto& testCase : testCases)
         {
-            const auto utf32String = utf8::toUtf32(testCase.second);
+            const auto utf32String = utf8::toUtf32(testCase.result);
 
-            REQUIRE(utf32String.length() == testCase.first.size());
+            REQUIRE(utf32String.length() == testCase.data.size());
 
-            for (std::size_t i = 0; i < testCase.first.size(); ++i)
-                REQUIRE(utf32String[i] == testCase.first[i]);
+            for (std::size_t i = 0; i < testCase.data.size(); ++i)
+                REQUIRE(utf32String[i] == testCase.data[i]);
         }
     }
 }
