@@ -184,6 +184,70 @@ TEST_CASE("Base64", "[base64]")
     }
 }
 
+TEST_CASE("Base64 URL", "[base64url]")
+{
+    const struct final
+    {
+        std::vector<std::uint8_t> data;
+        bool padding;
+        std::string result;
+    } testCases[] = {
+        {{}, true, ""},
+        {{0xF8}, false, "-A"},
+        {{0xFC}, false, "_A"},
+        {{'0'}, false, "MA"},
+        {{'0'}, true, "MA=="},
+        {{'0', '0'}, false, "MDA"},
+        {{'0', '0'}, true, "MDA="},
+        {{'0', '0', '0'}, true, "MDAw"},
+        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, false, "VGVzdCAxMiE"},
+        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, true, "VGVzdCAxMiE="}
+    };
+
+    SECTION("Encoding")
+    {
+        for (const auto& testCase : testCases)
+        {
+            const auto b = base64url::encode(testCase.data, testCase.padding);
+            REQUIRE(b == testCase.result);
+        }
+    }
+
+    SECTION("Decoding")
+    {
+        for (const auto& testCase : testCases)
+        {
+            const auto b = base64url::decode(testCase.result);
+            REQUIRE(b == testCase.data);
+        }
+    }
+
+    SECTION("Invalid Symbol Error")
+    {
+        std::string data = {'@'};
+        REQUIRE_THROWS_AS(base64url::decode(data), base64url::ParseError);
+    }
+
+    SECTION("Not Enough Data Error")
+    {
+        REQUIRE_THROWS_AS(base64url::decode("M"), base64url::ParseError);
+    }
+
+    SECTION("Byte")
+    {
+        const struct final
+        {
+            std::vector<std::byte> data;
+            std::string result;
+        } testCaseByte = {
+            {}, ""
+        };
+
+        const auto b = base64url::encode(testCaseByte.data);
+        REQUIRE(b == testCaseByte.result);
+    }
+}
+
 TEST_CASE("CRC8", "[crc8]")
 {
     SECTION("Check")
