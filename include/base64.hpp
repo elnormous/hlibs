@@ -20,17 +20,9 @@ namespace base64
         explicit ParseError(const char* str): std::logic_error(str) {}
     };
 
-    template <class Iterator>
+    template <class Chars, class Iterator>
     std::string encode(const Iterator begin, const Iterator end, const bool padding = true)
     {
-        constexpr std::array chars = {
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
-        };
-
         std::string result;
         std::size_t c = 0;
         std::array<std::uint8_t, 3> charArray;
@@ -40,30 +32,50 @@ namespace base64
             charArray[c++] = static_cast<std::uint8_t>(*i);
             if (c == 3)
             {
-                result += chars[static_cast<std::uint8_t>((charArray[0] & 0xFC) >> 2)];
-                result += chars[static_cast<std::uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
-                result += chars[static_cast<std::uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
-                result += chars[static_cast<std::uint8_t>(charArray[2] & 0x3f)];
+                result += Chars::chars[static_cast<std::uint8_t>((charArray[0] & 0xFC) >> 2)];
+                result += Chars::chars[static_cast<std::uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
+                result += Chars::chars[static_cast<std::uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
+                result += Chars::chars[static_cast<std::uint8_t>(charArray[2] & 0x3f)];
                 c = 0;
             }
         }
 
         if (c)
         {
-            result += chars[static_cast<std::uint8_t>((charArray[0] & 0xFC) >> 2)];
+            result += Chars::chars[static_cast<std::uint8_t>((charArray[0] & 0xFC) >> 2)];
 
             if (c == 1)
-                result += chars[static_cast<std::uint8_t>((charArray[0] & 0x03) << 4)];
+                result += Chars::chars[static_cast<std::uint8_t>((charArray[0] & 0x03) << 4)];
             else if (c == 2)
             {
-                result += chars[static_cast<std::uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
-                result += chars[static_cast<std::uint8_t>((charArray[1] & 0x0F) << 2)];
+                result += Chars::chars[static_cast<std::uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
+                result += Chars::chars[static_cast<std::uint8_t>((charArray[1] & 0x0F) << 2)];
             }
 
             if (padding) while (++c < 4) result += '=';
         }
 
         return result;
+    }
+
+    inline namespace detail
+    {
+        struct Chars final
+        {
+            static constexpr std::array chars = {
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
+            };
+        };
+    }
+
+    template <class Iterator>
+    std::string encode(const Iterator begin, const Iterator end, const bool padding = true)
+    {
+        return encode<Chars, Iterator>(begin, end, padding);
     }
 
     template <class T>
@@ -137,50 +149,24 @@ namespace base64url
         explicit ParseError(const char* str): std::logic_error(str) {}
     };
 
+    inline namespace detail
+    {
+        struct Chars final
+        {
+            static constexpr std::array chars = {
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
+                'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+                'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
+            };
+        };
+    }
+
     template <class Iterator>
     std::string encode(const Iterator begin, const Iterator end, const bool padding = true)
     {
-        constexpr std::array chars = {
-            'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
-            'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
-            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
-            'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
-            '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
-        };
-
-        std::string result;
-        std::size_t c = 0;
-        std::array<std::uint8_t, 3> charArray;
-
-        for (auto i = begin; i != end; ++i)
-        {
-            charArray[c++] = static_cast<std::uint8_t>(*i);
-            if (c == 3)
-            {
-                result += chars[static_cast<std::uint8_t>((charArray[0] & 0xFC) >> 2)];
-                result += chars[static_cast<std::uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
-                result += chars[static_cast<std::uint8_t>(((charArray[1] & 0x0F) << 2) + ((charArray[2] & 0xC0) >> 6))];
-                result += chars[static_cast<std::uint8_t>(charArray[2] & 0x3f)];
-                c = 0;
-            }
-        }
-
-        if (c)
-        {
-            result += chars[static_cast<std::uint8_t>((charArray[0] & 0xFC) >> 2)];
-
-            if (c == 1)
-                result += chars[static_cast<std::uint8_t>((charArray[0] & 0x03) << 4)];
-            else if (c == 2)
-            {
-                result += chars[static_cast<std::uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
-                result += chars[static_cast<std::uint8_t>((charArray[1] & 0x0F) << 2)];
-            }
-
-            if (padding) while (++c < 4) result += '=';
-        }
-
-        return result;
+        return base64::encode<Chars, Iterator>(begin, end, padding);
     }
 
     template <class T>
