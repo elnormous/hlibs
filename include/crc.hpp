@@ -13,8 +13,7 @@ namespace crc
     inline namespace detail
     {
         template <typename T> constexpr T getEntry(std::uint8_t i) noexcept;
-        template <typename T> constexpr T getInit() noexcept;
-        template <typename T> constexpr T getXorOut() noexcept;
+        template <typename T> struct Constants;
 
         constexpr std::array<std::uint8_t, 256> table8 = {
             0x00, 0x07, 0x0E, 0x09, 0x1C, 0x1B, 0x12, 0x15, 0x38, 0x3F, 0x36, 0x31,
@@ -46,15 +45,11 @@ namespace crc
             return table8[i];
         }
 
-        template <> constexpr std::uint8_t getInit() noexcept
+        template <> struct Constants<std::uint8_t>
         {
-            return 0x00;
-        }
-
-        template <> constexpr std::uint8_t getXorOut() noexcept
-        {
-            return 0x00;
-        }
+            static constexpr std::uint8_t init = 0x00U;
+            static constexpr std::uint8_t xorOut = 0x00U;
+        };
 
         constexpr std::array<std::uint16_t, 256> table16 = {
             0x0000, 0x1189, 0x2312, 0x329B, 0x4624, 0x57AD, 0x6536, 0x74BF,
@@ -96,15 +91,11 @@ namespace crc
             return table16[i];
         }
 
-        template <> constexpr std::uint16_t getInit() noexcept
+        template <> struct Constants<std::uint16_t>
         {
-            return 0x0000;
-        }
-
-        template <> constexpr std::uint16_t getXorOut() noexcept
-        {
-            return 0x0000;
-        }
+            static constexpr std::uint16_t init = 0x0000U;
+            static constexpr std::uint16_t xorOut = 0x0000U;
+        };
 
         constexpr std::array<std::uint32_t, 256> table32 = {
             0x00000000U, 0x77073096U, 0xEE0E612CU, 0x990951BAU, 0x076DC419U, 0x706AF48FU, 0xE963A535U, 0x9E6495A3U,
@@ -146,20 +137,16 @@ namespace crc
             return table32[i];
         }
 
-        template <> constexpr std::uint32_t getInit() noexcept
+        template <> struct Constants<std::uint32_t>
         {
-            return 0xFFFFFFFFU;
-        }
-
-        template <> constexpr std::uint32_t getXorOut() noexcept
-        {
-            return 0xFFFFFFFFU;
-        }
+            static constexpr std::uint32_t init = 0xFFFFFFFFU;
+            static constexpr std::uint32_t xorOut = 0xFFFFFFFFU;
+        };
     }
 
-    template <typename T, T xorOut = getXorOut<T>(), class Iterator>
+    template <typename T, T xorOut = Constants<T>::xorOut, class Iterator>
     constexpr T generate(const Iterator i, const Iterator end,
-                         const T init = getInit<T>()) noexcept
+                         const T init = Constants<T>::init) noexcept
     {
         return ((i != end) ? generate<T, T(0)>(i + 1, end, static_cast<T>(static_cast<std::uint32_t>(init) >> 8) ^ getEntry<T>(static_cast<std::uint8_t>(init ^ static_cast<std::uint8_t>(*i)))) : init) ^ xorOut;
     }
