@@ -125,7 +125,7 @@ namespace crc
         };
     }
 
-    template <typename T, T xorOut = Constants<T>::xorOut, class Iterator>
+    template <typename T, auto xorOut = Constants<T>::xorOut, class Iterator>
     constexpr T generate(const Iterator i, const Iterator end,
                          const T init = Constants<T>::init) noexcept
     {
