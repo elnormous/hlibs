@@ -184,7 +184,7 @@ TEST_CASE("Base64", "[base64]")
     }
 }
 
-TEST_CASE("Base64 URL", "[base64url]")
+TEST_CASE("Base64 URL", "[base64]")
 {
     const struct final
     {
@@ -248,7 +248,7 @@ TEST_CASE("Base64 URL", "[base64url]")
     }
 }
 
-TEST_CASE("CRC8", "[crc8]")
+TEST_CASE("CRC8", "[crc]")
 {
     SECTION("Check")
     {
@@ -288,7 +288,7 @@ TEST_CASE("CRC8", "[crc8]")
     }
 }
 
-TEST_CASE("CRC16", "[crc16]")
+TEST_CASE("CRC16", "[crc]")
 {
     SECTION("Check")
     {
@@ -328,7 +328,7 @@ TEST_CASE("CRC16", "[crc16]")
     }
 }
 
-TEST_CASE("CRC32", "[crc32]")
+TEST_CASE("CRC32", "[crc]")
 {
     SECTION("Check")
     {
@@ -368,7 +368,7 @@ TEST_CASE("CRC32", "[crc32]")
     }
 }
 
-TEST_CASE("FNV1 32", "[fnv132]")
+TEST_CASE("FNV1 32", "[fnv1]")
 {
     SECTION("Hash")
     {
@@ -408,7 +408,7 @@ TEST_CASE("FNV1 32", "[fnv132]")
     }
 }
 
-TEST_CASE("FNV1 64", "[fnv164]")
+TEST_CASE("FNV1 64", "[fnv1]")
 {
     SECTION("Hash")
     {
