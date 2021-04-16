@@ -21,6 +21,7 @@ namespace sha1
         using Block = std::array<std::uint8_t, blockByteCount>;
         using State = std::array<std::uint32_t, digestIntCount>;
 
+        [[nodiscard]]
         constexpr std::uint32_t rotateLeft(const std::uint32_t value,
                                            const std::uint32_t bits) noexcept
         {

@@ -86,13 +86,13 @@ namespace aes
         };
 
         // number of rounds (Nr)
-        constexpr std::size_t getRoundCount(std::size_t keyLength) noexcept
+        [[nodiscard]] constexpr std::size_t getRoundCount(std::size_t keyLength) noexcept
         {
             return keyLength / 32 + 6;
         }
 
         // number of 32-bit words in cipher key (Nk)
-        constexpr std::size_t getKeyWordCount(std::size_t keyLength) noexcept
+        [[nodiscard]] constexpr std::size_t getKeyWordCount(std::size_t keyLength) noexcept
         {
             return keyLength / 32;
         }
@@ -162,7 +162,7 @@ namespace aes
             return c;
         }
 
-        constexpr std::uint8_t getRoundConstant(std::size_t i) noexcept
+        [[nodiscard]] constexpr std::uint8_t getRoundConstant(std::size_t i) noexcept
         {
             return (i == 1) ? 0x01 : static_cast<std::uint8_t>(0x02 * getRoundConstant(i - 1)) ^ (getRoundConstant(i - 1) >= 0x80 ? 0x1B : 0x00);
         }

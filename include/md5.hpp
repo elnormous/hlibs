@@ -40,6 +40,7 @@ namespace md5
             0xF7537E82U, 0xBD3AF235U, 0x2AD7D2BBU, 0xEB86D391U
         };
 
+        [[nodiscard]]
         constexpr std::uint32_t rotateLeft(const std::uint32_t value,
                                            const std::uint32_t bits) noexcept
         {
