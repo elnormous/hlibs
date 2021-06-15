@@ -46,7 +46,7 @@ namespace base64
 
             if (c == 1)
                 result += Chars::chars[static_cast<std::uint8_t>((charArray[0] & 0x03) << 4)];
-            else if (c == 2)
+            else // c == 2
             {
                 result += Chars::chars[static_cast<std::uint8_t>(((charArray[0] & 0x03) << 4) + ((charArray[1] & 0xF0) >> 4))];
                 result += Chars::chars[static_cast<std::uint8_t>((charArray[1] & 0x0F) << 2)];
