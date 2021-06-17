@@ -68,7 +68,7 @@ namespace base64
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '/'
         };
 
-        return encode<Iterator>(begin, end, chars, padding);
+        return encode(begin, end, chars, padding);
     }
 
     template <class T>
@@ -163,7 +163,7 @@ namespace base64url
             '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '-', '_'
         };
 
-        return base64::encode<Iterator>(begin, end, chars, padding);
+        return base64::encode(begin, end, chars, padding);
     }
 
     template <class T>
