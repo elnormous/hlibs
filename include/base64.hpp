@@ -94,11 +94,22 @@ namespace base64
         {
             const auto b = static_cast<std::uint8_t>(*i);
 
-            charArray[c++] = (b >= 'A' && b <= 'Z') ? b - 'A' :
-                (b >= 'a' && b <= 'z') ? 26 + (b - 'a') :
-                (b >= '0' && b <= '9') ? 52 + (b - '0') :
-                (b == '+') ? 62 : (b == '/') ? 63 :
-                throw ParseError("Invalid Base64 digit");
+            auto hexToDecimal = [](std::uint8_t b) {
+                if (b >= 'A' && b <= 'Z')
+                    return static_cast<std::uint8_t>(b - 'A');
+                else if (b >= 'a' && b <= 'z')
+                    return static_cast<std::uint8_t>(26U + b - 'a');
+                else if (b >= '0' && b <= '9')
+                    return static_cast<std::uint8_t>(52U + b - '0');
+                else if (b == '+')
+                    return static_cast<std::uint8_t>(62U);
+                else if (b == '/')
+                    return static_cast<std::uint8_t>(63U);
+                else
+                    throw ParseError("Invalid Base64 digit");
+            };
+
+            charArray[c++] = hexToDecimal(b);
 
             if (c == 4)
             {
@@ -184,11 +195,22 @@ namespace base64url
         {
             const auto b = static_cast<std::uint8_t>(*i);
 
-            charArray[c++] = (b >= 'A' && b <= 'Z') ? b - 'A' :
-                (b >= 'a' && b <= 'z') ? 26 + (b - 'a') :
-                (b >= '0' && b <= '9') ? 52 + (b - '0') :
-                (b == '-') ? 62 : (b == '_') ? 63 :
-                throw ParseError("Invalid Base64 digit");
+            auto hexToDecimal = [](std::uint8_t b) {
+                if (b >= 'A' && b <= 'Z')
+                    return static_cast<std::uint8_t>(b - 'A');
+                else if (b >= 'a' && b <= 'z')
+                    return static_cast<std::uint8_t>(26U + b - 'a');
+                else if (b >= '0' && b <= '9')
+                    return static_cast<std::uint8_t>(52U + b - '0');
+                else if (b == '-')
+                    return static_cast<std::uint8_t>(62U);
+                else if (b == '_')
+                    return static_cast<std::uint8_t>(63U);
+                else
+                    throw ParseError("Invalid Base64 digit");
+            };
+
+            charArray[c++] = hexToDecimal(b);
 
             if (c == 4)
             {
