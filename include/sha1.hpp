@@ -93,7 +93,7 @@ namespace sha1
     std::array<std::uint8_t, digestByteCount> hash(const Iterator begin,
                                                    const Iterator end) noexcept
     {
-        State state = {
+        State state{
             0x67452301U,
             0xEFCDAB89U,
             0x98BADCFEU,

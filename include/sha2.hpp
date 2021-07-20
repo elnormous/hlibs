@@ -14,7 +14,7 @@ namespace sha256
 {
     inline namespace detail
     {
-        constexpr std::array<std::uint32_t, 64> k = {
+        constexpr std::array<std::uint32_t, 64> k{
             0x428A2F98U, 0x71374491U, 0xB5C0FBCFU, 0xE9B5DBA5U,
             0x3956C25BU, 0x59F111F1U, 0x923F82A4U, 0xAB1C5ED5U,
             0xD807AA98U, 0x12835B01U, 0x243185BEU, 0x550C7DC3U,
@@ -108,7 +108,7 @@ namespace sha256
     std::array<std::uint8_t, digestByteCount> hash(const Iterator begin,
                                                    const Iterator end) noexcept
     {
-        State state = {
+        State state{
             0x6A09E667U,
             0xBB67AE85U,
             0x3C6EF372U,
@@ -123,7 +123,7 @@ namespace sha256
         std::uint32_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {
-            block[dataSize % blockByteCount] =static_cast<std::uint8_t>(*i);
+            block[dataSize % blockByteCount] = static_cast<std::uint8_t>(*i);
             if (++dataSize % blockByteCount == 0)
                 transform(block, state);
         }

@@ -14,14 +14,14 @@ namespace md5
 {
     inline namespace detail
     {
-        constexpr std::array<std::uint8_t, 16> s = {
+        constexpr std::array<std::uint8_t, 16> s{
             7, 12, 17, 22,
             5, 9, 14, 20,
             4, 11, 16, 23,
             6, 10, 15, 21
         };
 
-        constexpr std::array<std::uint32_t, 64> k = {
+        constexpr std::array<std::uint32_t, 64> k{
             0xD76AA478U, 0xE8C7B756U, 0x242070DBU, 0xC1BDCEEEU,
             0xF57C0FAFU, 0x4787C62AU, 0xA8304613U, 0xFD469501U,
             0x698098D8U, 0x8B44F7AFU, 0xFFFF5BB1U, 0x895CD7BEU,
@@ -114,7 +114,7 @@ namespace md5
     std::array<std::uint8_t, digestByteCount> hash(const Iterator begin,
                                                    const Iterator end) noexcept
     {
-        State state = {
+        State state{
             0x67452301U,
             0xEFCDAB89U,
             0x98BADCFEU,

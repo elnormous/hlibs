@@ -14,7 +14,7 @@ namespace aes
     inline namespace detail
     {
         // substitution-box 16x16 matrix
-        constexpr std::array<std::uint8_t, 256> sbox = {
+        constexpr std::array<std::uint8_t, 256> sbox{
             0X63, 0X7C, 0X77, 0X7B, 0XF2, 0X6B, 0X6F, 0XC5,
             0X30, 0X01, 0X67, 0X2B, 0XFE, 0XD7, 0XAB, 0X76,
             0XCA, 0X82, 0XC9, 0X7D, 0XFA, 0X59, 0X47, 0XF0,
@@ -50,7 +50,7 @@ namespace aes
         };
 
         // inverse substitution-box 16x16 matrix
-        constexpr std::array<std::uint8_t, 256> inverseSbox = {
+        constexpr std::array<std::uint8_t, 256> inverseSbox{
             0X52, 0X09, 0X6A, 0XD5, 0X30, 0X36, 0XA5, 0X38,
             0XBF, 0X40, 0XA3, 0X9E, 0X81, 0XF3, 0XD7, 0XFB,
             0X7C, 0XE3, 0X39, 0X82, 0X9B, 0X2F, 0XFF, 0X87,
@@ -188,7 +188,7 @@ namespace aes
                     {
                         temp.rot();
                         temp.sub();
-                        Word rCon = {getRoundConstant(i / getKeyWordCount(keyLength)), 0, 0, 0};
+                        const Word rCon{getRoundConstant(i / getKeyWordCount(keyLength)), 0, 0, 0};
                         temp ^= rCon;
                     }
                     else if (getKeyWordCount(keyLength) > 6 && i % getKeyWordCount(keyLength) == 4)
@@ -264,14 +264,14 @@ namespace aes
             {
                 for (std::size_t j = 0; j < blockWordCount; ++j)
                 {
-                    const Word s = {
+                    const Word s{
                         words[0].bytes[j],
                         words[1].bytes[j],
                         words[2].bytes[j],
                         words[3].bytes[j]
                     };
 
-                    const Word s1 = {
+                    const Word s1{
                         static_cast<std::uint8_t>(mulBytes(0x02, s.bytes[0]) ^ mulBytes(0x03, s.bytes[1]) ^ s.bytes[2] ^ s.bytes[3]),
                         static_cast<std::uint8_t>(s.bytes[0] ^ mulBytes(0x02, s.bytes[1]) ^ mulBytes(0x03, s.bytes[2]) ^ s.bytes[3]),
                         static_cast<std::uint8_t>(s.bytes[0] ^ s.bytes[1] ^ mulBytes(0x02, s.bytes[2]) ^ mulBytes(0x03, s.bytes[3])),
@@ -287,18 +287,19 @@ namespace aes
             {
                 for (std::size_t j = 0; j < blockWordCount; ++j)
                 {
-                    const Word s = {
+                    const Word s{
                         words[0].bytes[j],
                         words[1].bytes[j],
                         words[2].bytes[j],
                         words[3].bytes[j]
                     };
 
-                    Word s1;
-                    s1.bytes[0] = mulBytes(0x0E, s.bytes[0]) ^ mulBytes(0x0B, s.bytes[1]) ^ mulBytes(0x0D, s.bytes[2]) ^ mulBytes(0x09, s.bytes[3]);
-                    s1.bytes[1] = mulBytes(0x09, s.bytes[0]) ^ mulBytes(0x0E, s.bytes[1]) ^ mulBytes(0x0B, s.bytes[2]) ^ mulBytes(0x0D, s.bytes[3]);
-                    s1.bytes[2] = mulBytes(0x0D, s.bytes[0]) ^ mulBytes(0x09, s.bytes[1]) ^ mulBytes(0x0E, s.bytes[2]) ^ mulBytes(0x0B, s.bytes[3]);
-                    s1.bytes[3] = mulBytes(0x0B, s.bytes[0]) ^ mulBytes(0x0D, s.bytes[1]) ^ mulBytes(0x09, s.bytes[2]) ^ mulBytes(0x0E, s.bytes[3]);
+                    const Word s1{
+                        static_cast<std::uint8_t>(mulBytes(0x0E, s.bytes[0]) ^ mulBytes(0x0B, s.bytes[1]) ^ mulBytes(0x0D, s.bytes[2]) ^ mulBytes(0x09, s.bytes[3])),
+                        static_cast<std::uint8_t>(mulBytes(0x09, s.bytes[0]) ^ mulBytes(0x0E, s.bytes[1]) ^ mulBytes(0x0B, s.bytes[2]) ^ mulBytes(0x0D, s.bytes[3])),
+                        static_cast<std::uint8_t>(mulBytes(0x0D, s.bytes[0]) ^ mulBytes(0x09, s.bytes[1]) ^ mulBytes(0x0E, s.bytes[2]) ^ mulBytes(0x0B, s.bytes[3])),
+                        static_cast<std::uint8_t>(mulBytes(0x0B, s.bytes[0]) ^ mulBytes(0x0D, s.bytes[1]) ^ mulBytes(0x09, s.bytes[2]) ^ mulBytes(0x0E, s.bytes[3]))
+                    };
 
                     for (std::size_t i = 0; i < wordByteCount; ++i)
                         words[i].bytes[j] = s1.bytes[i];
