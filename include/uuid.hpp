@@ -5,6 +5,7 @@
 #ifndef UUID_HPP
 #define UUID_HPP
 
+#include <array>
 #include <cstdint>
 #include <random>
 #include <string>
@@ -18,7 +19,7 @@ namespace uuid
         std::uint16_t timeHiAndVersion;
         std::uint8_t clockSeqHiAndReserved;
         std::uint8_t clockSeqLow;
-        std::uint8_t node[6];
+        std::array<std::uint8_t, 6> node;
     };
 
     inline Uuid generate()
