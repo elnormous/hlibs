@@ -25,7 +25,7 @@ namespace uuid
     inline Uuid generate()
     {
         static std::random_device rd;
-        static std::mt19937_64 mt(rd());
+        static std::mt19937_64 mt{rd()};
 
         const std::uint64_t randomTime = mt();
 
@@ -71,7 +71,7 @@ namespace uuid
     template <>
     std::array<std::uint8_t, 16> generate<std::array<std::uint8_t, 16>>()
     {
-        const Uuid uuid = generate();
+        const auto uuid = generate();
 
         return std::array<std::uint8_t, 16>{
             static_cast<std::uint8_t>(uuid.timeLow >> 24),
@@ -102,7 +102,7 @@ namespace uuid
     {
         constexpr char digits[] = "0123456789abcdef";
 
-        const Uuid uuid = generate();
+        const auto uuid = generate();
 
         return {
             digits[(uuid.timeLow >> 28) & 0x0FU],
