@@ -125,11 +125,12 @@ namespace crc
         };
     }
 
-    template <typename T, auto xorOut = Constants<T>::xorOut, class Iterator>
+    template <typename T, class Iterator>
     constexpr T generate(const Iterator i, const Iterator end,
-                         const T init = Constants<T>::init) noexcept
+                         const T init = Constants<T>::init,
+                         const T xorOut = Constants<T>::xorOut) noexcept
     {
-        return ((i != end) ? generate<T, T(0)>(i + 1, end, static_cast<T>(static_cast<std::uint32_t>(init) >> 8) ^ Constants<T>::table[(init ^ static_cast<std::uint8_t>(*i)) & 0xFFU]) : init) ^ xorOut;
+        return ((i != end) ? generate<T>(i + 1, end, static_cast<T>(static_cast<std::uint32_t>(init) >> 8) ^ Constants<T>::table[(init ^ static_cast<std::uint8_t>(*i)) & 0xFFU], T(0)) : init) ^ xorOut;
     }
 
     template <class T, class Data>
