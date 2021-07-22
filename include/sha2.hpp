@@ -120,7 +120,7 @@ namespace sha256
         };
 
         Block block;
-        std::uint32_t dataSize = 0;
+        std::size_t dataSize = 0;
         for (auto i = begin; i != end; ++i)
         {
             block[dataSize % blockByteCount] = static_cast<std::uint8_t>(*i);
@@ -129,7 +129,7 @@ namespace sha256
         }
 
         // pad data left in the buffer
-        const std::uint32_t n = dataSize % blockByteCount;
+        const std::size_t n = dataSize % blockByteCount;
         block[n] = 0x80;
         if (n < blockByteCount - 8)
         {

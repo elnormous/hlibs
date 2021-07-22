@@ -37,7 +37,7 @@ namespace uuid
         const auto timeMid = static_cast<std::uint16_t>(((randomTime >> 40) & 0x00FFU) |
                                                         ((randomTime >> 24) & 0xFF00U));
 
-        const auto timeHiAndVersion = static_cast<std::uint16_t>(((0x04 << 12) & 0xF000U) |
+        const auto timeHiAndVersion = static_cast<std::uint16_t>(((0x04U << 12) & 0xF000U) |
                                                                  ((randomTime >> 56) & 0x00FFU) |
                                                                  ((randomTime >> 40) & 0x0F00U));
 
