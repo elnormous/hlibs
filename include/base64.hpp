@@ -74,7 +74,8 @@ namespace base64
     template <class T>
     std::string encode(const T& v, const bool padding = true)
     {
-        return encode(std::begin(v), std::end(v), padding);
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return encode(begin(v), end(v), padding);
     }
 
     template <class Iterator>
@@ -133,7 +134,8 @@ namespace base64
     template <class T>
     std::vector<std::uint8_t> decode(const T& s)
     {
-        return decode(std::begin(s), std::end(s));
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return decode(begin(s), end(s));
     }
 
     inline std::vector<std::uint8_t> decode(const char* s)
@@ -169,7 +171,8 @@ namespace base64url
     template <class T>
     std::string encode(const T& v, const bool padding = true)
     {
-        return encode(std::begin(v), std::end(v), padding);
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return encode(begin(v), end(v), padding);
     }
 
     template <class Iterator>
@@ -228,7 +231,8 @@ namespace base64url
     template <class T>
     std::vector<std::uint8_t> decode(const T& s)
     {
-        return decode(std::begin(s), std::end(s));
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return decode(begin(s), end(s));
     }
 
     inline std::vector<std::uint8_t> decode(const char* s)

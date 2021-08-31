@@ -171,7 +171,8 @@ namespace md5
     template <class T>
     std::array<std::uint8_t, digestByteCount> hash(const T& v) noexcept
     {
-        return hash(std::begin(v), std::end(v));
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return hash(begin(v), end(v));
     }
 }
 

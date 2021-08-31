@@ -36,7 +36,8 @@ namespace fnv1
     template <typename Result, typename T>
     constexpr Result hash(const T& v) noexcept
     {
-        return hash<Result>(std::begin(v), std::end(v));
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return hash<Result>(begin(v), end(v));
     }
 }
 

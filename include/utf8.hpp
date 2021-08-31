@@ -66,7 +66,8 @@ namespace utf8
     template <typename T>
     std::u32string toUtf32(const T& text)
     {
-        return toUtf32(std::begin(text), std::end(text));
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return toUtf32(begin(text), end(text));
     }
 
     inline std::string fromUtf32(const char32_t c)
@@ -132,7 +133,8 @@ namespace utf8
     template <typename T>
     std::string fromUtf32(const T& text)
     {
-        return fromUtf32(std::begin(text), std::end(text));
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return fromUtf32(begin(text), end(text));
     }
 }
 

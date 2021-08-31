@@ -421,7 +421,8 @@ namespace aes
     template <std::size_t keyLength, class Data, class Key>
     std::vector<std::uint8_t> encryptEcb(const Data& data, const Key& key)
     {
-        return encryptEcb<keyLength>(std::begin(data), std::end(data), key);
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return encryptEcb<keyLength>(begin(data), end(data), key);
     }
 
     template <std::size_t keyLength, class Iterator, class Key>
@@ -448,7 +449,8 @@ namespace aes
     template <std::size_t keyLength, class Data, class Key>
     std::vector<std::uint8_t> decryptEcb(const Data& data, const Key& key)
     {
-        return decryptEcb<keyLength>(std::begin(data), std::end(data), key);
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return decryptEcb<keyLength>(begin(data), end(data), key);
     }
 
     template <std::size_t keyLength, class Iterator, class Key, class InitVector>
@@ -485,7 +487,8 @@ namespace aes
     std::vector<std::uint8_t> encryptCbc(const Data& data, const Key& key,
                                          const InitVector& initVector)
     {
-        return encryptCbc<keyLength>(std::begin(data), std::end(data), key, initVector);
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return encryptCbc<keyLength>(begin(data), end(data), key, initVector);
     }
 
     template <std::size_t keyLength, class Iterator, class Key, class InitVector>
@@ -528,7 +531,8 @@ namespace aes
     std::vector<std::uint8_t> decryptCbc(const Data& data, const Key& key,
                                          const InitVector& initVector)
     {
-        return decryptCbc<keyLength>(std::begin(data), std::end(data), key, initVector);
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return decryptCbc<keyLength>(begin(data), end(data), key, initVector);
     }
 
     template <std::size_t keyLength, class Iterator, class Key, class InitVector>
@@ -604,7 +608,8 @@ namespace aes
     std::vector<std::uint8_t> decryptCfb(const Data& data, const Key& key,
                                          const InitVector& initVector)
     {
-        return decryptCfb<keyLength>(std::begin(data), std::end(data), key, initVector);
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return decryptCfb<keyLength>(begin(data), end(data), key, initVector);
     }
 }
 

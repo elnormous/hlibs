@@ -136,7 +136,8 @@ namespace crc
     template <class T, class Data>
     constexpr T generate(const Data& v) noexcept
     {
-        return generate<T>(std::begin(v), std::end(v));
+        using std::begin, std::end; // add std::begin and std::end to lookup
+        return generate<T>(begin(v), end(v));
     }
 }
 
