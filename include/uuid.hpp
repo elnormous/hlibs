@@ -66,10 +66,7 @@ namespace uuid
         };
     }
 
-    template <class T> T generate();
-
-    template <>
-    std::array<std::uint8_t, 16> generate<std::array<std::uint8_t, 16>>()
+    inline std::array<std::uint8_t, 16> generateArray()
     {
         const auto uuid = generate();
 
@@ -97,8 +94,7 @@ namespace uuid
         };
     }
 
-    template <>
-    std::string generate<std::string>()
+    inline std::string generateString()
     {
         constexpr char digits[] = "0123456789abcdef";
 

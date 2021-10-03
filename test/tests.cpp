@@ -685,12 +685,12 @@ namespace
 
 TEST_CASE("UUID", "[uuid]")
 {
-    const auto a = uuid::generate<std::array<std::uint8_t, 16>>();
+    const auto a = uuid::generateArray();
 
     REQUIRE(a[6] >> 4 == 4);
     REQUIRE((a[8] & 0xC0U) == 0x80U);
 
-    const auto s = uuid::generate<std::string>();
+    const auto s = uuid::generateString();
     REQUIRE(s.length() == 36);
     REQUIRE(s[14] == '4');
     REQUIRE((hexToInt(s[19]) & 0x0CU) == 0x08U);
