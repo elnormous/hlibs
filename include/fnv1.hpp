@@ -27,6 +27,7 @@ namespace fnv1
     }
 
     template <typename Result, typename Iterator>
+    [[nodiscard]]
     constexpr Result hash(const Iterator i, const Iterator end,
                           const Result result = Constants<Result>::offsetBasis) noexcept
     {
@@ -34,6 +35,7 @@ namespace fnv1
     }
 
     template <typename Result, typename T>
+    [[nodiscard]]
     constexpr Result hash(const T& v) noexcept
     {
         using std::begin, std::end; // add std::begin and std::end to lookup

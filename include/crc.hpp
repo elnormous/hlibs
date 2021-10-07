@@ -126,6 +126,7 @@ namespace crc
     }
 
     template <typename T, class Iterator>
+    [[nodiscard]]
     constexpr T generate(const Iterator i, const Iterator end,
                          const T init = Constants<T>::init,
                          const T xorOut = Constants<T>::xorOut) noexcept
@@ -134,6 +135,7 @@ namespace crc
     }
 
     template <class T, class Data>
+    [[nodiscard]]
     constexpr T generate(const Data& v) noexcept
     {
         using std::begin, std::end; // add std::begin and std::end to lookup

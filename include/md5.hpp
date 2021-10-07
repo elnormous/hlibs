@@ -111,6 +111,7 @@ namespace md5
     }
 
     template <class Iterator>
+    [[nodiscard]]
     std::array<std::uint8_t, digestByteCount> hash(const Iterator begin,
                                                    const Iterator end) noexcept
     {
@@ -169,6 +170,7 @@ namespace md5
     }
 
     template <class T>
+    [[nodiscard]]
     std::array<std::uint8_t, digestByteCount> hash(const T& v) noexcept
     {
         using std::begin, std::end; // add std::begin and std::end to lookup

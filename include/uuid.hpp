@@ -22,7 +22,7 @@ namespace uuid
         std::array<std::uint8_t, 6> node;
     };
 
-    inline Uuid generate()
+    [[nodiscard]] inline Uuid generate()
     {
         static std::random_device rd;
         static std::mt19937_64 mt{rd()};
@@ -66,7 +66,7 @@ namespace uuid
         };
     }
 
-    inline std::array<std::uint8_t, 16> generateArray()
+    [[nodiscard]] inline std::array<std::uint8_t, 16> generateArray()
     {
         const auto uuid = generate();
 
@@ -94,7 +94,7 @@ namespace uuid
         };
     }
 
-    inline std::string generateString()
+    [[nodiscard]] inline std::string generateString()
     {
         constexpr char digits[] = "0123456789abcdef";
 

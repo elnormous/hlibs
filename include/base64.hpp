@@ -20,7 +20,10 @@ namespace base64
     };
 
     template <class Iterator>
-    std::string encode(const Iterator begin, const Iterator end, const std::array<char, 64>& chars, const bool padding = true)
+    [[nodiscard]]
+    std::string encode(const Iterator begin, const Iterator end,
+                       const std::array<char, 64>& chars,
+                       const bool padding = true)
     {
         std::string result;
         std::size_t c = 0;
@@ -58,7 +61,9 @@ namespace base64
     }
 
     template <class Iterator>
-    std::string encode(const Iterator begin, const Iterator end, const bool padding = true)
+    [[nodiscard]]
+    std::string encode(const Iterator begin, const Iterator end,
+                       const bool padding = true)
     {
         static constexpr std::array chars{
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -72,6 +77,7 @@ namespace base64
     }
 
     template <class T>
+    [[nodiscard]]
     std::string encode(const T& v, const bool padding = true)
     {
         using std::begin, std::end; // add std::begin and std::end to lookup
@@ -79,6 +85,7 @@ namespace base64
     }
 
     template <class Iterator>
+    [[nodiscard]]
     std::vector<std::uint8_t> decode(const Iterator begin, const Iterator end)
     {
         std::uint32_t c = 0;
@@ -132,12 +139,14 @@ namespace base64
     }
 
     template <class T>
+    [[nodiscard]]
     std::vector<std::uint8_t> decode(const T& s)
     {
         using std::begin, std::end; // add std::begin and std::end to lookup
         return decode(begin(s), end(s));
     }
 
+    [[nodiscard]]
     inline std::vector<std::uint8_t> decode(const char* s)
     {
         auto end = s;
@@ -155,6 +164,7 @@ namespace base64url
     };
 
     template <class Iterator>
+    [[nodiscard]]
     std::string encode(const Iterator begin, const Iterator end, const bool padding = true)
     {
         static constexpr std::array chars{
@@ -169,6 +179,7 @@ namespace base64url
     }
 
     template <class T>
+    [[nodiscard]]
     std::string encode(const T& v, const bool padding = true)
     {
         using std::begin, std::end; // add std::begin and std::end to lookup
@@ -176,6 +187,7 @@ namespace base64url
     }
 
     template <class Iterator>
+    [[nodiscard]]
     std::vector<std::uint8_t> decode(const Iterator begin, const Iterator end)
     {
         std::uint32_t c = 0;
@@ -229,12 +241,14 @@ namespace base64url
     }
 
     template <class T>
+    [[nodiscard]]
     std::vector<std::uint8_t> decode(const T& s)
     {
         using std::begin, std::end; // add std::begin and std::end to lookup
         return decode(begin(s), end(s));
     }
 
+    [[nodiscard]]
     inline std::vector<std::uint8_t> decode(const char* s)
     {
         auto end = s;
