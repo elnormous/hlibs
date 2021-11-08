@@ -136,12 +136,12 @@ namespace aes
                 bytes[3] = c;
             }
 
-            std::uint8_t bytes[wordByteCount];
+            std::array<std::uint8_t, wordByteCount> bytes;
         };
 
-        using RoundKey = Word[4];
+        using RoundKey = std::array<Word, 4>;
         template <std::size_t keyLength>
-        using RoundKeys = RoundKey[getRoundCount(keyLength) + 1];
+        using RoundKeys = std::array<RoundKey, getRoundCount(keyLength) + 1>;
 
         inline std::uint8_t mulBytes(std::uint8_t a, std::uint8_t b) noexcept
         {
