@@ -104,7 +104,7 @@ namespace aes
         class Word final
         {
         public:
-            Word operator^(const Word& other) const noexcept
+            [[nodiscard]] Word operator^(const Word& other) const noexcept
             {
                 Word result = *this;
                 for (std::size_t i = 0; i < wordByteCount; ++i)
@@ -203,7 +203,7 @@ namespace aes
         class Block final
         {
         public:
-            Block operator^(const Block& other) const noexcept
+            [[nodiscard]] Block operator^(const Block& other) const noexcept
             {
                 Block result = *this;
                 for (std::size_t i = 0; i < blockWordCount; ++i)
@@ -377,6 +377,7 @@ namespace aes
         };
 
         template <class Iterator>
+        [[nodiscard]]
         std::vector<Block> convertToBlocks(Iterator begin, Iterator end)
         {
             std::vector<Block> result;
