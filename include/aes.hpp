@@ -101,43 +101,39 @@ namespace aes
         constexpr std::size_t blockByteCount = 4 * blockWordCount;
         constexpr std::size_t wordByteCount = 4;
 
-        class Word final
+        using Word = std::array<std::uint8_t, wordByteCount>;
+
+        [[nodiscard]] Word operator^(const Word& first, const Word& second) noexcept
         {
-        public:
-            [[nodiscard]] Word operator^(const Word& other) const noexcept
-            {
-                Word result = *this;
-                for (std::size_t i = 0; i < wordByteCount; ++i)
-                    result.bytes[i] ^= other.bytes[i];
+            Word result = first;
+            for (std::size_t i = 0; i < wordByteCount; ++i)
+                result[i] ^= second[i];
 
-                return result;
-            }
+            return result;
+        }
 
-            Word& operator^=(const Word& other) noexcept
-            {
-                for (std::size_t i = 0; i < wordByteCount; ++i)
-                    bytes[i] ^= other.bytes[i];
+        Word& operator^=(Word& first, const Word& second) noexcept
+        {
+            for (std::size_t i = 0; i < wordByteCount; ++i)
+                first[i] ^= second[i];
 
-                return *this;
-            }
+            return first;
+        }
 
-            void sub() noexcept
-            {
-                for (std::size_t i = 0; i < wordByteCount; ++i)
-                    bytes[i] = sbox[bytes[i]];
-            }
+        void sub(Word& word) noexcept
+        {
+            for (std::size_t i = 0; i < wordByteCount; ++i)
+                word[i] = sbox[word[i]];
+        }
 
-            void rot() noexcept
-            {
-                const std::uint8_t c = bytes[0];
-                bytes[0] = bytes[1];
-                bytes[1] = bytes[2];
-                bytes[2] = bytes[3];
-                bytes[3] = c;
-            }
-
-            std::array<std::uint8_t, wordByteCount> bytes;
-        };
+        void rot(Word& word) noexcept
+        {
+            const std::uint8_t c = word[0];
+            word[0] = word[1];
+            word[1] = word[2];
+            word[2] = word[3];
+            word[3] = c;
+        }
 
         using RoundKey = std::array<Word, 4>;
         template <std::size_t keyLength>
@@ -174,10 +170,10 @@ namespace aes
             {
                 if (i < getKeyWordCount(keyLength))
                 {
-                    roundKeys[i / 4][i % 4].bytes[0] = static_cast<std::uint8_t>(key[i * 4 + 0]);
-                    roundKeys[i / 4][i % 4].bytes[1] = static_cast<std::uint8_t>(key[i * 4 + 1]);
-                    roundKeys[i / 4][i % 4].bytes[2] = static_cast<std::uint8_t>(key[i * 4 + 2]);
-                    roundKeys[i / 4][i % 4].bytes[3] = static_cast<std::uint8_t>(key[i * 4 + 3]);
+                    roundKeys[i / 4][i % 4][0] = static_cast<std::uint8_t>(key[i * 4 + 0]);
+                    roundKeys[i / 4][i % 4][1] = static_cast<std::uint8_t>(key[i * 4 + 1]);
+                    roundKeys[i / 4][i % 4][2] = static_cast<std::uint8_t>(key[i * 4 + 2]);
+                    roundKeys[i / 4][i % 4][3] = static_cast<std::uint8_t>(key[i * 4 + 3]);
                 }
                 else
                 {
@@ -186,13 +182,13 @@ namespace aes
 
                     if (i % getKeyWordCount(keyLength) == 0)
                     {
-                        temp.rot();
-                        temp.sub();
+                        rot(temp);
+                        sub(temp);
                         const Word rCon{getRoundConstant(i / getKeyWordCount(keyLength)), 0, 0, 0};
                         temp ^= rCon;
                     }
                     else if (getKeyWordCount(keyLength) > 6 && i % getKeyWordCount(keyLength) == 4)
-                        temp.sub();
+                        sub(temp);
 
                     const std::size_t beforeKeyIndex = i - getKeyWordCount(keyLength);
                     roundKeys[i / 4][i % 4] = roundKeys[beforeKeyIndex / 4][beforeKeyIndex % 4] ^ temp;
@@ -224,25 +220,25 @@ namespace aes
             {
                 for (std::size_t i = 0; i < wordByteCount; ++i)
                     for (std::size_t j = 0; j < blockWordCount; ++j)
-                        words[i].bytes[j] = sbox[words[i].bytes[j]];
+                        words[i][j] = sbox[words[i][j]];
             }
 
             void invSubBytes() noexcept
             {
                 for (std::size_t i = 0; i < wordByteCount; ++i)
                     for (std::size_t j = 0; j < blockWordCount; ++j)
-                        words[i].bytes[j] = inverseSbox[words[i].bytes[j]];
+                        words[i][j] = inverseSbox[words[i][j]];
             }
 
             void shiftRow(const std::size_t i, const std::size_t n) noexcept
             {
                 for (std::size_t k = 0; k < n; k++)
                 {
-                    std::uint8_t t = words[i].bytes[0];
-                    words[i].bytes[0] = words[i].bytes[1];
-                    words[i].bytes[1] = words[i].bytes[2];
-                    words[i].bytes[2] = words[i].bytes[3];
-                    words[i].bytes[3] = t;
+                    std::uint8_t t = words[i][0];
+                    words[i][0] = words[i][1];
+                    words[i][1] = words[i][2];
+                    words[i][2] = words[i][3];
+                    words[i][3] = t;
                 }
             }
 
@@ -265,21 +261,21 @@ namespace aes
                 for (std::size_t j = 0; j < blockWordCount; ++j)
                 {
                     const Word s{
-                        words[0].bytes[j],
-                        words[1].bytes[j],
-                        words[2].bytes[j],
-                        words[3].bytes[j]
+                        words[0][j],
+                        words[1][j],
+                        words[2][j],
+                        words[3][j]
                     };
 
                     const Word s1{
-                        static_cast<std::uint8_t>(mulBytes(0x02, s.bytes[0]) ^ mulBytes(0x03, s.bytes[1]) ^ s.bytes[2] ^ s.bytes[3]),
-                        static_cast<std::uint8_t>(s.bytes[0] ^ mulBytes(0x02, s.bytes[1]) ^ mulBytes(0x03, s.bytes[2]) ^ s.bytes[3]),
-                        static_cast<std::uint8_t>(s.bytes[0] ^ s.bytes[1] ^ mulBytes(0x02, s.bytes[2]) ^ mulBytes(0x03, s.bytes[3])),
-                        static_cast<std::uint8_t>(mulBytes(0x03, s.bytes[0]) ^ s.bytes[1] ^ s.bytes[2] ^ mulBytes(0x02, s.bytes[3]))
+                        static_cast<std::uint8_t>(mulBytes(0x02, s[0]) ^ mulBytes(0x03, s[1]) ^ s[2] ^ s[3]),
+                        static_cast<std::uint8_t>(s[0] ^ mulBytes(0x02, s[1]) ^ mulBytes(0x03, s[2]) ^ s[3]),
+                        static_cast<std::uint8_t>(s[0] ^ s[1] ^ mulBytes(0x02, s[2]) ^ mulBytes(0x03, s[3])),
+                        static_cast<std::uint8_t>(mulBytes(0x03, s[0]) ^ s[1] ^ s[2] ^ mulBytes(0x02, s[3]))
                     };
 
                     for (std::size_t i = 0; i < wordByteCount; ++i)
-                        words[i].bytes[j] = s1.bytes[i];
+                        words[i][j] = s1[i];
               }
             }
 
@@ -288,21 +284,21 @@ namespace aes
                 for (std::size_t j = 0; j < blockWordCount; ++j)
                 {
                     const Word s{
-                        words[0].bytes[j],
-                        words[1].bytes[j],
-                        words[2].bytes[j],
-                        words[3].bytes[j]
+                        words[0][j],
+                        words[1][j],
+                        words[2][j],
+                        words[3][j]
                     };
 
                     const Word s1{
-                        static_cast<std::uint8_t>(mulBytes(0x0E, s.bytes[0]) ^ mulBytes(0x0B, s.bytes[1]) ^ mulBytes(0x0D, s.bytes[2]) ^ mulBytes(0x09, s.bytes[3])),
-                        static_cast<std::uint8_t>(mulBytes(0x09, s.bytes[0]) ^ mulBytes(0x0E, s.bytes[1]) ^ mulBytes(0x0B, s.bytes[2]) ^ mulBytes(0x0D, s.bytes[3])),
-                        static_cast<std::uint8_t>(mulBytes(0x0D, s.bytes[0]) ^ mulBytes(0x09, s.bytes[1]) ^ mulBytes(0x0E, s.bytes[2]) ^ mulBytes(0x0B, s.bytes[3])),
-                        static_cast<std::uint8_t>(mulBytes(0x0B, s.bytes[0]) ^ mulBytes(0x0D, s.bytes[1]) ^ mulBytes(0x09, s.bytes[2]) ^ mulBytes(0x0E, s.bytes[3]))
+                        static_cast<std::uint8_t>(mulBytes(0x0E, s[0]) ^ mulBytes(0x0B, s[1]) ^ mulBytes(0x0D, s[2]) ^ mulBytes(0x09, s[3])),
+                        static_cast<std::uint8_t>(mulBytes(0x09, s[0]) ^ mulBytes(0x0E, s[1]) ^ mulBytes(0x0B, s[2]) ^ mulBytes(0x0D, s[3])),
+                        static_cast<std::uint8_t>(mulBytes(0x0D, s[0]) ^ mulBytes(0x09, s[1]) ^ mulBytes(0x0E, s[2]) ^ mulBytes(0x0B, s[3])),
+                        static_cast<std::uint8_t>(mulBytes(0x0B, s[0]) ^ mulBytes(0x0D, s[1]) ^ mulBytes(0x09, s[2]) ^ mulBytes(0x0E, s[3]))
                     };
 
                     for (std::size_t i = 0; i < wordByteCount; ++i)
-                        words[i].bytes[j] = s1.bytes[i];
+                        words[i][j] = s1[i];
                 }
             }
 
@@ -310,7 +306,7 @@ namespace aes
             {
                 for (std::size_t i = 0; i < blockWordCount; ++i)
                     for (std::size_t j = 0; j < wordByteCount; ++j)
-                        words[i].bytes[j] ^= roundKey[j].bytes[i];
+                        words[i][j] ^= roundKey[j][i];
             }
 
             template <std::size_t keyLength, class Key>
@@ -322,7 +318,7 @@ namespace aes
                 Block state;
                 for (std::size_t i = 0; i < wordByteCount; ++i)
                     for (std::size_t j = 0; j < blockWordCount; ++j)
-                        state.words[i].bytes[j] = words[j].bytes[i];
+                        state.words[i][j] = words[j][i];
 
                 state.addRoundKey(roundKeys[0]);
 
@@ -340,7 +336,7 @@ namespace aes
 
                 for (std::size_t i = 0; i < wordByteCount; ++i)
                     for (std::size_t j = 0; j < blockWordCount; ++j)
-                        words[j].bytes[i] = state.words[i].bytes[j];
+                        words[j][i] = state.words[i][j];
             }
 
             template <std::size_t keyLength, class Key>
@@ -352,7 +348,7 @@ namespace aes
                 Block state;
                 for (std::size_t i = 0; i < wordByteCount; ++i)
                     for (std::size_t j = 0; j < blockWordCount; ++j)
-                        state.words[i].bytes[j] = words[j].bytes[i];
+                        state.words[i][j] = words[j][i];
 
                 state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
 
@@ -370,7 +366,7 @@ namespace aes
 
                 for (std::size_t i = 0; i < wordByteCount; ++i)
                     for (std::size_t j = 0; j < blockWordCount; ++j)
-                        words[j].bytes[i] = state.words[i].bytes[j];
+                        words[j][i] = state.words[i][j];
             }
 
             Word words[blockWordCount];
@@ -390,7 +386,7 @@ namespace aes
 
                 Block& block = result[byte / blockByteCount];
                 Word& word = block.words[(byte / wordByteCount) % blockWordCount];
-                word.bytes[byte % wordByteCount] = static_cast<std::uint8_t>(*i);
+                word[byte % wordByteCount] = static_cast<std::uint8_t>(*i);
                 ++byte;
             }
 
@@ -413,7 +409,7 @@ namespace aes
 
             // copy the block to output
             for (const auto w : block.words)
-                for (const auto b : w.bytes)
+                for (const auto b : w)
                     *resultIterator++ = b;
         }
 
@@ -443,7 +439,7 @@ namespace aes
 
             // copy the block to output
             for (const auto word : block.words)
-                for (const auto byte : word.bytes)
+                for (const auto byte : word)
                     *resultIterator++ = byte;
         }
 
@@ -470,7 +466,7 @@ namespace aes
 
         auto initVectorIterator = std::begin(initVector);
         for (auto& w : dataBlock.words)
-            for (auto& b : w.bytes)
+            for (auto& b : w)
                 b = *initVectorIterator++;
 
         auto resultIterator = result.begin();
@@ -482,7 +478,7 @@ namespace aes
 
             // copy the block to output
             for (const auto w : dataBlock.words)
-                for (const auto b : w.bytes)
+                for (const auto b : w)
                     *resultIterator++ = b;
         }
 
@@ -510,7 +506,7 @@ namespace aes
 
         auto initVectorIterator = std::begin(initVector);
         for (auto& w : dataBlock.words)
-            for (auto& b : w.bytes)
+            for (auto& b : w)
                 b = *initVectorIterator++;
 
         auto dataIterator = begin;
@@ -523,12 +519,12 @@ namespace aes
 
             // copy the block to output
             for (const auto w : block.words)
-                for (const auto b : w.bytes)
+                for (const auto b : w)
                     *resultIterator++ = b;
 
             // copy the data to data block
             for (auto& w : dataBlock.words)
-                for (auto& b : w.bytes)
+                for (auto& b : w)
                     b = *dataIterator++;
         }
 
@@ -556,7 +552,7 @@ namespace aes
 
         auto initVectorIterator = std::begin(initVector);
         for (auto& w : encryptedBlock.words)
-            for (auto& b : w.bytes)
+            for (auto& b : w)
                 b = static_cast<std::uint8_t>(*initVectorIterator++);
 
         auto resultIterator = result.begin();
@@ -568,7 +564,7 @@ namespace aes
 
             // copy the block to output
             for (const auto w : encryptedBlock.words)
-                for (const auto b : w.bytes)
+                for (const auto b : w)
                     *resultIterator++ = b;
         }
 
@@ -595,7 +591,7 @@ namespace aes
 
         auto initVectorIterator = std::begin(initVector);
         for (auto& w : decryptedBlock.words)
-            for (auto& b : w.bytes)
+            for (auto& b : w)
                 b = *initVectorIterator++;
 
         auto resultIterator = result.begin();
@@ -607,7 +603,7 @@ namespace aes
 
             // copy the block to output
             for (const auto w : decryptedBlock.words)
-                for (const auto b : w.bytes)
+                for (const auto b : w)
                     *resultIterator++ = b;
 
             decryptedBlock = block;
