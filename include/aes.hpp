@@ -103,7 +103,7 @@ namespace aes
 
         using Word = std::array<std::uint8_t, wordByteCount>;
 
-        [[nodiscard]] Word operator^(const Word& first, const Word& second) noexcept
+        [[nodiscard]] inline Word operator^(const Word& first, const Word& second) noexcept
         {
             Word result = first;
             for (std::size_t i = 0; i < wordByteCount; ++i)
@@ -112,7 +112,7 @@ namespace aes
             return result;
         }
 
-        Word& operator^=(Word& first, const Word& second) noexcept
+        inline Word& operator^=(Word& first, const Word& second) noexcept
         {
             for (std::size_t i = 0; i < wordByteCount; ++i)
                 first[i] ^= second[i];
@@ -120,13 +120,13 @@ namespace aes
             return first;
         }
 
-        void sub(Word& word) noexcept
+        inline void sub(Word& word) noexcept
         {
             for (std::size_t i = 0; i < wordByteCount; ++i)
                 word[i] = sbox[word[i]];
         }
 
-        void rot(Word& word) noexcept
+        inline void rot(Word& word) noexcept
         {
             const std::uint8_t c = word[0];
             word[0] = word[1];
