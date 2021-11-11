@@ -86,16 +86,10 @@ namespace aes
         };
 
         // number of rounds (Nr)
-        [[nodiscard]] constexpr std::size_t getRoundCount(std::size_t keyLength) noexcept
-        {
-            return keyLength / 32 + 6;
-        }
+        template <std::size_t keyLength> constexpr std::size_t roundCount = keyLength / 32U + 6U;
 
         // number of 32-bit words in cipher key (Nk)
-        [[nodiscard]] constexpr std::size_t getKeyWordCount(std::size_t keyLength) noexcept
-        {
-            return keyLength / 32;
-        }
+        template <std::size_t keyLength> constexpr std::size_t keyWordCount = keyLength / 32U;
 
         constexpr std::size_t blockWordCount = 4; // number of words in an AES block (Nb)
         constexpr std::size_t blockByteCount = 4 * blockWordCount;
@@ -139,7 +133,7 @@ namespace aes
 
         using RoundKey = std::array<Word, 4>;
         template <std::size_t keyLength>
-        using RoundKeys = std::array<RoundKey, getRoundCount(keyLength) + 1>;
+        using RoundKeys = std::array<RoundKey, roundCount<keyLength> + 1>;
 
         inline std::uint8_t mulBytes(std::uint8_t a, std::uint8_t b) noexcept
         {
@@ -150,7 +144,7 @@ namespace aes
                 {
                     std::uint8_t d = a;
                     for (std::size_t j = 0; j < i; ++j)
-                        d = static_cast<std::uint8_t>((d << 1) ^ (d & 0x80 ? 0x1B : 0));
+                        d = static_cast<std::uint8_t>((d << 1) ^ (d & 0x80 ? 0x1B : 0x00));
 
                     c = c ^ d;
                 }
@@ -168,9 +162,9 @@ namespace aes
         template <std::size_t keyLength, class Key>
         void expandKey(const Key& key, RoundKeys<keyLength>& roundKeys) noexcept
         {
-            for (std::size_t i = 0; i < blockWordCount * (getRoundCount(keyLength) + 1); ++i)
+            for (std::size_t i = 0; i < blockWordCount * (roundCount<keyLength> + 1); ++i)
             {
-                if (i < getKeyWordCount(keyLength))
+                if (i < keyWordCount<keyLength>)
                 {
                     roundKeys[i / 4][i % 4][0] = static_cast<std::uint8_t>(key[i * 4 + 0]);
                     roundKeys[i / 4][i % 4][1] = static_cast<std::uint8_t>(key[i * 4 + 1]);
@@ -182,17 +176,17 @@ namespace aes
                     const std::size_t previousWordIndex = i - 1;
                     Word temp = roundKeys[previousWordIndex / 4][previousWordIndex % 4];
 
-                    if (i % getKeyWordCount(keyLength) == 0)
+                    if (i % keyWordCount<keyLength> == 0)
                     {
                         rot(temp);
                         sub(temp);
-                        const Word rCon{getRoundConstant(i / getKeyWordCount(keyLength)), 0, 0, 0};
+                        const Word rCon{getRoundConstant(i / keyWordCount<keyLength>), 0, 0, 0};
                         temp ^= rCon;
                     }
-                    else if (getKeyWordCount(keyLength) > 6 && i % getKeyWordCount(keyLength) == 4)
+                    else if (keyWordCount<keyLength> > 6 && i % keyWordCount<keyLength> == 4)
                         sub(temp);
 
-                    const std::size_t beforeKeyIndex = i - getKeyWordCount(keyLength);
+                    const std::size_t beforeKeyIndex = i - keyWordCount<keyLength>;
                     roundKeys[i / 4][i % 4] = roundKeys[beforeKeyIndex / 4][beforeKeyIndex % 4] ^ temp;
                 }
             }
@@ -316,7 +310,7 @@ namespace aes
 
                 state.addRoundKey(roundKeys[0]);
 
-                for (std::size_t round = 1; round <= getRoundCount(keyLength) - 1; ++round)
+                for (std::size_t round = 1; round <= roundCount<keyLength> - 1; ++round)
                 {
                     state.subBytes();
                     state.shiftRows();
@@ -326,7 +320,7 @@ namespace aes
 
                 state.subBytes();
                 state.shiftRows();
-                state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
+                state.addRoundKey(roundKeys[roundCount<keyLength>]);
 
                 for (std::size_t i = 0; i < wordByteCount; ++i)
                     for (std::size_t j = 0; j < blockWordCount; ++j)
@@ -344,9 +338,9 @@ namespace aes
                     for (std::size_t j = 0; j < blockWordCount; ++j)
                         state.words[i][j] = words[j][i];
 
-                state.addRoundKey(roundKeys[getRoundCount(keyLength)]);
+                state.addRoundKey(roundKeys[roundCount<keyLength>]);
 
-                for (std::size_t round = getRoundCount(keyLength) - 1; round >= 1; --round)
+                for (std::size_t round = roundCount<keyLength> - 1; round >= 1; --round)
                 {
                     state.invSubBytes();
                     state.invShiftRows();
