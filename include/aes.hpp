@@ -367,7 +367,7 @@ namespace aes
                         words[j][i] = state.words[i][j];
             }
 
-            Word words[blockWordCount];
+            std::array<Word, blockWordCount> words;
         };
 
         template <class Iterator>
