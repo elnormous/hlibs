@@ -108,7 +108,6 @@ namespace aes
             Word result = first;
             for (std::size_t i = 0; i < wordByteCount; ++i)
                 result[i] ^= second[i];
-
             return result;
         }
 
@@ -116,25 +115,22 @@ namespace aes
         {
             for (std::size_t i = 0; i < wordByteCount; ++i)
                 first[i] ^= second[i];
-
             return first;
         }
 
         inline void sub(Word& word) noexcept
         {
-            for (std::size_t i = 0; i < wordByteCount; ++i)
-                word[i] = sbox[word[i]];
+            for (auto& byte : word) byte = sbox[byte];
         }
 
         inline void intSub(Word& word) noexcept
         {
-            for (std::size_t i = 0; i < wordByteCount; ++i)
-                word[i] = inverseSbox[word[i]];
+            for (auto& byte : word) byte = inverseSbox[byte];
         }
 
         inline void rot(Word& word) noexcept
         {
-            const std::uint8_t c = word[0];
+            const auto c = word[0];
             word[0] = word[1];
             word[1] = word[2];
             word[2] = word[3];
