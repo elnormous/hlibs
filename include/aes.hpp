@@ -126,6 +126,12 @@ namespace aes
                 word[i] = sbox[word[i]];
         }
 
+        inline void intSub(Word& word) noexcept
+        {
+            for (std::size_t i = 0; i < wordByteCount; ++i)
+                word[i] = inverseSbox[word[i]];
+        }
+
         inline void rot(Word& word) noexcept
         {
             const std::uint8_t c = word[0];
@@ -219,27 +225,19 @@ namespace aes
             void subBytes() noexcept
             {
                 for (std::size_t i = 0; i < wordByteCount; ++i)
-                    for (std::size_t j = 0; j < blockWordCount; ++j)
-                        words[i][j] = sbox[words[i][j]];
+                    sub(words[i]);
             }
 
             void invSubBytes() noexcept
             {
                 for (std::size_t i = 0; i < wordByteCount; ++i)
-                    for (std::size_t j = 0; j < blockWordCount; ++j)
-                        words[i][j] = inverseSbox[words[i][j]];
+                    intSub(words[i]);
             }
 
             void shiftRow(const std::size_t i, const std::size_t n) noexcept
             {
                 for (std::size_t k = 0; k < n; k++)
-                {
-                    std::uint8_t t = words[i][0];
-                    words[i][0] = words[i][1];
-                    words[i][1] = words[i][2];
-                    words[i][2] = words[i][3];
-                    words[i][3] = t;
-                }
+                    rot(words[i]);
             }
 
             void shiftRows() noexcept
