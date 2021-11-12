@@ -15,74 +15,74 @@ namespace aes
     {
         // substitution-box 16x16 matrix
         constexpr std::array<std::uint8_t, 256> sbox{
-            0X63, 0X7C, 0X77, 0X7B, 0XF2, 0X6B, 0X6F, 0XC5,
-            0X30, 0X01, 0X67, 0X2B, 0XFE, 0XD7, 0XAB, 0X76,
-            0XCA, 0X82, 0XC9, 0X7D, 0XFA, 0X59, 0X47, 0XF0,
-            0XAD, 0XD4, 0XA2, 0XAF, 0X9C, 0XA4, 0X72, 0XC0,
-            0XB7, 0XFD, 0X93, 0X26, 0X36, 0X3F, 0XF7, 0XCC,
-            0X34, 0XA5, 0XE5, 0XF1, 0X71, 0XD8, 0X31, 0X15,
-            0X04, 0XC7, 0X23, 0XC3, 0X18, 0X96, 0X05, 0X9A,
-            0X07, 0X12, 0X80, 0XE2, 0XEB, 0X27, 0XB2, 0X75,
-            0X09, 0X83, 0X2C, 0X1A, 0X1B, 0X6E, 0X5A, 0XA0,
-            0X52, 0X3B, 0XD6, 0XB3, 0X29, 0XE3, 0X2F, 0X84,
-            0X53, 0XD1, 0X00, 0XED, 0X20, 0XFC, 0XB1, 0X5B,
-            0X6A, 0XCB, 0XBE, 0X39, 0X4A, 0X4C, 0X58, 0XCF,
-            0XD0, 0XEF, 0XAA, 0XFB, 0X43, 0X4D, 0X33, 0X85,
-            0X45, 0XF9, 0X02, 0X7F, 0X50, 0X3C, 0X9F, 0XA8,
-            0X51, 0XA3, 0X40, 0X8F, 0X92, 0X9D, 0X38, 0XF5,
-            0XBC, 0XB6, 0XDA, 0X21, 0X10, 0XFF, 0XF3, 0XD2,
-            0XCD, 0X0C, 0X13, 0XEC, 0X5F, 0X97, 0X44, 0X17,
-            0XC4, 0XA7, 0X7E, 0X3D, 0X64, 0X5D, 0X19, 0X73,
-            0X60, 0X81, 0X4F, 0XDC, 0X22, 0X2A, 0X90, 0X88,
-            0X46, 0XEE, 0XB8, 0X14, 0XDE, 0X5E, 0X0B, 0XDB,
-            0XE0, 0X32, 0X3A, 0X0A, 0X49, 0X06, 0X24, 0X5C,
-            0XC2, 0XD3, 0XAC, 0X62, 0X91, 0X95, 0XE4, 0X79,
-            0XE7, 0XC8, 0X37, 0X6D, 0X8D, 0XD5, 0X4E, 0XA9,
-            0X6C, 0X56, 0XF4, 0XEA, 0X65, 0X7A, 0XAE, 0X08,
-            0XBA, 0X78, 0X25, 0X2E, 0X1C, 0XA6, 0XB4, 0XC6,
-            0XE8, 0XDD, 0X74, 0X1F, 0X4B, 0XBD, 0X8B, 0X8A,
-            0X70, 0X3E, 0XB5, 0X66, 0X48, 0X03, 0XF6, 0X0E,
-            0X61, 0X35, 0X57, 0XB9, 0X86, 0XC1, 0X1D, 0X9E,
-            0XE1, 0XF8, 0X98, 0X11, 0X69, 0XD9, 0X8E, 0X94,
-            0X9B, 0X1E, 0X87, 0XE9, 0XCE, 0X55, 0X28, 0XDF,
-            0X8C, 0XA1, 0X89, 0X0D, 0XBF, 0XE6, 0X42, 0X68,
-            0X41, 0X99, 0X2D, 0X0F, 0XB0, 0X54, 0XBB, 0X16
+            0X63U, 0X7CU, 0X77U, 0X7BU, 0XF2U, 0X6BU, 0X6FU, 0XC5U,
+            0X30U, 0X01U, 0X67U, 0X2BU, 0XFEU, 0XD7U, 0XABU, 0X76U,
+            0XCAU, 0X82U, 0XC9U, 0X7DU, 0XFAU, 0X59U, 0X47U, 0XF0U,
+            0XADU, 0XD4U, 0XA2U, 0XAFU, 0X9CU, 0XA4U, 0X72U, 0XC0U,
+            0XB7U, 0XFDU, 0X93U, 0X26U, 0X36U, 0X3FU, 0XF7U, 0XCCU,
+            0X34U, 0XA5U, 0XE5U, 0XF1U, 0X71U, 0XD8U, 0X31U, 0X15U,
+            0X04U, 0XC7U, 0X23U, 0XC3U, 0X18U, 0X96U, 0X05U, 0X9AU,
+            0X07U, 0X12U, 0X80U, 0XE2U, 0XEBU, 0X27U, 0XB2U, 0X75U,
+            0X09U, 0X83U, 0X2CU, 0X1AU, 0X1BU, 0X6EU, 0X5AU, 0XA0U,
+            0X52U, 0X3BU, 0XD6U, 0XB3U, 0X29U, 0XE3U, 0X2FU, 0X84U,
+            0X53U, 0XD1U, 0X00U, 0XEDU, 0X20U, 0XFCU, 0XB1U, 0X5BU,
+            0X6AU, 0XCBU, 0XBEU, 0X39U, 0X4AU, 0X4CU, 0X58U, 0XCFU,
+            0XD0U, 0XEFU, 0XAAU, 0XFBU, 0X43U, 0X4DU, 0X33U, 0X85U,
+            0X45U, 0XF9U, 0X02U, 0X7FU, 0X50U, 0X3CU, 0X9FU, 0XA8U,
+            0X51U, 0XA3U, 0X40U, 0X8FU, 0X92U, 0X9DU, 0X38U, 0XF5U,
+            0XBCU, 0XB6U, 0XDAU, 0X21U, 0X10U, 0XFFU, 0XF3U, 0XD2U,
+            0XCDU, 0X0CU, 0X13U, 0XECU, 0X5FU, 0X97U, 0X44U, 0X17U,
+            0XC4U, 0XA7U, 0X7EU, 0X3DU, 0X64U, 0X5DU, 0X19U, 0X73U,
+            0X60U, 0X81U, 0X4FU, 0XDCU, 0X22U, 0X2AU, 0X90U, 0X88U,
+            0X46U, 0XEEU, 0XB8U, 0X14U, 0XDEU, 0X5EU, 0X0BU, 0XDBU,
+            0XE0U, 0X32U, 0X3AU, 0X0AU, 0X49U, 0X06U, 0X24U, 0X5CU,
+            0XC2U, 0XD3U, 0XACU, 0X62U, 0X91U, 0X95U, 0XE4U, 0X79U,
+            0XE7U, 0XC8U, 0X37U, 0X6DU, 0X8DU, 0XD5U, 0X4EU, 0XA9U,
+            0X6CU, 0X56U, 0XF4U, 0XEAU, 0X65U, 0X7AU, 0XAEU, 0X08U,
+            0XBAU, 0X78U, 0X25U, 0X2EU, 0X1CU, 0XA6U, 0XB4U, 0XC6U,
+            0XE8U, 0XDDU, 0X74U, 0X1FU, 0X4BU, 0XBDU, 0X8BU, 0X8AU,
+            0X70U, 0X3EU, 0XB5U, 0X66U, 0X48U, 0X03U, 0XF6U, 0X0EU,
+            0X61U, 0X35U, 0X57U, 0XB9U, 0X86U, 0XC1U, 0X1DU, 0X9EU,
+            0XE1U, 0XF8U, 0X98U, 0X11U, 0X69U, 0XD9U, 0X8EU, 0X94U,
+            0X9BU, 0X1EU, 0X87U, 0XE9U, 0XCEU, 0X55U, 0X28U, 0XDFU,
+            0X8CU, 0XA1U, 0X89U, 0X0DU, 0XBFU, 0XE6U, 0X42U, 0X68U,
+            0X41U, 0X99U, 0X2DU, 0X0FU, 0XB0U, 0X54U, 0XBBU, 0X16U
         };
 
         // inverse substitution-box 16x16 matrix
         constexpr std::array<std::uint8_t, 256> inverseSbox{
-            0X52, 0X09, 0X6A, 0XD5, 0X30, 0X36, 0XA5, 0X38,
-            0XBF, 0X40, 0XA3, 0X9E, 0X81, 0XF3, 0XD7, 0XFB,
-            0X7C, 0XE3, 0X39, 0X82, 0X9B, 0X2F, 0XFF, 0X87,
-            0X34, 0X8E, 0X43, 0X44, 0XC4, 0XDE, 0XE9, 0XCB,
-            0X54, 0X7B, 0X94, 0X32, 0XA6, 0XC2, 0X23, 0X3D,
-            0XEE, 0X4C, 0X95, 0X0B, 0X42, 0XFA, 0XC3, 0X4E,
-            0X08, 0X2E, 0XA1, 0X66, 0X28, 0XD9, 0X24, 0XB2,
-            0X76, 0X5B, 0XA2, 0X49, 0X6D, 0X8B, 0XD1, 0X25,
-            0X72, 0XF8, 0XF6, 0X64, 0X86, 0X68, 0X98, 0X16,
-            0XD4, 0XA4, 0X5C, 0XCC, 0X5D, 0X65, 0XB6, 0X92,
-            0X6C, 0X70, 0X48, 0X50, 0XFD, 0XED, 0XB9, 0XDA,
-            0X5E, 0X15, 0X46, 0X57, 0XA7, 0X8D, 0X9D, 0X84,
-            0X90, 0XD8, 0XAB, 0X00, 0X8C, 0XBC, 0XD3, 0X0A,
-            0XF7, 0XE4, 0X58, 0X05, 0XB8, 0XB3, 0X45, 0X06,
-            0XD0, 0X2C, 0X1E, 0X8F, 0XCA, 0X3F, 0X0F, 0X02,
-            0XC1, 0XAF, 0XBD, 0X03, 0X01, 0X13, 0X8A, 0X6B,
-            0X3A, 0X91, 0X11, 0X41, 0X4F, 0X67, 0XDC, 0XEA,
-            0X97, 0XF2, 0XCF, 0XCE, 0XF0, 0XB4, 0XE6, 0X73,
-            0X96, 0XAC, 0X74, 0X22, 0XE7, 0XAD, 0X35, 0X85,
-            0XE2, 0XF9, 0X37, 0XE8, 0X1C, 0X75, 0XDF, 0X6E,
-            0X47, 0XF1, 0X1A, 0X71, 0X1D, 0X29, 0XC5, 0X89,
-            0X6F, 0XB7, 0X62, 0X0E, 0XAA, 0X18, 0XBE, 0X1B,
-            0XFC, 0X56, 0X3E, 0X4B, 0XC6, 0XD2, 0X79, 0X20,
-            0X9A, 0XDB, 0XC0, 0XFE, 0X78, 0XCD, 0X5A, 0XF4,
-            0X1F, 0XDD, 0XA8, 0X33, 0X88, 0X07, 0XC7, 0X31,
-            0XB1, 0X12, 0X10, 0X59, 0X27, 0X80, 0XEC, 0X5F,
-            0X60, 0X51, 0X7F, 0XA9, 0X19, 0XB5, 0X4A, 0X0D,
-            0X2D, 0XE5, 0X7A, 0X9F, 0X93, 0XC9, 0X9C, 0XEF,
-            0XA0, 0XE0, 0X3B, 0X4D, 0XAE, 0X2A, 0XF5, 0XB0,
-            0XC8, 0XEB, 0XBB, 0X3C, 0X83, 0X53, 0X99, 0X61,
-            0X17, 0X2B, 0X04, 0X7E, 0XBA, 0X77, 0XD6, 0X26,
-            0XE1, 0X69, 0X14, 0X63, 0X55, 0X21, 0X0C, 0X7D
+            0X52U, 0X09U, 0X6AU, 0XD5U, 0X30U, 0X36U, 0XA5U, 0X38U,
+            0XBFU, 0X40U, 0XA3U, 0X9EU, 0X81U, 0XF3U, 0XD7U, 0XFBU,
+            0X7CU, 0XE3U, 0X39U, 0X82U, 0X9BU, 0X2FU, 0XFFU, 0X87U,
+            0X34U, 0X8EU, 0X43U, 0X44U, 0XC4U, 0XDEU, 0XE9U, 0XCBU,
+            0X54U, 0X7BU, 0X94U, 0X32U, 0XA6U, 0XC2U, 0X23U, 0X3DU,
+            0XEEU, 0X4CU, 0X95U, 0X0BU, 0X42U, 0XFAU, 0XC3U, 0X4EU,
+            0X08U, 0X2EU, 0XA1U, 0X66U, 0X28U, 0XD9U, 0X24U, 0XB2U,
+            0X76U, 0X5BU, 0XA2U, 0X49U, 0X6DU, 0X8BU, 0XD1U, 0X25U,
+            0X72U, 0XF8U, 0XF6U, 0X64U, 0X86U, 0X68U, 0X98U, 0X16U,
+            0XD4U, 0XA4U, 0X5CU, 0XCCU, 0X5DU, 0X65U, 0XB6U, 0X92U,
+            0X6CU, 0X70U, 0X48U, 0X50U, 0XFDU, 0XEDU, 0XB9U, 0XDAU,
+            0X5EU, 0X15U, 0X46U, 0X57U, 0XA7U, 0X8DU, 0X9DU, 0X84U,
+            0X90U, 0XD8U, 0XABU, 0X00U, 0X8CU, 0XBCU, 0XD3U, 0X0AU,
+            0XF7U, 0XE4U, 0X58U, 0X05U, 0XB8U, 0XB3U, 0X45U, 0X06U,
+            0XD0U, 0X2CU, 0X1EU, 0X8FU, 0XCAU, 0X3FU, 0X0FU, 0X02U,
+            0XC1U, 0XAFU, 0XBDU, 0X03U, 0X01U, 0X13U, 0X8AU, 0X6BU,
+            0X3AU, 0X91U, 0X11U, 0X41U, 0X4FU, 0X67U, 0XDCU, 0XEAU,
+            0X97U, 0XF2U, 0XCFU, 0XCEU, 0XF0U, 0XB4U, 0XE6U, 0X73U,
+            0X96U, 0XACU, 0X74U, 0X22U, 0XE7U, 0XADU, 0X35U, 0X85U,
+            0XE2U, 0XF9U, 0X37U, 0XE8U, 0X1CU, 0X75U, 0XDFU, 0X6EU,
+            0X47U, 0XF1U, 0X1AU, 0X71U, 0X1DU, 0X29U, 0XC5U, 0X89U,
+            0X6FU, 0XB7U, 0X62U, 0X0EU, 0XAAU, 0X18U, 0XBEU, 0X1BU,
+            0XFCU, 0X56U, 0X3EU, 0X4BU, 0XC6U, 0XD2U, 0X79U, 0X20U,
+            0X9AU, 0XDBU, 0XC0U, 0XFEU, 0X78U, 0XCDU, 0X5AU, 0XF4U,
+            0X1FU, 0XDDU, 0XA8U, 0X33U, 0X88U, 0X07U, 0XC7U, 0X31U,
+            0XB1U, 0X12U, 0X10U, 0X59U, 0X27U, 0X80U, 0XECU, 0X5FU,
+            0X60U, 0X51U, 0X7FU, 0XA9U, 0X19U, 0XB5U, 0X4AU, 0X0DU,
+            0X2DU, 0XE5U, 0X7AU, 0X9FU, 0X93U, 0XC9U, 0X9CU, 0XEFU,
+            0XA0U, 0XE0U, 0X3BU, 0X4DU, 0XAEU, 0X2AU, 0XF5U, 0XB0U,
+            0XC8U, 0XEBU, 0XBBU, 0X3CU, 0X83U, 0X53U, 0X99U, 0X61U,
+            0X17U, 0X2BU, 0X04U, 0X7EU, 0XBAU, 0X77U, 0XD6U, 0X26U,
+            0XE1U, 0X69U, 0X14U, 0X63U, 0X55U, 0X21U, 0X0CU, 0X7DU
         };
 
         // number of rounds (Nr)
@@ -381,7 +381,7 @@ namespace aes
     [[nodiscard]]
     std::vector<std::uint8_t> encryptEcb(Iterator begin, Iterator end, const Key& key)
     {
-        std::vector<Block> blocks = convertToBlocks(begin, end);
+        auto blocks = convertToBlocks(begin, end);
         std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         auto resultIterator = result.begin();
@@ -411,7 +411,7 @@ namespace aes
     [[nodiscard]]
     std::vector<std::uint8_t> decryptEcb(Iterator begin, Iterator end, const Key& key)
     {
-        std::vector<Block> blocks = convertToBlocks(begin, end);
+        auto blocks = convertToBlocks(begin, end);
         std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         auto resultIterator = result.begin();
@@ -442,7 +442,7 @@ namespace aes
     std::vector<std::uint8_t> encryptCbc(Iterator begin, Iterator end, const Key& key,
                                          const InitVector& initVector)
     {
-        std::vector<Block> blocks = convertToBlocks(begin, end);
+        const auto blocks = convertToBlocks(begin, end);
         std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         Block dataBlock;
@@ -482,7 +482,7 @@ namespace aes
     std::vector<std::uint8_t> decryptCbc(Iterator begin, Iterator end, const Key& key,
                                          const InitVector& initVector)
     {
-        std::vector<Block> blocks = convertToBlocks(begin, end);
+        auto blocks = convertToBlocks(begin, end);
         std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         Block dataBlock;
@@ -528,7 +528,7 @@ namespace aes
     std::vector<std::uint8_t> encryptCfb(Iterator begin, Iterator end, const Key& key,
                                          const InitVector& initVector)
     {
-        std::vector<Block> blocks = convertToBlocks(begin, end);
+        const auto blocks = convertToBlocks(begin, end);
         std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         Block encryptedBlock;
@@ -567,7 +567,7 @@ namespace aes
     std::vector<std::uint8_t> decryptCfb(Iterator begin, Iterator end, const Key& key,
                                          const InitVector& initVector)
     {
-        std::vector<Block> blocks = convertToBlocks(begin, end);
+        const auto blocks = convertToBlocks(begin, end);
         std::vector<std::uint8_t> result(blocks.size() * blockByteCount);
 
         Block decryptedBlock;
