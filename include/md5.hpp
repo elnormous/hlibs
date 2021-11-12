@@ -14,6 +14,7 @@ namespace md5
 {
     inline namespace detail
     {
+        // Per-round shift amounts
         constexpr std::array<std::uint8_t, 16> s{
             7, 12, 17, 22,
             5, 9, 14, 20,
@@ -21,6 +22,7 @@ namespace md5
             6, 10, 15, 21
         };
 
+        // Integer part of the sines
         constexpr std::array<std::uint32_t, 64> k{
             0xD76AA478U, 0xE8C7B756U, 0x242070DBU, 0xC1BDCEEEU,
             0xF57C0FAFU, 0x4787C62AU, 0xA8304613U, 0xFD469501U,
