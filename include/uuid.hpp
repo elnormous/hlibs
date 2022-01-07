@@ -33,7 +33,7 @@ namespace uuid
         const auto timeMid = static_cast<std::uint16_t>((timeHigh >> 16) & 0xFFFFU);
 
         const auto timeHiAndVersion = static_cast<std::uint16_t>(((0x04U << 12) & 0xF000U) |
-                                                                 (timeHigh & 0xFFFFU));
+                                                                 (timeHigh & 0x0FFFU));
 
         const auto clockSequence = static_cast<std::uint32_t>(re());
 
