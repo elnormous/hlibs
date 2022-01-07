@@ -98,6 +98,10 @@ namespace aes
         using Word = std::array<std::uint8_t, wordByteCount>;
         using Block = std::array<Word, blockWordCount>;
 
+        using RoundKey = std::array<Word, 4>;
+        template <std::size_t keyLength>
+        using RoundKeys = std::array<RoundKey, roundCount<keyLength> + 1>;
+
         [[nodiscard]] inline Word operator^(const Word& first, const Word& second) noexcept
         {
             Word result = first;
@@ -131,10 +135,6 @@ namespace aes
             word[2] = word[3];
             word[3] = c;
         }
-
-        using RoundKey = std::array<Word, 4>;
-        template <std::size_t keyLength>
-        using RoundKeys = std::array<RoundKey, roundCount<keyLength> + 1>;
 
         inline std::uint8_t mulBytes(std::uint8_t a, std::uint8_t b) noexcept
         {
