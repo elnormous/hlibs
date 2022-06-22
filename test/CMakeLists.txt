@@ -1,4 +1,4 @@
-include_directories("${hlibs_SOURCE_DIR}/include")
+include_directories("${Hlibs_SOURCE_DIR}/include")
 
 set(hlibs_test_sources
     main.cpp
