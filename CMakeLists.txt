@@ -5,3 +5,6 @@ include(CTest)
 
 add_subdirectory(external/Catch2)
 add_subdirectory(test)
+
+add_library(hlibs INTERFACE)
+target_include_directories(hlibs INTERFACE include/)
