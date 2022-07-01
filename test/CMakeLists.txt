@@ -1,3 +1,6 @@
+include(CTest)
+add_subdirectory(external/Catch2)
+
 include_directories("${Hlibs_SOURCE_DIR}/include")
 
 set(hlibs_test_sources
