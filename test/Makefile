@@ -27,5 +27,5 @@ clean:
 ifeq ($(OS),Windows_NT)
 	-del /f /q "$(EXECUTABLE).exe" $(OBJECTS)
 else
-	$(RM) $(EXECUTABLE) $(OBJECTS) $(EXECUTABLE).exe $(DEPENDENCIES) *.gcno
+	$(RM) $(EXECUTABLE) $(OBJECTS) $(EXECUTABLE).exe $(DEPENDENCIES) *.gcno *.gcda
 endif
