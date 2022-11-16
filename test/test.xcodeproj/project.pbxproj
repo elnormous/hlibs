@@ -272,7 +272,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					../external/Catch2/single_include,
+					external/Catch2/single_include,
 					../include,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -283,7 +283,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				HEADER_SEARCH_PATHS = (
-					../external/Catch2/single_include,
+					external/Catch2/single_include,
 					../include,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
