@@ -25,7 +25,7 @@ $(EXECUTABLE): $(OBJECTS)
 .PHONY: clean
 clean:
 ifeq ($(OS),Windows_NT)
-	-del /f /q "$(EXECUTABLE).exe" $(OBJECTS)
+	-del /f /q "$(EXECUTABLE).exe" $(OBJECTS) *.gcda *.gcno
 else
-	$(RM) $(EXECUTABLE) $(OBJECTS) $(EXECUTABLE).exe $(DEPENDENCIES) *.gcno *.gcda
+	$(RM) $(EXECUTABLE) $(OBJECTS) $(EXECUTABLE).exe $(DEPENDENCIES) *.gcda *.gcno
 endif
