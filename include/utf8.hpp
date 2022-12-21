@@ -21,8 +21,7 @@ namespace utf8
     std::u32string toUtf32(const Iterator begin, const Iterator end)
     {
         std::u32string result;
-        auto i = begin;
-        while (i != end)
+        for (auto i = begin; i != end;)
         {
             char32_t cp = *i++ & 0xFF;
 
