@@ -6,6 +6,7 @@
 #define UTF8_HPP
 
 #include <cstdint>
+#include <stdexcept>
 #include <string>
 
 namespace utf8
