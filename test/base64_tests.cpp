@@ -15,7 +15,13 @@ TEST_CASE("Base64", "[base64]")
         {{'0'}, "MA=="},
         {{'0', '0'}, "MDA="},
         {{'0', '0', '0'}, "MDAw"},
-        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "VGVzdCAxMiE="}
+        {{'T', 'e', 's', 't', ' ', '1', '2', '!'}, "VGVzdCAxMiE="},
+        { { 0xFA, 0xFB }, "+vs="},
+        { { 0xFA, 0xFB, 0xFC }, "+vv8"},
+        { { 0xFA, 0xFB, 0xFC, 0xFD }, "+vv8/Q=="},
+        { { 0xFA, 0xFB, 0xFC, 0xFD, 0xFE }, "+vv8/f4="},
+        { { 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF }, "+vv8/f7/"},
+        { { 0xFA, 0xFB, 0xFC, 0xFD, 0xFE, 0xFF, 0xFF }, "+vv8/f7//w=="}
     };
 
     SECTION("Encoding")
