@@ -22,7 +22,7 @@ namespace uuid
         std::array<std::uint8_t, 6> node;
     };
 
-    std::mt19937 mt{std::random_device{}()};
+    inline std::mt19937 mt{std::random_device{}()};
 
     template <class RandomEngine = std::mt19937>
     [[nodiscard]] Uuid generate(RandomEngine& re = mt)
