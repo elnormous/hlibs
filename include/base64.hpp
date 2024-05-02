@@ -27,7 +27,7 @@ namespace base64
     {
         std::string result;
         std::size_t c = 0;
-        std::array<std::uint8_t, 3> charArray;
+        std::array<std::uint8_t, 3> charArray{};
 
         for (auto i = begin; i != end; ++i)
         {
@@ -89,7 +89,7 @@ namespace base64
     std::vector<std::uint8_t> decode(const Iterator begin, const Iterator end)
     {
         std::uint32_t c = 0;
-        std::array<std::uint8_t, 4> charArray;
+        std::array<std::uint8_t, 4> charArray{};
         std::vector<std::uint8_t> result;
 
         for (auto i = begin; i != end && *i != '='; ++i)
@@ -191,7 +191,7 @@ namespace base64url
     std::vector<std::uint8_t> decode(const Iterator begin, const Iterator end)
     {
         std::uint32_t c = 0;
-        std::array<std::uint8_t, 4> charArray;
+        std::array<std::uint8_t, 4> charArray{};
         std::vector<std::uint8_t> result;
 
         for (auto i = begin; i != end && *i != '='; ++i)
