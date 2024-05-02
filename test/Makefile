@@ -1,6 +1,6 @@
 DEBUG=0
 CXXFLAGS=-std=c++17 -Wall -Iexternal/Catch2/single_include -I../include
-SOURCES=main.cpp tests.cpp
+SOURCES=main.cpp aes_tests.cpp base64_tests.cpp crc_tests.cpp fnv1_tests.cpp md5_tests.cpp sha1_tests.cpp sha2_tests.cpp utf8_tests.cpp uuid_tests.cpp
 BASE_NAMES=$(basename $(SOURCES))
 OBJECTS=$(BASE_NAMES:=.o)
 DEPENDENCIES=$(OBJECTS:.o=.d)
