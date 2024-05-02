@@ -7,12 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		303E87A825223DDF008B7E24 /* tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 303E87A725223DDF008B7E24 /* tests.cpp */; };
+		303E87A825223DDF008B7E24 /* sha2_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 303E87A725223DDF008B7E24 /* sha2_tests.cpp */; };
+		30D51B082BE3E3B100395328 /* aes_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30D51B072BE3E3B100395328 /* aes_tests.cpp */; };
+		30D51B0B2BE3E40F00395328 /* base64_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30D51B0A2BE3E40F00395328 /* base64_tests.cpp */; };
+		30D51B0D2BE3E44700395328 /* crc_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30D51B0C2BE3E44700395328 /* crc_tests.cpp */; };
+		30D51B0F2BE3E47A00395328 /* fnv1_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30D51B0E2BE3E47A00395328 /* fnv1_tests.cpp */; };
+		30D51B112BE3E50F00395328 /* md5_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30D51B102BE3E50F00395328 /* md5_tests.cpp */; };
+		30D51B132BE3E56400395328 /* utf8_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30D51B122BE3E56400395328 /* utf8_tests.cpp */; };
+		30D51B152BE3E59400395328 /* uuid_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30D51B142BE3E59400395328 /* uuid_tests.cpp */; };
+		30D51B172BE3E6CA00395328 /* sha1_tests.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 30D51B162BE3E6CA00395328 /* sha1_tests.cpp */; };
 		C6C90FD721A5A24D00B5FCB7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = C6C90FD621A5A24D00B5FCB7 /* main.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		303E87A725223DDF008B7E24 /* tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = tests.cpp; sourceTree = "<group>"; };
+		303E87A725223DDF008B7E24 /* sha2_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sha2_tests.cpp; sourceTree = "<group>"; };
+		30D51B072BE3E3B100395328 /* aes_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = aes_tests.cpp; sourceTree = "<group>"; };
+		30D51B0A2BE3E40F00395328 /* base64_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = base64_tests.cpp; sourceTree = "<group>"; };
+		30D51B0C2BE3E44700395328 /* crc_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = crc_tests.cpp; sourceTree = "<group>"; };
+		30D51B0E2BE3E47A00395328 /* fnv1_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = fnv1_tests.cpp; sourceTree = "<group>"; };
+		30D51B102BE3E50F00395328 /* md5_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = md5_tests.cpp; sourceTree = "<group>"; };
+		30D51B122BE3E56400395328 /* utf8_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = utf8_tests.cpp; sourceTree = "<group>"; };
+		30D51B142BE3E59400395328 /* uuid_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = uuid_tests.cpp; sourceTree = "<group>"; };
+		30D51B162BE3E6CA00395328 /* sha1_tests.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = sha1_tests.cpp; sourceTree = "<group>"; };
 		30E08685232B183700F90FAF /* sha1.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = sha1.hpp; sourceTree = "<group>"; };
 		30E08686232B183700F90FAF /* utf8.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = utf8.hpp; sourceTree = "<group>"; };
 		30E08687232B183700F90FAF /* uuid.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = uuid.hpp; sourceTree = "<group>"; };
@@ -27,6 +43,23 @@
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
+		30D51B092BE3E3E800395328 /* tests */ = {
+			isa = PBXGroup;
+			children = (
+				30D51B072BE3E3B100395328 /* aes_tests.cpp */,
+				30D51B0A2BE3E40F00395328 /* base64_tests.cpp */,
+				30D51B0C2BE3E44700395328 /* crc_tests.cpp */,
+				30D51B0E2BE3E47A00395328 /* fnv1_tests.cpp */,
+				C6C90FD621A5A24D00B5FCB7 /* main.cpp */,
+				30D51B102BE3E50F00395328 /* md5_tests.cpp */,
+				30D51B162BE3E6CA00395328 /* sha1_tests.cpp */,
+				303E87A725223DDF008B7E24 /* sha2_tests.cpp */,
+				30D51B122BE3E56400395328 /* utf8_tests.cpp */,
+				30D51B142BE3E59400395328 /* uuid_tests.cpp */,
+			);
+			name = tests;
+			sourceTree = "<group>";
+		};
 		30E08684232B168C00F90FAF /* include */ = {
 			isa = PBXGroup;
 			children = (
@@ -47,10 +80,9 @@
 		C6C90FCA21A5A24D00B5FCB7 = {
 			isa = PBXGroup;
 			children = (
+				30D51B092BE3E3E800395328 /* tests */,
 				30E08684232B168C00F90FAF /* include */,
-				C6C90FD621A5A24D00B5FCB7 /* main.cpp */,
 				C6C90FD421A5A24D00B5FCB7 /* Products */,
-				303E87A725223DDF008B7E24 /* tests.cpp */,
 			);
 			sourceTree = "<group>";
 		};
@@ -116,8 +148,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				30D51B132BE3E56400395328 /* utf8_tests.cpp in Sources */,
+				30D51B0D2BE3E44700395328 /* crc_tests.cpp in Sources */,
+				30D51B172BE3E6CA00395328 /* sha1_tests.cpp in Sources */,
+				30D51B152BE3E59400395328 /* uuid_tests.cpp in Sources */,
+				30D51B0B2BE3E40F00395328 /* base64_tests.cpp in Sources */,
+				30D51B0F2BE3E47A00395328 /* fnv1_tests.cpp in Sources */,
+				30D51B112BE3E50F00395328 /* md5_tests.cpp in Sources */,
+				30D51B082BE3E3B100395328 /* aes_tests.cpp in Sources */,
 				C6C90FD721A5A24D00B5FCB7 /* main.cpp in Sources */,
-				303E87A825223DDF008B7E24 /* tests.cpp in Sources */,
+				303E87A825223DDF008B7E24 /* sha2_tests.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -191,7 +231,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -261,7 +301,7 @@
 				GCC_WARN_UNUSED_LABEL = YES;
 				GCC_WARN_UNUSED_PARAMETER = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 10.10;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
