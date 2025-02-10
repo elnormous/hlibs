@@ -108,7 +108,7 @@ namespace base64
                 else if (b == '/')
                     return static_cast<std::uint8_t>(63U);
                 else
-                    throw ParseError("Invalid Base64 digit");
+                    throw ParseError{"Invalid Base64 digit"};
             };
 
             charArray[c++] = hexToDecimal(b);
@@ -125,7 +125,7 @@ namespace base64
         if (c)
         {
             if (c == 1)
-                throw ParseError("Invalid Base64");
+                throw ParseError{"Invalid Base64"};
             else if (c == 2)
                 result.push_back(static_cast<std::uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
             else if (c == 3)
@@ -210,7 +210,7 @@ namespace base64url
                 else if (b == '_')
                     return static_cast<std::uint8_t>(63U);
                 else
-                    throw ParseError("Invalid Base64 digit");
+                    throw ParseError{"Invalid Base64 digit"};
             };
 
             charArray[c++] = hexToDecimal(b);
@@ -227,7 +227,7 @@ namespace base64url
         if (c)
         {
             if (c == 1)
-                throw ParseError("Invalid Base64");
+                throw ParseError{"Invalid Base64"};
             else if (c == 2)
                 result.push_back(static_cast<std::uint8_t>((charArray[0] << 2) + ((charArray[1] & 0x30) >> 4)));
             else if (c == 3)

@@ -11,7 +11,7 @@ namespace
         return (hex >= '0' && hex <= '9') ? static_cast<std::uint8_t>(hex - '0') :
             (hex >= 'a' && hex <='f') ? static_cast<std::uint8_t>(hex - 'a' + 10) :
             (hex >= 'A' && hex <='F') ? static_cast<std::uint8_t>(hex - 'A' + 10) :
-            throw std::out_of_range("Invalid hex digit");
+            throw std::out_of_range{"Invalid hex digit"};
     }
 }
 
